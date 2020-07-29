@@ -1,4 +1,4 @@
-package com.example.feature.profile.presentation.main
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater

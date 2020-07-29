@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileMainFragment"
-        android:name="com.example.feature.profile.presentation.main.ProfileMainFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainFragment"
         android:label="ProfileMainFragment"
         app:moduleName="feature_profile">
     </fragment>
