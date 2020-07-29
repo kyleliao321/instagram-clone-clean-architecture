@@ -22,6 +22,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
@@ -51,8 +60,8 @@ dependencies {
 
     // Kodein
     api 'org.kodein.di:kodein-di:7.0.0'
+    api 'org.kodein.di:kodein-di-framework-android-x:7.0.0'
 
     // Timber
     api 'com.jakewharton.timber:timber:4.7.1'
-
 }
