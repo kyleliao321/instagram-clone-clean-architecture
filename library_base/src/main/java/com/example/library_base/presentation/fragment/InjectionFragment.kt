@@ -11,7 +11,7 @@ import org.kodein.di.diContext
 
 abstract class InjectionFragment: Fragment(), DIAware {
 
-    private val parentDI by closestDI()
+    final override val di by closestDI()
 
     final override val diContext = diContext<Fragment>(this)
 

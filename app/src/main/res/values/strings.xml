@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">instagram-clone-clean-architecture</string>
+    <string name="title_feature_profile">Profile Feature</string>
 </resources>

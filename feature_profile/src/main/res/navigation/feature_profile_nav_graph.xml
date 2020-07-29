@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:moduleName="feature_profile"
+    app:startDestination="@id/profileMainFragment">
+
+    <fragment
+        android:id="@+id/profileMainFragment"
+        android:name="com.example.feature.profile.presentation.main.ProfileMainFragment"
+        android:label="ProfileMainFragment"
+        app:moduleName="feature_profile">
+    </fragment>
+
+</navigation>
