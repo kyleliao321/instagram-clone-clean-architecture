@@ -1,0 +1,3 @@
+include ':library_base'
+include ':app'
+rootProject.name = "instagram-clone-clean-architecture"
