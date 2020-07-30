@@ -5,7 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
-internal interface ProfileRepository {
+interface ProfileRepository {
 
     suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure>
 
