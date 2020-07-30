@@ -3,6 +3,8 @@ package com.example.instagram_clone_clean_architecture.feature.profile.data.repo
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
+import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.utility.Either
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -33,11 +35,11 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         )
     )
 
-    override suspend fun getUserProfileById(id: Int): UserDomainModel? {
-        return userProfileMap[id]
+    override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
+        return Either.Success(userProfileMap[id])
     }
 
-    override suspend fun getFollowerById(id: Int): List<UserDomainModel> {
+    override suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure> {
         val result = mutableListOf<UserDomainModel>()
 
         val followerIdList = userFollowerMap[id]
@@ -49,10 +51,10 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
             }
         }
 
-        return result
+        return Either.Success(result)
     }
 
-    override suspend fun getFollowingById(id: Int): List<UserDomainModel> {
+    override suspend fun getFollowingById(id: Int): Either<List<UserDomainModel>, Failure> {
         val result = mutableListOf<UserDomainModel>()
 
         val followingList = userFollowingMap[id]
@@ -64,19 +66,19 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
             }
         }
 
-        return result
+        return Either.Success(result)
     }
 
-    override suspend fun getPostByUserId(id: Int): List<PostDomainModel> {
+    override suspend fun getPostByUserId(id: Int): Either<List<PostDomainModel>, Failure> {
         val userPostMap = postMap.filterValues {
             it.belongUserId == id
         }
 
-        return ArrayList(userPostMap.values)
+        return Either.Success(ArrayList(userPostMap.values))
     }
 
-    override suspend fun getPostByPostId(id: Int): PostDomainModel? {
-        return postMap[id]
+    override suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure> {
+        return Either.Success(postMap[id])
     }
 
 }
