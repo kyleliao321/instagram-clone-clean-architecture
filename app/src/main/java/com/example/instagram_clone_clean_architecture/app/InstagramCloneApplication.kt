@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.app
 import android.app.Application
 import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.domain.di.FeatureManager
+import com.example.library_base.baseModule
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.androidXModule
@@ -12,6 +13,7 @@ class InstagramCloneApplication: Application(), DIAware {
 
     override val di: DI = DI.lazy {
         import(androidXModule(this@InstagramCloneApplication))
+        import(baseModule)
 
         importAll(FeatureManager.diModules)
     }

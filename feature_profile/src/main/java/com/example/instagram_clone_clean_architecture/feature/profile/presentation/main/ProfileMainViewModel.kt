@@ -1,15 +1,12 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.main
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.extension.asLiveData
-import com.example.library_base.domain.utility.Event
+import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
@@ -17,6 +14,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ProfileMainViewModel(
+    private val navigationManager: NavigationManager,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getUserPostUseCase: GetUserPostUseCase
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
@@ -24,17 +22,13 @@ class ProfileMainViewModel(
     // TODO: This parameter should come form Navigation Argument
     private val userId: Int = 1
 
-    /**
-     * Triggering navigation to particular post.
-     */
-    private val _navigateToPostEvent = MutableLiveData<Event<Int>>()
-    val navigateToPostEvent = _navigateToPostEvent.asLiveData()
+    fun onNavigateToPostDetail(post: PostDomainModel) {
+        // TODO: Call navigation manger to navigate to post detail fragment
+    }
 
-    /**
-     * Triggering navigation to user profile edit view.
-     */
-    private val _navigateToEditProfileEvent = MutableLiveData<Event<Int>>()
-    val navigateToEditProfileEvent = _navigateToEditProfileEvent.asLiveData()
+    fun onNavigateToEditProfile(user: UserDomainModel) {
+        // TODO: Call navigation manager to navigate to profile edit fragment
+    }
 
     private fun loadUserProfile() = viewModelScope.launch {
         val params = GetUserProfileUseCase.Param(userId)

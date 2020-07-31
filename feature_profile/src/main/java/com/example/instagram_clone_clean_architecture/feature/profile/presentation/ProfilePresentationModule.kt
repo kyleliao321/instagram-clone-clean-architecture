@@ -10,6 +10,6 @@ import org.kodein.di.android.x.AndroidLifecycleScope
 internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
 
     bind<ProfileMainViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
-        KotlinViewModelProvider.of(context) { ProfileMainViewModel(instance(), instance()) }
+        KotlinViewModelProvider.of(context) { ProfileMainViewModel(instance(), instance(), instance()) }
     }
 }
