@@ -35,8 +35,13 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         )
     )
 
-    override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
-        return Either.Success(userProfileMap[id])
+    override suspend fun getUserProfileById(id: Int): Either<UserDomainModel, Failure> {
+        val userProfile = userProfileMap[id]
+
+        return when (userProfile) {
+            null -> Either.Failure(Failure.NullValue)
+            else -> Either.Success(userProfile)
+        }
     }
 
     override suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure> {
@@ -77,8 +82,13 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         return Either.Success(ArrayList(userPostMap.values))
     }
 
-    override suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure> {
-        return Either.Success(postMap[id])
+    override suspend fun getPostByPostId(id: Int): Either<PostDomainModel, Failure> {
+        val post = postMap[id]
+
+        return when (post) {
+            null -> Either.Failure(Failure.NullValue)
+            else -> Either.Success(post)
+        }
     }
 
 }

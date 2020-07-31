@@ -2,10 +2,7 @@ package com.example.library_base.domain.usercase
 
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 abstract class UseCase<out Type, in Params> {
 
@@ -20,8 +17,8 @@ abstract class UseCase<out Type, in Params> {
      * Since the UseCase is the bridge between ViewModel and Data Repository, by design,
      * it always involve data manipulation. So we can launch the callback in IO thread.
      */
-    fun invoke(params: Params, onResult: (Either<Type, Failure>) -> Unit) {
-        val job = GlobalScope.async(Dispatchers.IO) { run(params) }
-        GlobalScope.launch(Dispatchers.IO) { onResult(job.await()) }
-    }
+    suspend operator fun invoke(params: Params, onResult: (Either<Type, Failure>) -> Unit) =
+        withContext(Dispatchers.IO) {
+            onResult(run(params))
+        }
 }

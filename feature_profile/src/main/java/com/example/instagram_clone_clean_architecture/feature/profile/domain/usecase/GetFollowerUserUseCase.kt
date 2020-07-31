@@ -6,13 +6,12 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase
 import com.example.library_base.domain.utility.Either
 
-class GetUserProfileUseCase(
+class GetFollowerUserUseCase(
     private val profileRepository: ProfileRepository
-): UseCase<UserDomainModel, GetUserProfileUseCase.Param>() {
+) : UseCase<List<UserDomainModel>, GetFollowerUserUseCase.Param>() {
 
-    override suspend fun run(params: Param): Either<UserDomainModel, Failure> =
-        profileRepository.getUserProfileById(params.id)
+    override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> =
+        profileRepository.getFollowerById(params.id)
 
     data class Param(val id: Int)
-
 }
