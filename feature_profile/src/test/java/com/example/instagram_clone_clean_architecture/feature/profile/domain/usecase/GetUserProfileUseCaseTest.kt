@@ -33,7 +33,7 @@ class GetUserProfileUseCaseTest {
 
     @Test
     fun `should return correct type when invoke`() {
-        val userProfile = UserDomainModel(id = 1, name = "Kyle", description = "any", postNum = 0, followerNum = 0, followingNum = 0)
+        val userProfile = UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description = "any", postNum = 0, followerNum = 0, followingNum = 0)
         val param = GetUserProfileUseCase.Param(1)
         var result: Either<UserDomainModel, Failure>? = null
 

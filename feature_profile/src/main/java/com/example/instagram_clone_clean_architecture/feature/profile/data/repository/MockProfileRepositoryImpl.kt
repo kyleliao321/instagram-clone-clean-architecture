@@ -12,9 +12,9 @@ import kotlin.collections.HashMap
 internal class MockProfileRepositoryImpl: ProfileRepository {
 
     private val userProfileMap: HashMap<Int, UserDomainModel> = hashMapOf(
-        1 to UserDomainModel(1, "Kyle", "My name is Kyle", 1, 0, 2),
-        2 to UserDomainModel(2, "Anna", "", 0, 1, 0),
-        3 to UserDomainModel(2, "John", "", 0, 1, 0)
+        1 to UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 1, followingNum = 0, followerNum = 2),
+        2 to UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 0, followingNum = 1,followerNum =  0),
+        3 to UserDomainModel(id = 2, name = "John", userName = "john", postNum = 0, followingNum = 1, followerNum = 0)
     )
 
     private val userFollowerMap: HashMap<Int, List<Int>> = hashMapOf(

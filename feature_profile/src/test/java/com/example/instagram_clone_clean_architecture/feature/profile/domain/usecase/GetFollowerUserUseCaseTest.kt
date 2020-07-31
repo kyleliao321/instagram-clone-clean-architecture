@@ -32,8 +32,8 @@ class GetFollowerUserUseCaseTest {
     @Test
     fun `should return correct type when invoke`() {
         val userProfiles = listOf(
-            UserDomainModel(1, "a", "a", 1, 1, 1),
-            UserDomainModel(2, "B", "B", 1, 1, 1)
+            UserDomainModel(id = 1, name = "a", userName = "a", postNum = 1, followingNum = 1, followerNum = 1),
+            UserDomainModel(id = 2, name = "B", userName = "b",  postNum = 1, followingNum = 1, followerNum = 1)
         )
         val param = GetFollowerUserUseCase.Param(1)
         var result: Either<List<UserDomainModel>, Failure>? = null
