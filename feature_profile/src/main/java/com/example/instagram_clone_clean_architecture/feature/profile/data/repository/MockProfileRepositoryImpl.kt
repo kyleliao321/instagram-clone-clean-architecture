@@ -91,4 +91,16 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         }
     }
 
+    override suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure> {
+        val userId = userProfile.id
+
+        return when(userProfileMap[userId]) {
+            null -> Either.Failure(Failure.ServerError)
+            else -> {
+                userProfileMap[userId] = userProfile
+                Either.Success(userProfileMap[userId]!!)
+            }
+        }
+    }
+
 }

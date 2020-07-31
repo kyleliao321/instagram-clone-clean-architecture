@@ -16,4 +16,6 @@ interface ProfileRepository {
     suspend fun getPostByUserId(id: Int): Either<List<PostDomainModel>, Failure>
 
     suspend fun getPostByPostId(id: Int): Either<PostDomainModel, Failure>
+
+    suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure>
 }
