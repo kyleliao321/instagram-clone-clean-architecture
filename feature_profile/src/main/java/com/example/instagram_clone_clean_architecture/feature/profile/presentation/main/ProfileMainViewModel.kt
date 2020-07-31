@@ -10,13 +10,16 @@ import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
 class ProfileMainViewModel(
     private val navigationManager: NavigationManager,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPostUseCase: GetUserPostUseCase
+    private val getUserPostUseCase: GetUserPostUseCase,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
 
     // TODO: This parameter should come form Navigation Argument
@@ -30,7 +33,7 @@ class ProfileMainViewModel(
         // TODO: Call navigation manager to navigate to profile edit fragment
     }
 
-    private fun loadUserProfile() = viewModelScope.launch {
+    private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserProfileUseCase.Param(userId)
         getUserProfileUseCase(params) {
             it.fold(
@@ -42,7 +45,7 @@ class ProfileMainViewModel(
         }
     }
 
-    private fun loadUserPost() = viewModelScope.launch {
+    private fun loadUserPost() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserPostUseCase.Param(userId)
         getUserPostUseCase(params) {
             it.fold(
@@ -85,7 +88,17 @@ class ProfileMainViewModel(
             isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
+            isUserProfileError = false,
             isUnknownError = true,
+            userProfile = null,
+            userPosts = listOf()
+        )
+        is Action.FailOnFetchingUserProfile -> state.copy(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = false,
+            isUserProfileError = true,
+            isUnknownError = false,
             userProfile = null,
             userPosts = listOf()
         )
@@ -97,6 +110,7 @@ class ProfileMainViewModel(
         val isProfileLoading: Boolean = true,
         val isPostLoading: Boolean = true,
         val isNetworkError: Boolean = false,
+        val isUserProfileError: Boolean = false,
         val isUnknownError: Boolean = false
     ) : BaseViewState
 
@@ -104,6 +118,7 @@ class ProfileMainViewModel(
         class UserProfileLoaded(val userProfile: UserDomainModel) : Action()
         class UserPostLoaded(val userPost: List<PostDomainModel>) : Action()
         object NetworkConnectionFail : Action()
+        object FailOnFetchingUserProfile : Action()
         object FailWithUnknownIssue : Action()
     }
 }

@@ -6,6 +6,10 @@ sealed class Either<out SuccessParam, out FailureParam> {
 
     data class Failure<out FailureParam>(val b: FailureParam): Either<Nothing, FailureParam>()
 
+    val isSuccess: Boolean get() = this is Success
+
+    val isFailure: Boolean get() = this is Failure
+
     fun fold(onSucceed: (SuccessParam) -> Any, onFail: (FailureParam) -> Any): Any =
         when (this) {
             is Success -> onSucceed(a)

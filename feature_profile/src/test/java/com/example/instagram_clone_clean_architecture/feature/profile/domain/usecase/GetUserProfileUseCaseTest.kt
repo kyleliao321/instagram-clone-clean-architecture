@@ -8,6 +8,7 @@ import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
@@ -32,7 +33,7 @@ class GetUserProfileUseCaseTest {
     }
 
     @Test
-    fun `should return correct type when invoke`() {
+    fun `should return Success when repository return non-null value`() {
         val userProfile = UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description = "any", postNum = 0, followerNum = 0, followingNum = 0)
         val param = GetUserProfileUseCase.Param(1)
         var result: Either<UserDomainModel, Failure>? = null
@@ -46,6 +47,23 @@ class GetUserProfileUseCaseTest {
         }
 
         result shouldBeEqualTo Either.Success(userProfile)
+    }
+
+    @Test
+    fun `should return Failure when repository return null value`() {
+        val param = GetUserProfileUseCase.Param(1)
+        var result: Either<UserDomainModel, Failure>? = null
+
+        coEvery { profileRepository.getUserProfileById(any()) } returns Either.Success(null)
+
+        runBlocking {
+            testUseCase(param) {
+                result = it
+            }
+        }
+
+        result shouldBeInstanceOf Either.Failure::class.java
+        result shouldBeEqualTo Either.Failure(Failure.NullValue)
     }
 
 }

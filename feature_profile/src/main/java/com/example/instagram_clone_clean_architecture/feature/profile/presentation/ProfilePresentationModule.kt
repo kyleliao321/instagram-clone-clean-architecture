@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.instagram_clone_clean_architecture.feature.profile.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel
 import com.example.library_base.domain.utility.KotlinViewModelProvider

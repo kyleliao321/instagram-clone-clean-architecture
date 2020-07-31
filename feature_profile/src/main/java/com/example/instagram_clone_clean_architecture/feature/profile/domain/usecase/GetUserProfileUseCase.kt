@@ -10,8 +10,24 @@ class GetUserProfileUseCase(
     private val profileRepository: ProfileRepository
 ): UseCase<UserDomainModel, GetUserProfileUseCase.Param>() {
 
-    override suspend fun run(params: Param): Either<UserDomainModel, Failure> =
-        profileRepository.getUserProfileById(params.id)
+    override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
+        var result: Either<UserDomainModel, Failure>? = null
+
+        profileRepository.getUserProfileById(params.id).fold(
+            onSucceed = { userProfile ->
+                if (userProfile == null) {
+                    result = Either.Failure(Failure.NullValue)
+                } else {
+                    result = Either.Success(userProfile)
+                }
+            },
+            onFail = { failure ->
+                { result = Either.Failure(Failure.NullValue) }
+            }
+        )
+
+        return result!!
+    }
 
     data class Param(val id: Int)
 
