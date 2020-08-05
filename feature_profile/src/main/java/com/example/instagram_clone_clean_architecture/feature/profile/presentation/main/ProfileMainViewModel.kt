@@ -38,19 +38,19 @@ class ProfileMainViewModel(
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->
-                    sendAction(Action.UserProfileLoaded(userProfile))
+                    { sendAction(Action.UserProfileLoaded(userProfile)) }
                 },
                 onFail = ::onFailure
             )
         }
     }
 
-    private fun loadUserPost() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadUserPost() = viewModelScope.launch(defaultDispatcher)  {
         val params = GetUserPostUseCase.Param(userId)
         getUserPostUseCase(params) {
             it.fold(
                 onSucceed = { userPost ->
-                    sendAction(Action.UserPostLoaded(userPost))
+                    { sendAction(Action.UserPostLoaded(userPost)) }
                 },
                 onFail = ::onFailure
             )

@@ -20,7 +20,7 @@ import kotlin.properties.Delegates
  */
 abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initialState: ViewState): ViewModel() {
 
-    private val _state = MutableLiveData<ViewState>()
+    private val _state = MutableLiveData<ViewState>(initialState)
     val stateLiveData: LiveData<ViewState>
         get() = _state
 
@@ -28,7 +28,7 @@ abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initi
         _state.value = new
     }
 
-    fun loadDate() {
+    fun loadData() {
         onLoadData()
     }
 

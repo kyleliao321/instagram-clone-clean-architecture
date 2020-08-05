@@ -5,8 +5,8 @@ import java.util.*
 data class PostDomainModel(
     val id: Int,
     val imageSrc: String,
-    val description: String?,
-    val location: String?,
+    val description: String? = null,
+    val location: String? = null,
     val date: Date,
     val belongUserId: Int
 )

@@ -2,13 +2,16 @@ package com.example.instagram_clone_clean_architecture.feature.profile.domain.us
 
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
+import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
+import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
@@ -16,6 +19,9 @@ import java.util.*
 
 @RunWith(JUnit4::class)
 class GetUserPostUseCaseTest {
+
+    @get:Rule
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     internal lateinit var profileRepository: ProfileRepository
@@ -26,7 +32,7 @@ class GetUserPostUseCaseTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        testUseCase = GetUserPostUseCase(profileRepository)
+        testUseCase = GetUserPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
     }
 
     @Test
@@ -40,7 +46,7 @@ class GetUserPostUseCaseTest {
 
         coEvery { profileRepository.getPostByUserId(any()) } returns Either.Success(postList)
 
-        runBlocking {
+        mainCoroutineRule.runBlockingTest {
             testUseCase(param) {
                 result = it
             }

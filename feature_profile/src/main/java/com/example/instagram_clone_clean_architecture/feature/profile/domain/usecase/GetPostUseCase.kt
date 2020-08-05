@@ -5,10 +5,13 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase
 import com.example.library_base.domain.utility.Either
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 
 class GetPostUseCase(
-    private val profileRepository: ProfileRepository
-) : UseCase<PostDomainModel, GetPostUseCase.Param>() {
+    private val profileRepository: ProfileRepository,
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
+) : UseCase<PostDomainModel, GetPostUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<PostDomainModel, Failure> {
         var result: Either<PostDomainModel, Failure>? = null

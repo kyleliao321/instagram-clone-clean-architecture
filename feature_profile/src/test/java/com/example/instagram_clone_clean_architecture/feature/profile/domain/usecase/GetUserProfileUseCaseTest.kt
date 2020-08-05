@@ -3,7 +3,9 @@ package com.example.instagram_clone_clean_architecture.feature.profile.domain.us
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
+import com.example.library_base.domain.utility.runBlockingTest
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
@@ -13,12 +15,16 @@ import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
 class GetUserProfileUseCaseTest {
+
+    @get:Rule
+    val mainCoroutineRule = CoroutineTestRule()
 
     @MockK
     internal lateinit var profileRepository: ProfileRepository
@@ -29,7 +35,7 @@ class GetUserProfileUseCaseTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        testUseCase = GetUserProfileUseCase(profileRepository)
+        testUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
     }
 
     @Test
@@ -40,7 +46,7 @@ class GetUserProfileUseCaseTest {
 
         coEvery { profileRepository.getUserProfileById(any()) } returns Either.Success(userProfile)
 
-        runBlocking {
+        mainCoroutineRule.runBlockingTest {
             testUseCase(param) {
                 result = it
             }
@@ -56,7 +62,7 @@ class GetUserProfileUseCaseTest {
 
         coEvery { profileRepository.getUserProfileById(any()) } returns Either.Success(null)
 
-        runBlocking {
+        mainCoroutineRule.runBlockingTest {
             testUseCase(param) {
                 result = it
             }
