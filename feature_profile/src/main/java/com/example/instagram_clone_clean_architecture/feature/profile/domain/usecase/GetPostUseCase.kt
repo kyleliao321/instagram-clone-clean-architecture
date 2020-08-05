@@ -22,7 +22,7 @@ class GetPostUseCase(
                 else result = Either.Success(post)
             },
             onFail = { failure ->
-                { result = Either.Failure(failure) }
+                result = Either.Failure(failure)
             }
         )
 

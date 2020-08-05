@@ -83,6 +83,13 @@ class ProfileMainViewModelTest {
             getUserPostUseCase,
             mainCoroutineRule.testDispatcher
         )
+
+        testViewModel.stateLiveData.observeForever(observer)
+    }
+
+    @After
+    fun teardown() {
+        testViewModel.stateLiveData.removeObserver(observer)
     }
 
     @Test
@@ -104,13 +111,10 @@ class ProfileMainViewModelTest {
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
-        testViewModel.stateLiveData.observeForever(observer)
-
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        verify(exactly = 3) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
             isUserProfileError = false,
             isUnknownError = false,
@@ -120,8 +124,69 @@ class ProfileMainViewModelTest {
             userPosts = correctUserPost,
             userProfile = correctUserProfile
         )
-
-        // cleanup
-        testViewModel.stateLiveData.removeObserver(observer)
     }
+
+
+    @Test
+    fun `verify view state when only getUserProfileUseCase failed`() {
+        // given
+        every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(null)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
+            isUserProfileError = true,
+            isUnknownError = false,
+            isNetworkError = false,
+            isPostLoading = false,
+            isProfileLoading = false,
+            userPosts = listOf(),
+            userProfile = null
+        )
+    }
+
+//    @Test
+//    fun `verify view state when only getUserProfileUseCase failed on network connection`() {
+//        // given
+//        every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
+//        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+//
+//        // when
+//        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+//
+//        // expect
+//        testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
+//            isUserProfileError = false,
+//            isUnknownError = false,
+//            isNetworkError = true,
+//            isPostLoading = false,
+//            isProfileLoading = false,
+//            userPosts = correctUserPost,
+//            userProfile = null
+//        )
+//    }
+//
+//    @Test
+//    fun `verify view state when only getUserPostUseCase failed on network connection`() {
+//        // given
+//        every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Failure(Failure.NetworkConnection)
+//        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
+//
+//        // when
+//        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+//
+//        // expect
+//        testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
+//            isUserProfileError = false,
+//            isUnknownError = false,
+//            isNetworkError = true,
+//            isPostLoading = false,
+//            isProfileLoading = false,
+//            userPosts = listOf(),
+//            userProfile = correctUserProfile
+//        )
+//    }
 }

@@ -25,7 +25,7 @@ class GetUserProfileUseCase(
                 }
             },
             onFail = { failure ->
-                { result = Either.Failure(Failure.NullValue) }
+                result = Either.Failure(failure)
             }
         )
 

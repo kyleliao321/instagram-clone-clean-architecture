@@ -9,13 +9,11 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.internal.runners.statements.Fail
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import java.util.*
@@ -73,5 +71,22 @@ class GetPostUseCaseTest {
 
         result shouldBeInstanceOf Either.Failure::class.java
         result shouldBeEqualTo Either.Failure(Failure.NullValue)
+    }
+    @Test
+
+    fun `should return Failure when repository return failure`() {
+        val param = GetPostUseCase.Param(1)
+        var result: Either<PostDomainModel, Failure>? = null
+
+        coEvery { profileRepository.getPostByPostId(any()) } returns Either.Failure(Failure.NetworkConnection)
+
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(param) {
+                result = it
+            }
+        }
+
+        result shouldBeInstanceOf Either.Failure::class.java
+        result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
     }
 }

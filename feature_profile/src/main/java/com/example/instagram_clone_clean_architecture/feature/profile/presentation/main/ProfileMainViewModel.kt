@@ -59,6 +59,7 @@ class ProfileMainViewModel(
 
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFail)
+        is Failure.NullValue -> sendAction(Action.FailOnFetchingUserProfile)
         else -> sendAction(Action.FailWithUnknownIssue)
     }
 
