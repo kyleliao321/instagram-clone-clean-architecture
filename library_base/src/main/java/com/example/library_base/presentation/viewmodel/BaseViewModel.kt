@@ -3,8 +3,6 @@ package com.example.library_base.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.library_base.domain.exception.Failure
-import timber.log.Timber
 import kotlin.properties.Delegates
 
 /**
@@ -24,7 +22,7 @@ abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initi
     val stateLiveData: LiveData<ViewState>
         get() = _state
 
-    protected var state by Delegates.observable(initialState) { _, _, new ->
+    protected var state by Delegates.observable(initialState) { _, old, new ->
         _state.value = new
     }
 

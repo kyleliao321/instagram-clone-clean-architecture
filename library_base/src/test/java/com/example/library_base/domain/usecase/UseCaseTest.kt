@@ -55,7 +55,7 @@ class UseCaseTest {
     val returnResult = "TestUseCaseString"
 
     private inner class TestUseCase(
-        private val defaultDispatcher: CoroutineDispatcher
+        defaultDispatcher: CoroutineDispatcher
     ) : UseCase<ReturnType, Param>(defaultDispatcher) {
         override suspend fun run(params: Param): Either<ReturnType, Failure> = Either.Success(ReturnType(returnResult))
     }

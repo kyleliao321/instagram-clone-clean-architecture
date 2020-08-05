@@ -38,7 +38,7 @@ class ProfileMainViewModel(
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->
-                    { sendAction(Action.UserProfileLoaded(userProfile)) }
+                    sendAction(Action.UserProfileLoaded(userProfile))
                 },
                 onFail = ::onFailure
             )
@@ -50,7 +50,7 @@ class ProfileMainViewModel(
         getUserPostUseCase(params) {
             it.fold(
                 onSucceed = { userPost ->
-                    { sendAction(Action.UserPostLoaded(userPost)) }
+                    sendAction(Action.UserPostLoaded(userPost))
                 },
                 onFail = ::onFailure
             )

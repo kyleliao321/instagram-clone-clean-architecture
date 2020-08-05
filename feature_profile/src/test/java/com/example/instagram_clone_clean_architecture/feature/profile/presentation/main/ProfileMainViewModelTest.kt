@@ -1,6 +1,8 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.main
 
 import android.util.Log
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
@@ -12,11 +14,8 @@ import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.domain.utility.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
@@ -36,17 +35,25 @@ import java.util.*
 @RunWith(JUnit4::class)
 class ProfileMainViewModelTest {
 
+
+    @get:Rule
+    var rule = InstantTaskExecutorRule()
+
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule()
+
+    @MockK(relaxed = true)
+    internal lateinit var profileRepository: ProfileRepository
 
     @MockK(relaxed = true)
     internal lateinit var navigationManager: NavigationManager
 
     @MockK(relaxed = true)
-    internal lateinit var getUserProfileUseCase: GetUserProfileUseCase
+    internal lateinit var observer: Observer<ProfileMainViewModel.ViewState>
 
-    @MockK(relaxed = true)
-    internal lateinit var getUserPostUseCase: GetUserPostUseCase
+    private lateinit var getUserProfileUseCase: GetUserProfileUseCase
+
+    private lateinit var getUserPostUseCase: GetUserPostUseCase
 
     private lateinit var testViewModel: ProfileMainViewModel
 
@@ -66,6 +73,9 @@ class ProfileMainViewModelTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+
+        getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getUserPostUseCase = GetUserPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel = ProfileMainViewModel(
             navigationManager,
@@ -89,24 +99,29 @@ class ProfileMainViewModelTest {
     }
 
     @Test
-    fun `loadData should invoke getUserProfileUseCase and getUserPostUseCase`() {
+    fun `verify view state when getUserProfileUseCase and getUserPostUseCase succeed`() {
         // given
-        coEvery { getUserPostUseCase.run(any()) } returns Either.Success(correctUserPost)
-        coEvery { getUserProfileUseCase.run(any()) } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
+
+        testViewModel.stateLiveData.observeForever(observer)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        coVerify { getUserPostUseCase(any(), any()) }
-        coVerify { getUserProfileUseCase(any(), any()) }
-    }
+        verify(exactly = 3) { observer.onChanged(any()) }
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
+            isUserProfileError = false,
+            isUnknownError = false,
+            isNetworkError = false,
+            isPostLoading = false,
+            isProfileLoading = false,
+            userPosts = correctUserPost,
+            userProfile = correctUserProfile
+        )
 
-    @Test
-    fun `verify view state when getUserProfileUseCase and getUserPostUseCase succeed`() {
-        /**
-         * TODO: Currently, Mockk will not mock the behavior of the abstract class that all UseCase extended.
-         *       As a result, the callback inside viewModel is not trigger, viewState will not be updated.
-         */
+        // cleanup
+        testViewModel.stateLiveData.removeObserver(observer)
     }
 }
