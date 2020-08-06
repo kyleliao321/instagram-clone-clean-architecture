@@ -7,6 +7,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.presentati
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower.ProfileFollowerViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.following.ProfileFollowingViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.post.ProfilePostViewModel
 import com.example.library_base.domain.utility.KotlinViewModelProvider
 import org.kodein.di.*
 import org.kodein.di.android.x.AndroidLifecycleScope
@@ -27,5 +28,9 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
 
     bind<ProfileFollowingViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) { ProfileFollowingViewModel(instance(), instance(), instance()) }
+    }
+
+    bind<ProfilePostViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
+        KotlinViewModelProvider.of(context) { ProfilePostViewModel(instance(), instance()) }
     }
 }

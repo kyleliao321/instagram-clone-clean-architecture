@@ -61,6 +61,18 @@ class ProfileEditViewModel(
         }
     }
 
+    private fun onFailureWhenLoadUserProfile(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenLoadUserProfile)
+        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserProfile)
+        else -> throw Exception("Unknown failure when load user profile $failure")
+    }
+
+    private fun onFailureWhenUpdateUserProfile(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenUpdateUserProfile)
+        is Failure.ServerError -> sendAction(Action.ServerErrorWhenUpdateUserProfile)
+        else -> throw Exception("Unknown failure when update user profile $failure")
+    }
+
     override fun onLoadData() {
         onLoadUserProfile()
     }
@@ -100,18 +112,6 @@ class ProfileEditViewModel(
         is Action.StartUpdatingUserProfile -> state.copy(
             isUserProfileLoading = true
         )
-    }
-
-    private fun onFailureWhenLoadUserProfile(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenLoadUserProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserProfile)
-        else -> throw Exception("Unknown failure when load user profile $failure")
-    }
-
-    private fun onFailureWhenUpdateUserProfile(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenUpdateUserProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenUpdateUserProfile)
-        else -> throw Exception("Unknown failure when update user profile $failure")
     }
 
     data class ViewState(

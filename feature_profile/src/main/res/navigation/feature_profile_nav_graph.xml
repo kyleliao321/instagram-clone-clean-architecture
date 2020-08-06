@@ -22,6 +22,10 @@
             android:id="@+id/action_profileMainFragment_to_profileFollowingFragment"
             app:destination="@id/profileFollowingFragment" />
 
+        <action
+            android:id="@+id/action_profileMainFragment_to_profilePostFragment"
+            app:destination="@id/profilePostFragment" />
+
         <argument
             android:name="userId"
             app:argType="integer" />
@@ -71,5 +75,17 @@
             app:argType="integer" />
     </fragment>
 
+    <fragment
+        android:id="@+id/profilePostFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.post.ProfilePostFragment"
+        android:label="ProfilePostFragment"
+        app:moduleName="@string/module_name">
+
+
+        <argument
+            android:name="postId"
+            app:argType="integer" />
+
+    </fragment>
 
 </navigation>
