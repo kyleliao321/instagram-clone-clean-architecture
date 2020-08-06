@@ -13,7 +13,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ProfileMainViewModel(
     private val navigationManager: NavigationManager,
@@ -40,7 +39,7 @@ class ProfileMainViewModel(
                 onSucceed = { userProfile ->
                     sendAction(Action.UserProfileLoaded(userProfile))
                 },
-                onFail = ::onFailure
+                onFail = ::onFailureWhenLoadUserProfile
             )
         }
     }
@@ -52,15 +51,21 @@ class ProfileMainViewModel(
                 onSucceed = { userPost ->
                     sendAction(Action.UserPostLoaded(userPost))
                 },
-                onFail = ::onFailure
+                onFail = ::onFailureWhenLoadUserPost
             )
         }
     }
 
-    private fun onFailure(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFail)
+    private fun onFailureWhenLoadUserProfile(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadUserProfile)
         is Failure.NullValue -> sendAction(Action.FailOnFetchingUserProfile)
-        else -> sendAction(Action.FailWithUnknownIssue)
+        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserProfile)
+    }
+
+    private fun onFailureWhenLoadUserPost(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadUserPost)
+        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserPosts)
+        else -> throw Exception("Unknown failure when load user posts : $failure")
     }
 
     override fun onLoadData() {
@@ -77,21 +82,34 @@ class ProfileMainViewModel(
             isPostLoading = false,
             userPosts = action.userPost
         )
-        is Action.NetworkConnectionFail -> state.copy(
+        is Action.NetworkConnectionFailWhenLoadUserProfile -> state.copy(
             isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = true,
-            isUnknownError = false,
-            userProfile = null,
+            isServerError = false,
+            userProfile = null
+        )
+        is Action.NetworkConnectionFailWhenLoadUserPost -> state.copy(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = true,
+            isServerError = false,
             userPosts = listOf()
         )
-        is Action.FailWithUnknownIssue -> state.copy(
+        is Action.ServerErrorWhenLoadUserProfile -> state.copy(
             isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
             isUserProfileError = false,
-            isUnknownError = true,
-            userProfile = null,
+            isServerError = true,
+            userProfile = null
+        )
+        is Action.ServerErrorWhenLoadUserPosts -> state.copy(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = false,
+            isUserProfileError = false,
+            isServerError = true,
             userPosts = listOf()
         )
         is Action.FailOnFetchingUserProfile -> state.copy(
@@ -99,9 +117,8 @@ class ProfileMainViewModel(
             isPostLoading = false,
             isNetworkError = false,
             isUserProfileError = true,
-            isUnknownError = false,
-            userProfile = null,
-            userPosts = listOf()
+            isServerError = false,
+            userProfile = null
         )
     }
 
@@ -112,14 +129,16 @@ class ProfileMainViewModel(
         val isPostLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isUserProfileError: Boolean = false,
-        val isUnknownError: Boolean = false
+        val isServerError: Boolean = false
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class UserProfileLoaded(val userProfile: UserDomainModel) : Action()
         class UserPostLoaded(val userPost: List<PostDomainModel>) : Action()
-        object NetworkConnectionFail : Action()
+        object NetworkConnectionFailWhenLoadUserProfile : Action()
+        object NetworkConnectionFailWhenLoadUserPost : Action()
+        object ServerErrorWhenLoadUserProfile : Action()
+        object ServerErrorWhenLoadUserPosts : Action()
         object FailOnFetchingUserProfile : Action()
-        object FailWithUnknownIssue : Action()
     }
 }
