@@ -28,6 +28,12 @@ android {
     buildFeatures {
         dataBinding true
     }
+
+    // Temporary solution for "kotlinx-coroutines-test" dependency conflict in library_base
+    packagingOptions {
+        exclude("META-INF/AL2.0")
+        exclude("META-INF/LGPL2.1")
+    }
 }
 
 dependencies {
