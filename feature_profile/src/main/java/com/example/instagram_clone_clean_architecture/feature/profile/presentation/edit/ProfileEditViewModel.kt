@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -19,11 +20,15 @@ class ProfileEditViewModel(
     private val args: ProfileEditFragmentArgs,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfileEditViewModel.ViewState, ProfileEditViewModel.Action>(ProfileEditViewModel.ViewState()) {
 
-    fun onNavigateToMainProfile() {
-        // TODO: Navigate to main profile fragment
+    fun onNavigateToMainProfile() = viewModelScope.launch(defaultDispatcher) {
+        val navDir = ProfileEditFragmentDirections.actionProfileEditFragmentToProfileMainFragment(args.userId)
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
     }
 
     fun onUpdateUserProfile() = viewModelScope.launch(defaultDispatcher) {

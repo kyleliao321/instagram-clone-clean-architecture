@@ -19,7 +19,7 @@ abstract class UseCase<out Type, in Params>(
      * Since the UseCase is the bridge between ViewModel and Data Repository, by design,
      * it always involve data manipulation. So we can launch the callback in IO thread.
      */
-    suspend operator fun invoke(params: Params, onResult: (Either<Type, Failure>) -> Unit) {
+    suspend operator fun invoke(params: Params, onResult: (Either<Type, Failure>) -> Unit = {}) {
         val job = withContext(defaultDispatcher) { return@withContext run(params) }
         onResult(job)
     }

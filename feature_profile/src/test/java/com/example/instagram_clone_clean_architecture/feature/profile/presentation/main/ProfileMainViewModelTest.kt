@@ -7,6 +7,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -34,7 +35,7 @@ class ProfileMainViewModelTest {
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule()
 
-    @MockK
+    @MockK(relaxed = true)
     internal lateinit var profileMainFragmentArgs: ProfileMainFragmentArgs
 
     @MockK(relaxed = true)
@@ -49,6 +50,8 @@ class ProfileMainViewModelTest {
     private lateinit var getUserProfileUseCase: GetUserProfileUseCase
 
     private lateinit var getUserPostUseCase: GetUserPostUseCase
+
+    private lateinit var navigationUseCase: NavigationUseCase
 
     private lateinit var testViewModel: ProfileMainViewModel
 
@@ -73,11 +76,13 @@ class ProfileMainViewModelTest {
 
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getUserPostUseCase = GetUserPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
         testViewModel = ProfileMainViewModel(
             profileMainFragmentArgs,
             getUserProfileUseCase,
             getUserPostUseCase,
+            navigationUseCase,
             mainCoroutineRule.testDispatcher
         )
 
@@ -87,6 +92,33 @@ class ProfileMainViewModelTest {
     @After
     fun teardown() {
         testViewModel.stateLiveData.removeObserver(observer)
+    }
+
+    @Test
+    fun `should invoke onNavEvent inside navigationManager when navigate to edit profile fragment`() {
+        // given
+        mainCoroutineRule.runBlockingTest { testViewModel.onNavigateToEditProfile() }
+
+        // expect
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
+    }
+
+    @Test
+    fun `should invoke onNavEvent inside navigationManager when navigate to follower profile fragment`() {
+        // given
+        mainCoroutineRule.runBlockingTest { testViewModel.onNavigateToFollowerProfile() }
+
+        // expect
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
+    }
+
+    @Test
+    fun `should invoke onNavEvent inside navigationManager when navigate to following profile fragment`() {
+        // given
+        mainCoroutineRule.runBlockingTest { testViewModel.onNavigateToFollowingProfile() }
+
+        // expect
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
     }
 
     @Test
@@ -104,8 +136,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase and getUserPostUseCase succeed`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
@@ -127,8 +157,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase failed`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(null)
 
@@ -149,8 +177,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase failed on network connection`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
@@ -171,8 +197,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when only getUserPostUseCase failed on network connection`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Failure(Failure.NetworkConnection)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
@@ -193,8 +217,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase and getUserPostUseCase failed on network connection`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Failure(Failure.NetworkConnection)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
@@ -215,8 +237,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase failed on server error`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Success(correctUserPost)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
 
@@ -237,8 +257,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when only getUserPostUseCase failed on server error`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Failure(Failure.ServerError)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
@@ -259,8 +277,6 @@ class ProfileMainViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase and getUserPostUseCase failed on server error`() {
         // given
-        every { profileMainFragmentArgs.userId } returns correctUserId
-
         every { runBlocking { profileRepository.getPostByUserId(any()) } } returns Either.Failure(Failure.ServerError)
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
 

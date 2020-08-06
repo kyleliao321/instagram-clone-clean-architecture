@@ -8,10 +8,10 @@ import com.example.library_base.presentation.navigation.NavigationManager
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class NavigateToEditProfileUseCase(
+class NavigationUseCase(
     private val navigationManager: NavigationManager,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : UseCase<Unit, NavigateToEditProfileUseCase.Param>(defaultDispatcher) {
+) : UseCase<Unit, NavigationUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<Unit, Failure> {
         navigationManager.onNavEvent(params.navDirections)

@@ -5,6 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -13,19 +14,39 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.kodein.di.bindings.ArgSetBinding
 
 class ProfileMainViewModel(
     private val args: ProfileMainFragmentArgs,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getUserPostUseCase: GetUserPostUseCase,
+    private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
+
     fun onNavigateToPostDetail(post: PostDomainModel) {
         // TODO: Call navigation manger to navigate to post detail fragment
     }
 
-    fun onNavigateToEditProfile(user: UserDomainModel) {
-        // TODO: Call navigation manager to navigate to profile edit fragment
+    fun onNavigateToEditProfile() = viewModelScope.launch(defaultDispatcher) {
+        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileEditFragment(args.userId)
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
+    }
+
+    fun onNavigateToFollowerProfile() = viewModelScope.launch(defaultDispatcher) {
+        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowerFragment(args.userId)
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
+    }
+
+    fun onNavigateToFollowingProfile() = viewModelScope.launch(defaultDispatcher) {
+        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowingFragment(args.userId)
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
     }
 
     private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {

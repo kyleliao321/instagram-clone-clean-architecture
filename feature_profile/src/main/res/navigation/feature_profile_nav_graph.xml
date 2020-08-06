@@ -2,17 +2,25 @@
 <navigation
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:moduleName="feature_profile"
+    app:moduleName="@string/module_name"
     app:startDestination="@id/profileMainFragment">
 
     <fragment
         android:id="@+id/profileMainFragment"
         android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainFragment"
         android:label="ProfileMainFragment"
-        app:moduleName="feature_profile">
+        app:moduleName="@string/module_name">
         <action
             android:id="@+id/action_profileMainFragment_to_profileEditFragment"
             app:destination="@+id/profileEditFragment" />
+
+        <action
+            android:id="@+id/action_profileMainFragment_to_profileFollowerFragment"
+            app:destination="@id/profileFollowerFragment" />
+
+        <action
+            android:id="@+id/action_profileMainFragment_to_profileFollowingFragment"
+            app:destination="@id/profileFollowingFragment" />
 
         <argument
             android:name="userId"
@@ -23,7 +31,7 @@
         android:id="@+id/profileEditFragment"
         android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.edit.ProfileEditFragment"
         android:label="ProfileEditFragment"
-        app:moduleName="feature_profile">
+        app:moduleName="@string/module_name">
         <action
             android:id="@+id/action_profileEditFragment_to_profileMainFragment"
             app:destination="@id/profileMainFragment"/>
@@ -32,5 +40,36 @@
             android:name="userId"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFollowerFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower.ProfileFollowerFragment"
+        android:label="ProfileFollowerFragment"
+        app:moduleName="@string/module_name">
+
+        <action
+            android:id="@+id/action_profileFollowerFragment_to_profileMainFragment"
+            app:destination="@+id/profileMainFragment"/>
+
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFollowingFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.following.ProfileFollowingFragment"
+        android:label="ProfileFollowingFragment"
+        app:moduleName="@string/module_name">
+
+        <action
+            android:id="@+id/action_profileFollowingFragment_to_profileMainFragment"
+            app:destination="@+id/profileMainFragment"/>
+
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+
 
 </navigation>
