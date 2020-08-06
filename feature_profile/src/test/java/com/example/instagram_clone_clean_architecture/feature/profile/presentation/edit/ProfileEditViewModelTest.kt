@@ -33,6 +33,9 @@ class ProfileEditViewModelTest {
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule()
 
+    @MockK
+    internal lateinit var profileEditFragmentArgs: ProfileEditFragmentArgs
+
     @MockK(relaxed = true)
     internal lateinit var profileRepository: ProfileRepository
 
@@ -51,8 +54,10 @@ class ProfileEditViewModelTest {
     /**
      * Mock data
      */
+    private val correctUserId = 1
+
     private val correctUserProfile = UserDomainModel(
-        id = 1, name = "Kyle", userName = "kyle", postNum = 1, followingNum = 1, followerNum = 1
+        id = correctUserId, name = "Kyle", userName = "kyle", postNum = 1, followingNum = 1, followerNum = 1
     )
 
     private val editedUserProfile = correctUserProfile.copy(userName = "kyle0321")
@@ -65,7 +70,7 @@ class ProfileEditViewModelTest {
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel = ProfileEditViewModel(
-            navigationManager,
+            profileEditFragmentArgs,
             getUserProfileUseCase,
             updateUserProfileUseCase,
             mainCoroutineRule.testDispatcher
@@ -93,6 +98,7 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when getUserProfile succeed`() {
         // given
+        every { profileEditFragmentArgs.userId } returns correctUserId
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
         // when
@@ -111,6 +117,7 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase fail on network connection`() {
         // given
+        every { profileEditFragmentArgs.userId } returns correctUserId
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
@@ -129,6 +136,7 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase fail on server error`() {
         // given
+        every { profileEditFragmentArgs.userId } returns correctUserId
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(null) // this should be interpreted as server error
 
         // when
@@ -146,6 +154,9 @@ class ProfileEditViewModelTest {
 
     @Test
     fun `verify view state when updateUserProfileUseCase succeed`() {
+
+        every { profileEditFragmentArgs.userId } returns correctUserId
+
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Success(editedUserProfile)
@@ -170,6 +181,9 @@ class ProfileEditViewModelTest {
 
     @Test
     fun `verify view state when updateUserProfileUseCase fail on network connection`() {
+
+        every { profileEditFragmentArgs.userId } returns correctUserId
+
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.NetworkConnection)
@@ -194,6 +208,9 @@ class ProfileEditViewModelTest {
 
     @Test
     fun `verify view state when updateUserProfileUseCase fail on server error`() {
+
+        every { profileEditFragmentArgs.userId } returns correctUserId
+
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.ServerError)

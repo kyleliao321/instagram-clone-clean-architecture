@@ -16,14 +16,11 @@ import timber.log.Timber
 import java.lang.Exception
 
 class ProfileEditViewModel(
-    private val navigationManager: NavigationManager,
+    private val args: ProfileEditFragmentArgs,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfileEditViewModel.ViewState, ProfileEditViewModel.Action>(ProfileEditViewModel.ViewState()) {
-
-    // TODO: should come from navigation argument
-    private val userId = 1
 
     fun onNavigateToMainProfile() {
         // TODO: Navigate to main profile fragment
@@ -48,7 +45,7 @@ class ProfileEditViewModel(
 
 
     private fun onLoadUserProfile() = viewModelScope.launch(defaultDispatcher) {
-        val params = GetUserProfileUseCase.Param(userId)
+        val params = GetUserProfileUseCase.Param(args.userId)
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->

@@ -15,15 +15,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileMainViewModel(
-    private val navigationManager: NavigationManager,
+    private val args: ProfileMainFragmentArgs,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getUserPostUseCase: GetUserPostUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
-
-    // TODO: This parameter should come form Navigation Argument
-    private val userId: Int = 1
-
     fun onNavigateToPostDetail(post: PostDomainModel) {
         // TODO: Call navigation manger to navigate to post detail fragment
     }
@@ -33,7 +29,7 @@ class ProfileMainViewModel(
     }
 
     private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {
-        val params = GetUserProfileUseCase.Param(userId)
+        val params = GetUserProfileUseCase.Param(args.userId)
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->
@@ -45,7 +41,7 @@ class ProfileMainViewModel(
     }
 
     private fun loadUserPost() = viewModelScope.launch(defaultDispatcher)  {
-        val params = GetUserPostUseCase.Param(userId)
+        val params = GetUserPostUseCase.Param(args.userId)
         getUserPostUseCase(params) {
             it.fold(
                 onSucceed = { userPost ->

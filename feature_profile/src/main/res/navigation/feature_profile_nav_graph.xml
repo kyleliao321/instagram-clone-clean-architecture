@@ -10,6 +10,27 @@
         android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainFragment"
         android:label="ProfileMainFragment"
         app:moduleName="feature_profile">
+        <action
+            android:id="@+id/action_profileMainFragment_to_profileEditFragment"
+            app:destination="@+id/profileEditFragment" />
+
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileEditFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.profile.presentation.edit.ProfileEditFragment"
+        android:label="ProfileEditFragment"
+        app:moduleName="feature_profile">
+        <action
+            android:id="@+id/action_profileEditFragment_to_profileMainFragment"
+            app:destination="@id/profileMainFragment"/>
+
+        <argument
+            android:name="userId"
+            app:argType="integer" />
     </fragment>
 
 </navigation>
