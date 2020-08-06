@@ -91,7 +91,6 @@ class ProfileMainViewModelTest {
             isPostLoading = true,
             isNetworkError = false,
             isServerError = false,
-            isUserProfileError = false,
             userProfile = null,
             userPosts = listOf()
         )
@@ -108,7 +107,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = false,
             isNetworkError = false,
             isPostLoading = false,
@@ -130,8 +128,7 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = true,
-            isServerError = false,
+            isServerError = true,
             isNetworkError = false,
             isPostLoading = false,
             isProfileLoading = false,
@@ -151,7 +148,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = false,
             isNetworkError = true,
             isPostLoading = false,
@@ -172,7 +168,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = false,
             isNetworkError = true,
             isPostLoading = false,
@@ -193,7 +188,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = false,
             isNetworkError = true,
             isPostLoading = false,
@@ -214,7 +208,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = true,
             isNetworkError = false,
             isPostLoading = false,
@@ -235,7 +228,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = true,
             isNetworkError = false,
             isPostLoading = false,
@@ -256,7 +248,6 @@ class ProfileMainViewModelTest {
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
-            isUserProfileError = false,
             isServerError = true,
             isNetworkError = false,
             isPostLoading = false,

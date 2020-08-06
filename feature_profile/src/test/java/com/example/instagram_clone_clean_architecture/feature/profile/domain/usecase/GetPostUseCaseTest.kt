@@ -70,7 +70,7 @@ class GetPostUseCaseTest {
         }
 
         result shouldBeInstanceOf Either.Failure::class.java
-        result shouldBeEqualTo Either.Failure(Failure.NullValue)
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
     @Test
 

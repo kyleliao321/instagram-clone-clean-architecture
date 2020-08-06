@@ -18,7 +18,7 @@ class GetPostUseCase(
 
         profileRepository.getPostByPostId(params.id).fold(
             onSucceed = { post ->
-                if (post == null) result = Either.Failure(Failure.NullValue)
+                if (post == null) result = Either.Failure(Failure.ServerError)
                 else result = Either.Success(post)
             },
             onFail = { failure ->

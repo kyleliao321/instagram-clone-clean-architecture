@@ -58,8 +58,7 @@ class ProfileMainViewModel(
 
     private fun onFailureWhenLoadUserProfile(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadUserProfile)
-        is Failure.NullValue -> sendAction(Action.FailOnFetchingUserProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserProfile)
+        else -> sendAction(Action.ServerErrorWhenLoadUserProfile)
     }
 
     private fun onFailureWhenLoadUserPost(failure: Failure) = when (failure) {
@@ -100,7 +99,6 @@ class ProfileMainViewModel(
             isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
-            isUserProfileError = false,
             isServerError = true,
             userProfile = null
         )
@@ -108,17 +106,8 @@ class ProfileMainViewModel(
             isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
-            isUserProfileError = false,
             isServerError = true,
             userPosts = listOf()
-        )
-        is Action.FailOnFetchingUserProfile -> state.copy(
-            isProfileLoading = false,
-            isPostLoading = false,
-            isNetworkError = false,
-            isUserProfileError = true,
-            isServerError = false,
-            userProfile = null
         )
     }
 
@@ -128,7 +117,6 @@ class ProfileMainViewModel(
         val isProfileLoading: Boolean = true,
         val isPostLoading: Boolean = true,
         val isNetworkError: Boolean = false,
-        val isUserProfileError: Boolean = false,
         val isServerError: Boolean = false
     ) : BaseViewState
 
@@ -139,6 +127,5 @@ class ProfileMainViewModel(
         object NetworkConnectionFailWhenLoadUserPost : Action()
         object ServerErrorWhenLoadUserProfile : Action()
         object ServerErrorWhenLoadUserPosts : Action()
-        object FailOnFetchingUserProfile : Action()
     }
 }
