@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+<!--        <variable-->
+<!--            name="userProfile"-->
+<!--            type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel" />-->
+<!--        <variable-->
+<!--            name="isLoading"-->
+<!--            type="Boolean" />-->
+<!--        <variable-->
+<!--            name="isNetworkError"-->
+<!--            type="Boolean" />-->
+<!--        <variable-->
+<!--            name="isServerError"-->
+<!--            type="Boolean" />-->
+
+<!--        <import type="android.view.View"/>-->
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="20dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/user_profile_image_top_guideline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="40dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/user_profile_numbers_top_guideline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="55dp" />
+        
+        <ImageView
+            android:id="@+id/user_profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/user_profile_post_number"
+            app:layout_constraintTop_toTopOf="@id/user_profile_image_top_guideline"
+            android:src="@drawable/user_profile_default_image"/>
+
+        <TextView
+            android:id="@+id/user_profile_post_number"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@id/user_profile_image"
+            app:layout_constraintEnd_toStartOf="@id/user_profile_follower_number"
+            app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
+            android:text="100" />
+        <TextView
+            android:id="@+id/user_profile_post_info_text"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintStart_toEndOf="@id/user_profile_image"
+            app:layout_constraintEnd_toStartOf="@id/user_profile_follower_info_text"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_post_number"
+            android:text="Post" />
+
+
+        <TextView
+            android:id="@+id/user_profile_follower_number"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@id/user_profile_post_number"
+            app:layout_constraintEnd_toStartOf="@id/user_following_number"
+            app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
+            android:text="100" />
+        <TextView
+            android:id="@+id/user_profile_follower_info_text"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintStart_toEndOf="@id/user_profile_post_info_text"
+            app:layout_constraintEnd_toStartOf="@id/user_profile_following_info_text"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_follower_number"
+            android:text="Follower" />
+
+        <TextView
+            android:id="@+id/user_following_number"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            app:layout_constraintStart_toEndOf="@id/user_profile_follower_number"
+            app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="100" />
+        <TextView
+            android:id="@+id/user_profile_following_info_text"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintStart_toEndOf="@id/user_profile_follower_info_text"
+            app:layout_constraintTop_toBottomOf="@id/user_following_number"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="Follower" />
+
+        <Button
+            android:id="@+id/outlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Outlined button"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/user_profile_image"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
