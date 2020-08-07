@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.MODULE_NAM
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.edit.ProfileEditViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower.ProfileFollowerViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.following.ProfileFollowingViewModel
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.post.ProfilePostViewModel
 import com.example.library_base.domain.utility.KotlinViewModelProvider
@@ -33,4 +34,9 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
     bind<ProfilePostViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) { ProfilePostViewModel(instance(), instance()) }
     }
+
+    /**
+     * Mock fragment arguments. This should be deleted when the entire data flow is setup.
+     */
+    bind<ProfileMainFragmentArgs>() with provider { ProfileMainFragmentArgs.Builder(1).build() }
 }

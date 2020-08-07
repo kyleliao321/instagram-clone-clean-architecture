@@ -25,8 +25,8 @@ class FragmentArgsExternalSource : ExternalSource {
             val deductedArgsName = fragment.javaClass.canonicalName + "Args"
 
             Timber.d("Deducted argument class : $deductedArgsName")
-            Timber.d("Actual java class canonical name : ${key.type.jvmType.javaClass.canonicalName}")
-            if (deductedArgsName == key.type.jvmType.javaClass.canonicalName) {
+            Timber.d("Actual java class canonical name : ${key.type}")
+            if (deductedArgsName == key.type.toString()) {
                 val navArgsInstance = getNavArgsInstance(fragment)
 
                 if (navArgsInstance != null) {
