@@ -5,6 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import kotlinx.coroutines.delay
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -32,10 +33,21 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
     private val postMap: HashMap<Int, PostDomainModel> = hashMapOf(
         1 to PostDomainModel(id = 1, belongUserId = 1, date = Date(), location = null, description = null,
             imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        ),
+        2 to PostDomainModel(id = 2, belongUserId = 1, date = Date(), location = null, description = null,
+            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        ),
+        3 to PostDomainModel(id = 3, belongUserId = 1, date = Date(), location = null, description = null,
+            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        ),
+        4 to PostDomainModel(id = 4, belongUserId = 1, date = Date(), location = null, description = null,
+            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
         )
     )
 
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
+        delay(1500)
+
         val userProfile = userProfileMap[id]
 
         return Either.Success(userProfile)
@@ -72,6 +84,8 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
     }
 
     override suspend fun getPostByUserId(id: Int): Either<List<PostDomainModel>, Failure> {
+        delay(2000)
+
         val userPostMap = postMap.filterValues {
             it.belongUserId == id
         }

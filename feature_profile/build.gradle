@@ -2,6 +2,7 @@ apply plugin: "com.android.dynamic-feature"
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: "androidx.navigation.safeargs"
+apply plugin: "kotlin-kapt"
 
 android {
     compileSdkVersion 30
@@ -27,6 +28,10 @@ android {
 
     buildFeatures {
         dataBinding true
+    }
+
+    sourceSets {
+        main.res.srcDirs = ['src/main/res']
     }
 
     // Temporary solution for "kotlinx-coroutines-test" dependency conflict in library_base

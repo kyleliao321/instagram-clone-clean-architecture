@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.kodein.di.bindings.ArgSetBinding
+import timber.log.Timber
 
 class ProfileMainViewModel(
     private val args: ProfileMainFragmentArgs,
@@ -25,7 +26,7 @@ class ProfileMainViewModel(
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
 
     fun onNavigateToPostDetail(post: PostDomainModel) {
-        // TODO: Call navigation manger to navigate to post detail fragment
+        Timber.d("Navigate to post $post")
     }
 
     fun onNavigateToEditProfile() = viewModelScope.launch(defaultDispatcher) {
