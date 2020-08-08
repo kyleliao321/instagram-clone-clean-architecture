@@ -88,4 +88,8 @@ dependencies {
     // Kluent
     def kluent_version = "1.61"
     testImplementation "org.amshove.kluent:kluent:${kluent_version}"
+
+
+    // Coil
+    api "io.coil-kt:coil:0.11.0"
 }

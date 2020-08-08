@@ -37,7 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/user_profile_post_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_image_top_guideline"
-            android:src="@drawable/user_profile_default_image"/>
+            app:userImage="@{userProfile.imageSrc}"/>
 
         <TextView
             android:id="@+id/user_profile_name"

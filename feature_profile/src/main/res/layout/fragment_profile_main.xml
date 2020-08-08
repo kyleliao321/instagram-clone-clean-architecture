@@ -42,7 +42,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3"
-            app:listData="@{viewModel.stateLiveData.userPosts}"
+            app:userPostData="@{viewModel.stateLiveData.userPosts}"
             tools:listitem="@layout/fragment_profile_main_user_posts_grid_view_item"/>
 
 
