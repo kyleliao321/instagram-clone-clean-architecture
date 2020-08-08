@@ -7,8 +7,8 @@
         <import type="android.view.View"/>
 
         <variable
-            name="userProfile"
-            type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel" />
+            name="viewModel"
+            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/user_profile_post_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_image_top_guideline"
-            app:userImage="@{userProfile.imageSrc}"/>
+            app:userImage="@{viewModel.stateLiveData.userProfile.imageSrc}"/>
 
         <TextView
             android:id="@+id/user_profile_name"
@@ -47,7 +47,7 @@
             app:layout_constraintTop_toBottomOf="@+id/user_profile_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/user_profile_post_info_text"
-            android:text="@{userProfile.name}" />
+            android:text="@{viewModel.stateLiveData.userProfile.name}" />
 
         <TextView
             android:id="@+id/user_profile_post_number"
@@ -58,7 +58,7 @@
             app:layout_constraintStart_toEndOf="@id/user_profile_image"
             app:layout_constraintEnd_toStartOf="@id/user_profile_follower_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
-            android:text="@{Integer.toString(userProfile.postNum)}" />
+            android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.postNum)}" />
         <TextView
             android:id="@+id/user_profile_post_info_text"
             android:layout_width="60dp"
@@ -80,7 +80,8 @@
             app:layout_constraintStart_toEndOf="@id/user_profile_post_number"
             app:layout_constraintEnd_toStartOf="@id/user_following_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
-            android:text="@{Integer.toString(userProfile.followerNum)}" />
+            android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.followerNum)}"
+            android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}"/>
         <TextView
             android:id="@+id/user_profile_follower_info_text"
             android:layout_width="60dp"
@@ -101,7 +102,8 @@
             app:layout_constraintStart_toEndOf="@id/user_profile_follower_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_numbers_top_guideline"
             app:layout_constraintEnd_toEndOf="parent"
-            android:text="@{Integer.toString(userProfile.followingNum)}" />
+            android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.followingNum)}"
+            android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}"/>
         <TextView
             android:id="@+id/user_profile_following_info_text"
             android:layout_width="60dp"
@@ -123,6 +125,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/user_profile_image"
+            android:onClick="@{() -> viewModel.onNavigateToEditProfile()}"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

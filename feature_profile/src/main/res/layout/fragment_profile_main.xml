@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            bind:userProfile="@{viewModel.stateLiveData.userProfile}" />
+            bind:viewModel="@{viewModel}"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
