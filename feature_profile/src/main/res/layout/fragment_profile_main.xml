@@ -17,16 +17,31 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/user_profile_container_shimmer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="@{viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
+
+            <include
+                layout="@layout/fragment_profile_main_user_profile_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <include
             layout="@layout/fragment_profile_main_user_profile"
-            android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
+            android:visibility="@{viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
             android:id="@+id/user_profile_container"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/user_post_container"
             bind:userProfile="@{viewModel.stateLiveData.userProfile}" />
 
         <androidx.recyclerview.widget.RecyclerView
