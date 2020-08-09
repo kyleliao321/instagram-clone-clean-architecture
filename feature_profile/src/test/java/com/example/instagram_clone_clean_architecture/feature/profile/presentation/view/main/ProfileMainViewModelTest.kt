@@ -124,6 +124,16 @@ class ProfileMainViewModelTest {
     }
 
     @Test
+    fun `should invoke onNavEvent inside navigationManager when navigate to post fragment`() {
+        // given
+        val post = correctUserPost[0]!!
+        mainCoroutineRule.runBlockingTest { testViewModel.onNavigateToPostDetail(post) }
+
+        // expect
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
+    }
+
+    @Test
     fun `profileMainViewModel should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
             isProfileLoading = true,

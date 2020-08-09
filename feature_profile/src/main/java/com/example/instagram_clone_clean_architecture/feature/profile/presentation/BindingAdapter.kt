@@ -24,11 +24,12 @@ fun bindUserProfileList(recyclerView: RecyclerView, data: List<UserDomainModel>)
 }
 
 @BindingAdapter("app:postImage")
-fun loadPostImage(imageView: ImageView, data: String) {
-    imageView.load(data) {
-        crossfade(true)
-        placeholder(R.drawable.image_loading_icon)
-        size(110, 110)
+fun loadPostImage(imageView: ImageView, data: String?) {
+    data?.let {
+        imageView.load(it) {
+            crossfade(true)
+            placeholder(R.drawable.image_loading_icon)
+        }
     }
 }
 

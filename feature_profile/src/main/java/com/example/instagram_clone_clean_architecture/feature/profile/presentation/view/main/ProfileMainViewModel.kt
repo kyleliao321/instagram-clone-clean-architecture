@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main
 
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
@@ -27,8 +28,13 @@ class ProfileMainViewModel(
     ViewState()
 ) {
 
-    fun onNavigateToPostDetail(post: PostDomainModel) {
-        Timber.d("Navigate to post $post")
+    fun onNavigateToPostDetail(post: PostDomainModel) = viewModelScope.launch(defaultDispatcher) {
+        Timber.d("Navigate to $post")
+
+        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfilePostFragment(post.belongUserId, post.id)
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
     }
 
     fun onNavigateToEditProfile() = viewModelScope.launch(defaultDispatcher) {

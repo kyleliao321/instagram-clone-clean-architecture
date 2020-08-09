@@ -1,13 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
 
+        <variable
+            name="viewModel"
+            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_post_detail_height"
+            android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
+
+            <include
+                layout="@layout/fragment_profile_post_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <include
+            layout="@layout/fragment_post_detail_item_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_post_detail_height"
+            android:visibility="@{viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.postLoading ? View.GONE : View.VISIBLE}"
+            bind:viewModel="@{viewModel}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

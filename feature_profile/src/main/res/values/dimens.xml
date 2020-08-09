@@ -15,4 +15,7 @@
     <dimen name="user_post_item_size">100dp</dimen>
     <dimen name="user_post_item_margin">10dp</dimen>
 
+    <!-- User Post Detail View default dimensions -->
+    <dimen name="user_post_detail_height">400dp</dimen>
+
 </resources>
