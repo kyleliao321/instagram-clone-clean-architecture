@@ -1,9 +1,9 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase
 
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.edit.ProfileEditFragmentDirections
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower.ProfileFollowerFragmentDirections
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.following.ProfileFollowingFragmentDirections
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentDirections
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either

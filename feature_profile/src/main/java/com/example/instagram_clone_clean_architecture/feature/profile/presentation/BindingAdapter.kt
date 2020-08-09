@@ -7,11 +7,19 @@ import coil.api.load
 import coil.transform.CircleCropTransformation
 import com.example.feature_profile.R
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.adapter.UserPostGridViewAdapter
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
 
 @BindingAdapter("app:userPostData")
 fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>) {
     val adapter = recyclerView.adapter as UserPostGridViewAdapter
+    adapter.submitList(data)
+}
+
+@BindingAdapter("app:userProfileList")
+fun bindUserProfileList(recyclerView: RecyclerView, data: List<UserDomainModel>) {
+    val adapter = recyclerView.adapter as UserProfileListViewAdapter
     adapter.submitList(data)
 }
 

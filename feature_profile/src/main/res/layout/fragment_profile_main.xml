@@ -10,7 +10,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel" />
+            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,8 +20,9 @@
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/user_profile_container_shimmer"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/user_profile_container_height"
+            android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:visibility="@{viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
@@ -29,7 +30,7 @@
             <include
                 layout="@layout/fragment_profile_main_user_profile_shimmer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/user_profile_container_height" />
+                android:layout_height="match_parent" />
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -38,11 +39,19 @@
             android:visibility="@{viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
             android:id="@+id/user_profile_container"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/user_profile_container_height"
+            android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             bind:viewModel="@{viewModel}"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/user_profile_post_list_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="@integer/user_profile_and_post_guide_line_percent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
@@ -51,7 +60,7 @@
             android:scrollbars="vertical"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_container"
+            app:layout_constraintTop_toBottomOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

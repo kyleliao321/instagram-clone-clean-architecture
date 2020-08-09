@@ -1,10 +1,11 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.post
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -15,7 +16,6 @@ import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -58,11 +58,12 @@ class ProfilePostViewModelTest {
 
         getPostUseCase = GetPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
-        testViewModel = ProfilePostViewModel(
-            profilePostFragmentArgs,
-            getPostUseCase,
-            mainCoroutineRule.testDispatcher
-        )
+        testViewModel =
+            ProfilePostViewModel(
+                profilePostFragmentArgs,
+                getPostUseCase,
+                mainCoroutineRule.testDispatcher
+            )
 
         testViewModel.stateLiveData.observeForever(observer)
     }

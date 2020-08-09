@@ -1,9 +1,11 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.following
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentArgs
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentDirections
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -17,10 +19,15 @@ class ProfileFollowingViewModel(
     private val getFollowingUserUseCase: GetFollowingUserUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : BaseViewModel<ProfileFollowingViewModel.ViewState, ProfileFollowingViewModel.Action>(ProfileFollowingViewModel.ViewState()) {
+) : BaseViewModel<ProfileFollowingViewModel.ViewState, ProfileFollowingViewModel.Action>(
+    ViewState()
+) {
 
     fun onNavigateToUserProfile(userProfile: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileFollowingFragmentDirections.actionProfileFollowingFragmentToProfileMainFragment(userProfile.id)
+        val navDir =
+            ProfileFollowingFragmentDirections.actionProfileFollowingFragmentToProfileMainFragment(
+                userProfile.id
+            )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
@@ -32,7 +39,11 @@ class ProfileFollowingViewModel(
         getFollowingUserUseCase(params) {
             it.fold(
                 onSucceed = { followingList ->
-                    sendAction(Action.FollowingListLoaded(followingList))
+                    sendAction(
+                        Action.FollowingListLoaded(
+                            followingList
+                        )
+                    )
                 },
                 onFail = ::onFailureWhenLoadFollowingList
             )

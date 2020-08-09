@@ -1,9 +1,11 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowerUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerFragmentArgs
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerFragmentDirections
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -17,10 +19,15 @@ class ProfileFollowerViewModel(
     private val getFollowerUserUseCase: GetFollowerUserUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : BaseViewModel<ProfileFollowerViewModel.ViewState, ProfileFollowerViewModel.Action>(ProfileFollowerViewModel.ViewState()) {
+) : BaseViewModel<ProfileFollowerViewModel.ViewState, ProfileFollowerViewModel.Action>(
+    ViewState()
+) {
 
     fun onNavigateToUserProfile(userProfile: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileFollowerFragmentDirections.actionProfileFollowerFragmentToProfileMainFragment(userProfile.id)
+        val navDir =
+            ProfileFollowerFragmentDirections.actionProfileFollowerFragmentToProfileMainFragment(
+                userProfile.id
+            )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
@@ -33,7 +40,11 @@ class ProfileFollowerViewModel(
         getFollowerUserUseCase(params) {
             it.fold(
                 onSucceed = { followerList ->
-                    sendAction(Action.FollowerListLoaded(followerList))
+                    sendAction(
+                        Action.FollowerListLoaded(
+                            followerList
+                        )
+                    )
                 },
                 onFail = ::onFailureWhenLoadFollowerList
             )

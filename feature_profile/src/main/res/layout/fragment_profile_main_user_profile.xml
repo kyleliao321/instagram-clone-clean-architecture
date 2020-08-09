@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.main.ProfileMainViewModel" />
+            type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

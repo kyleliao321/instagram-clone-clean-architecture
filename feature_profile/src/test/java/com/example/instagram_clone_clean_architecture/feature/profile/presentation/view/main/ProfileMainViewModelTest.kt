@@ -1,4 +1,4 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.main
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -8,6 +8,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -78,13 +79,14 @@ class ProfileMainViewModelTest {
         getUserPostUseCase = GetUserPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
-        testViewModel = ProfileMainViewModel(
-            profileMainFragmentArgs,
-            getUserProfileUseCase,
-            getUserPostUseCase,
-            navigationUseCase,
-            mainCoroutineRule.testDispatcher
-        )
+        testViewModel =
+            ProfileMainViewModel(
+                profileMainFragmentArgs,
+                getUserProfileUseCase,
+                getUserPostUseCase,
+                navigationUseCase,
+                mainCoroutineRule.testDispatcher
+            )
 
         testViewModel.stateLiveData.observeForever(observer)
     }

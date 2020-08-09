@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- User Profile default dimensions -->
-    <dimen name="user_profile_container_height">240dp</dimen>
     <dimen name="user_profile_container_padding">20dp</dimen>
     <dimen name="user_profile_image_top_guideline_margin">40dp</dimen>
     <dimen name="user_profile_numbers_container_top_guideline_margin">55dp</dimen>
@@ -10,8 +9,10 @@
     <dimen name="user_profile_number_text_height">30dp</dimen>
     <dimen name="user_profile_edit_button_top_margin">10dp</dimen>
 
+    <dimen name="user_profile_and_post_divider_percent">.3</dimen>
+
     <!-- User Post Recycler View default dimensions -->
-    <dimen name="user_post_item_size">110dp</dimen>
+    <dimen name="user_post_item_size">100dp</dimen>
     <dimen name="user_post_item_margin">10dp</dimen>
 
 </resources>

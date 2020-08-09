@@ -1,8 +1,9 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.post
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -15,14 +16,20 @@ class ProfilePostViewModel(
     private val args: ProfilePostFragmentArgs,
     private val getPostUseCase: GetPostUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : BaseViewModel<ProfilePostViewModel.ViewState, ProfilePostViewModel.Action>(ProfilePostViewModel.ViewState()) {
+) : BaseViewModel<ProfilePostViewModel.ViewState, ProfilePostViewModel.Action>(
+    ViewState()
+) {
 
     private fun onLoadPost() = viewModelScope.launch(defaultDispatcher) {
         val params = GetPostUseCase.Param(args.postId)
         getPostUseCase(params) {
             it.fold(
                 onSucceed = { post ->
-                    sendAction(Action.PostLoaded(post))
+                    sendAction(
+                        Action.PostLoaded(
+                            post
+                        )
+                    )
                 },
                 onFail = ::onFailureWhenLoadPost
             )

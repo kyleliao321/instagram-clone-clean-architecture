@@ -1,13 +1,14 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.edit
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import androidx.navigation.Navigation
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentArgs
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentDirections
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -74,13 +75,14 @@ class ProfileEditViewModelTest {
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
-        testViewModel = ProfileEditViewModel(
-            profileEditFragmentArgs,
-            getUserProfileUseCase,
-            updateUserProfileUseCase,
-            navigationUseCase,
-            mainCoroutineRule.testDispatcher
-        )
+        testViewModel =
+            ProfileEditViewModel(
+                profileEditFragmentArgs,
+                getUserProfileUseCase,
+                updateUserProfileUseCase,
+                navigationUseCase,
+                mainCoroutineRule.testDispatcher
+            )
 
         testViewModel.stateLiveData.observeForever(observer)
     }
@@ -93,7 +95,10 @@ class ProfileEditViewModelTest {
     @Test
     fun `should invoke onNavEvent inside navigationManager when navigate to main profile fragment`() {
         // given
-        val navDir = ProfileEditFragmentDirections.actionProfileEditFragmentToProfileMainFragment(1)
+        val navDir =
+            ProfileEditFragmentDirections.actionProfileEditFragmentToProfileMainFragment(
+                1
+            )
         val params = NavigationUseCase.Param(navDir)
 
         // when

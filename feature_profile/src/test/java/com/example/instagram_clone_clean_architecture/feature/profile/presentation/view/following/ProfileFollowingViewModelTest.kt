@@ -1,11 +1,12 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.follower
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowerUserUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -16,10 +17,8 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.amshove.kluent.any
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -27,7 +26,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
 @RunWith(JUnit4::class)
-class ProfileFollowerViewModelTest {
+class ProfileFollowingViewModelTest {
 
     @get:Rule
     val rule = InstantTaskExecutorRule()
@@ -36,22 +35,22 @@ class ProfileFollowerViewModelTest {
     val mainCoroutineRule = CoroutineTestRule()
 
     @MockK(relaxed = true)
-    internal lateinit var profileFollowerFragmentArgs: ProfileFollowerFragmentArgs
-
-    @MockK(relaxed = true)
-    internal lateinit var navigationManager: NavigationManager
+    internal lateinit var profileFollowingFragmentArgs: ProfileFollowingFragmentArgs
 
     @MockK(relaxed = true)
     internal lateinit var profileRepository: ProfileRepository
 
     @MockK(relaxed = true)
-    internal lateinit var observer: Observer<ProfileFollowerViewModel.ViewState>
+    internal lateinit var navigationManager: NavigationManager
 
-    private lateinit var getFollowerUserUseCase: GetFollowerUserUseCase
+    @MockK(relaxed = true)
+    internal lateinit var observer: Observer<ProfileFollowingViewModel.ViewState>
 
-    private lateinit var navigationUseCase: NavigationUseCase
+    private lateinit var getFollowingUserUserUseCase: GetFollowingUserUseCase
 
-    private lateinit var testViewModel: ProfileFollowerViewModel
+    private lateinit var navigationUserCase: NavigationUseCase
+
+    private lateinit var testViewModel: ProfileFollowingViewModel
 
     /**
      * Mock data
@@ -60,7 +59,7 @@ class ProfileFollowerViewModelTest {
         id = 2, name = "Kyle", userName = "kyle", followerNum = 1, followingNum = 1, postNum = 1
     )
 
-    private val correctFollowerList = listOf(
+    private val correctFollowingList = listOf(
         UserDomainModel(id = 1, name = "anna", userName = "Anna", followingNum = 1, followerNum = 2, postNum = 1)
     )
 
@@ -68,15 +67,16 @@ class ProfileFollowerViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getFollowerUserUseCase = GetFollowerUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
+        getFollowingUserUserUseCase = GetFollowingUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        navigationUserCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
-        testViewModel = ProfileFollowerViewModel(
-            profileFollowerFragmentArgs,
-            getFollowerUserUseCase,
-            navigationUseCase,
-            mainCoroutineRule.testDispatcher
-        )
+        testViewModel =
+            ProfileFollowingViewModel(
+                profileFollowingFragmentArgs,
+                getFollowingUserUserUseCase,
+                navigationUserCase,
+                mainCoroutineRule.testDispatcher
+            )
 
         testViewModel.stateLiveData.observeForever(observer)
     }
@@ -96,63 +96,63 @@ class ProfileFollowerViewModelTest {
     }
 
     @Test
-    fun `profileFollowerViewModel should initialize with correct view state`() {
-        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
-            isFollowerLoading = true,
+    fun `profileFollowingViewModel should initialize with correct view state`() {
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
+            isFollowingListLoading = true,
             isServerError = false,
             isNetworkError = false,
-            followerList = listOf()
+            followingList = listOf()
         )
     }
 
     @Test
-    fun `verify view state when getFollowerUserUseCase succeed`() {
+    fun `verify view state when getFollowingUserUseCase succeed`() {
         // given
-        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Success(correctFollowerList)
+        every { runBlocking { profileRepository.getFollowingById(any()) } } returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
-            isFollowerLoading = false,
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
+            isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = false,
-            followerList = correctFollowerList
+            followingList = correctFollowingList
         )
     }
 
     @Test
-    fun `verify view state when getFollowerUserUseCase fail on network connection`() {
+    fun `verify view state when getFollowingUserUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getFollowingById(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
-            isFollowerLoading = false,
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
+            isFollowingListLoading = false,
             isNetworkError = true,
             isServerError = false,
-            followerList = listOf()
+            followingList = listOf()
         )
     }
 
     @Test
-    fun `verify view state when getFollowerUserUseCase fail on server error`() {
+    fun `verify view state when getFollowingUserUseCase fail on server error`() {
         // given
-        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getFollowingById(any()) } } returns Either.Failure(Failure.ServerError)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
-            isFollowerLoading = false,
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
+            isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = true,
-            followerList = listOf()
+            followingList = listOf()
         )
     }
 

@@ -1,4 +1,4 @@
-package com.example.instagram_clone_clean_architecture.feature.profile.presentation.main
+package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -6,15 +6,15 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentArgs
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentDirections
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.kodein.di.bindings.ArgSetBinding
 import timber.log.Timber
 
 class ProfileMainViewModel(
@@ -23,28 +23,39 @@ class ProfileMainViewModel(
     private val getUserPostUseCase: GetUserPostUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(ProfileMainViewModel.ViewState()) {
+): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(
+    ViewState()
+) {
 
     fun onNavigateToPostDetail(post: PostDomainModel) {
         Timber.d("Navigate to post $post")
     }
 
     fun onNavigateToEditProfile() = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileEditFragment(args.userId)
+        val navDir =
+            ProfileMainFragmentDirections.actionProfileMainFragmentToProfileEditFragment(
+                args.userId
+            )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
     }
 
     fun onNavigateToFollowerProfile() = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowerFragment(args.userId)
+        val navDir =
+            ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowerFragment(
+                args.userId
+            )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
     }
 
     fun onNavigateToFollowingProfile() = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowingFragment(args.userId)
+        val navDir =
+            ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowingFragment(
+                args.userId
+            )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
@@ -55,7 +66,11 @@ class ProfileMainViewModel(
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->
-                    sendAction(Action.UserProfileLoaded(userProfile))
+                    sendAction(
+                        Action.UserProfileLoaded(
+                            userProfile
+                        )
+                    )
                 },
                 onFail = ::onFailureWhenLoadUserProfile
             )
@@ -67,7 +82,11 @@ class ProfileMainViewModel(
         getUserPostUseCase(params) {
             it.fold(
                 onSucceed = { userPost ->
-                    sendAction(Action.UserPostLoaded(userPost))
+                    sendAction(
+                        Action.UserPostLoaded(
+                            userPost
+                        )
+                    )
                 },
                 onFail = ::onFailureWhenLoadUserPost
             )
