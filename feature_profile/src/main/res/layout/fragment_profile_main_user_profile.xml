@@ -14,26 +14,26 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="@dimen/user_profile_container_padding">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/user_profile_image_top_guideline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="40dp" />
+            app:layout_constraintGuide_begin="@dimen/user_profile_image_top_guideline_margin" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/user_profile_numbers_top_guideline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="55dp" />
+            app:layout_constraintGuide_begin="@dimen/user_profile_numbers_container_top_guideline_margin" />
         
         <ImageView
             android:id="@+id/user_profile_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/user_profile_image_size"
+            android:layout_height="@dimen/user_profile_image_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/user_profile_post_number"
             app:layout_constraintTop_toTopOf="@id/user_profile_image_top_guideline"
@@ -41,8 +41,8 @@
 
         <TextView
             android:id="@+id/user_profile_name"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             app:layout_constraintTop_toBottomOf="@+id/user_profile_image"
             app:layout_constraintStart_toStartOf="parent"
@@ -51,8 +51,8 @@
 
         <TextView
             android:id="@+id/user_profile_post_number"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toEndOf="@id/user_profile_image"
@@ -61,8 +61,8 @@
             android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.postNum)}" />
         <TextView
             android:id="@+id/user_profile_post_info_text"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toEndOf="@id/user_profile_image"
@@ -73,8 +73,8 @@
 
         <TextView
             android:id="@+id/user_profile_follower_number"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toEndOf="@id/user_profile_post_number"
@@ -84,8 +84,8 @@
             android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}"/>
         <TextView
             android:id="@+id/user_profile_follower_info_text"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toEndOf="@id/user_profile_post_info_text"
@@ -95,8 +95,8 @@
 
         <TextView
             android:id="@+id/user_following_number"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:layout_constraintStart_toEndOf="@id/user_profile_follower_number"
@@ -106,8 +106,8 @@
             android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}"/>
         <TextView
             android:id="@+id/user_profile_following_info_text"
-            android:layout_width="60dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/user_profile_number_text_width"
+            android:layout_height="@dimen/user_profile_number_text_height"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintStart_toEndOf="@id/user_profile_follower_info_text"
@@ -121,6 +121,7 @@
             android:layout_height="wrap_content"
             android:text="Edit Profile"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_marginTop="@dimen/user_profile_edit_button_top_margin"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

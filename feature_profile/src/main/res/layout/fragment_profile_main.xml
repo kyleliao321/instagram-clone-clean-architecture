@@ -20,7 +20,7 @@
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/user_profile_container_shimmer"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/user_profile_container_height"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
             <include
                 layout="@layout/fragment_profile_main_user_profile_shimmer"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="@dimen/user_profile_container_height" />
 
         </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -38,7 +38,7 @@
             android:visibility="@{viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
             android:id="@+id/user_profile_container"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="@dimen/user_profile_container_height"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
