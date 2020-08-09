@@ -81,7 +81,9 @@
         android:label="ProfilePostFragment"
         app:moduleName="@string/module_name">
 
-
+        <argument
+            android:name="userId"
+            app:argType="integer" />
         <argument
             android:name="postId"
             app:argType="integer" />

@@ -60,6 +60,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
         KotlinViewModelProvider.of(context) {
             ProfilePostViewModel(
                 instance(),
+                instance(),
                 instance()
             )
         }

@@ -3,8 +3,10 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -43,11 +45,17 @@ class ProfilePostViewModelTest {
 
     private lateinit var getPostUseCase: GetPostUseCase
 
+    private lateinit var getUserProfileUseCase: GetUserProfileUseCase
+
     private lateinit var testViewModel: ProfilePostViewModel
 
     /**
      * Mock data
      */
+    private val correctUserProfile = UserDomainModel(
+        id = 1, name = "Kyle", userName = "kyle", postNum = 0, followerNum = 1, followingNum = 2
+    )
+
     private val correctPost = PostDomainModel(
         id = 1, imageSrc = "ss", date = Date(), belongUserId = 1
     )
@@ -57,11 +65,13 @@ class ProfilePostViewModelTest {
         MockKAnnotations.init(this)
 
         getPostUseCase = GetPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel =
             ProfilePostViewModel(
                 profilePostFragmentArgs,
                 getPostUseCase,
+                getUserProfileUseCase,
                 mainCoroutineRule.testDispatcher
             )
 
@@ -76,60 +86,151 @@ class ProfilePostViewModelTest {
     @Test
     fun `profilePostViewModel should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = true,
             isPostLoading = true,
             isServerError = false,
             isNetworkError = false,
+            userProfile = null,
             post = null
         )
     }
 
     @Test
-    fun `verify view state when getPostUseCase succeed`() {
+    fun `verify view state when getPostUseCase and getUserProfileUseCase succeed`() {
         // given
         every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
             isServerError = false,
+            userProfile = correctUserProfile,
             post = correctPost
         )
     }
 
     @Test
-    fun `verify view state when getPostUseCase fail on network connection`() {
+    fun `verify view state when only getPostUseCase fail on network connection`() {
         // given
         every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = true,
             isServerError = false,
+            userProfile = correctUserProfile,
             post = null
         )
     }
 
     @Test
-    fun `verify view state when getPostUseCase fail on server error`() {
+    fun `verify view state when only getPostUseCase fail on server error`() {
         // given
         every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
             isPostLoading = false,
             isNetworkError = false,
             isServerError = true,
+            userProfile = correctUserProfile,
+            post = null
+        )
+    }
+
+    @Test
+    fun `verify view state when only getUserProfileUseCase fail on network connection`() {
+        // given
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = true,
+            isServerError = false,
+            userProfile = null,
+            post = correctPost
+        )
+    }
+
+    @Test
+    fun `verify view state when only getUserProfileUseCase fail on server error`() {
+        // given
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = false,
+            isServerError = true,
+            userProfile = null,
+            post = correctPost
+        )
+    }
+
+    @Test
+    fun `verify view state when both getUserProfileUseCase and getPostUseCase fail on server error`() {
+        // given
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = false,
+            isServerError = true,
+            userProfile = null,
+            post = null
+        )
+    }
+
+    @Test
+    fun `verify view state when both getUserProfileUseCase and getPostUseCase fail on network conntection`() {
+        // given
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfilePostViewModel.ViewState(
+            isProfileLoading = false,
+            isPostLoading = false,
+            isNetworkError = true,
+            isServerError = false,
+            userProfile = null,
             post = null
         )
     }
