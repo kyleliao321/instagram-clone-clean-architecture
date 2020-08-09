@@ -12,14 +12,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginVertical="15dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:paddingHorizontal="10dp">
 
         <ImageView
             android:id="@+id/user_profile_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_centerVertical="true"
+            android:cropToPadding="true"
+            android:scaleType="fitXY"
             android:layout_alignParentStart="true"
             app:userImage="@{userProfile.imageSrc}"/>
 
