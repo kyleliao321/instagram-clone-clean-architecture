@@ -18,4 +18,9 @@
     <!-- User Post Detail View default dimensions -->
     <dimen name="user_post_detail_height">400dp</dimen>
 
+    <!-- User Edit View default dimensions -->
+    <dimen name="user_edit_image_margin">10dp</dimen>
+    <dimen name="user_edit_element_vertical_margin">5dp</dimen>
+    <dimen name="user_edit_element_horizontal_margin">20dp</dimen>
+
 </resources>
