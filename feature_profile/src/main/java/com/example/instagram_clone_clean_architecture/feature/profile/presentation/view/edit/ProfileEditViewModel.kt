@@ -14,7 +14,9 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.lang.Exception
+import java.util.*
 
 class ProfileEditViewModel(
     private val args: ProfileEditFragmentArgs,
@@ -46,7 +48,7 @@ class ProfileEditViewModel(
                 result.fold(
                     onSucceed = { userProfile ->
                         sendAction(
-                            Action.UserProfileLoaded(
+                            Action.FinishUpdatingUserProfile(
                                 userProfile
                             )
                         )
@@ -94,7 +96,7 @@ class ProfileEditViewModel(
         is Action.UserProfileLoaded -> state.copy(
             isUserProfileLoading = false,
             originalUserProfile = action.userProfile,
-            bindingUserProfile = action.userProfile
+            bindingUserProfile = action.userProfile.copy()
         )
         is Action.NetworkConnectionErrorWhenLoadUserProfile -> state.copy(
             isUserProfileLoading = false,
@@ -104,7 +106,7 @@ class ProfileEditViewModel(
             bindingUserProfile = null
         )
         is Action.NetworkConnectionErrorWhenUpdateUserProfile -> state.copy(
-            isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = true,
             isServerError = false,
             bindingUserProfile = state.originalUserProfile
@@ -117,18 +119,24 @@ class ProfileEditViewModel(
             bindingUserProfile = null
         )
         is Action.ServerErrorWhenUpdateUserProfile -> state.copy(
-            isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = false,
             isServerError = true,
             bindingUserProfile = state.originalUserProfile
         )
         is Action.StartUpdatingUserProfile -> state.copy(
-            isUserProfileLoading = true
+            isUserProfileUpdating = true
+        )
+        is Action.FinishUpdatingUserProfile -> state.copy(
+            isUserProfileUpdating = false,
+            originalUserProfile = action.userProfile,
+            bindingUserProfile = action.userProfile.copy()
         )
     }
 
     data class ViewState(
         val isUserProfileLoading: Boolean = true,
+        val isUserProfileUpdating: Boolean = false,
         val isNetworkConnectionFail: Boolean = false,
         val isServerError: Boolean = false,
         val originalUserProfile: UserDomainModel? = null,
@@ -137,6 +145,7 @@ class ProfileEditViewModel(
 
     sealed class Action : BaseAction {
         class UserProfileLoaded(val userProfile: UserDomainModel) : Action()
+        class FinishUpdatingUserProfile(val userProfile: UserDomainModel) : Action()
         object StartUpdatingUserProfile : Action()
         object ServerErrorWhenLoadUserProfile : Action()
         object ServerErrorWhenUpdateUserProfile : Action()

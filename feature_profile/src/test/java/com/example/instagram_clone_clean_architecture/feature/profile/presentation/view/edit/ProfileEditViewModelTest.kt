@@ -112,6 +112,7 @@ class ProfileEditViewModelTest {
     fun `profileEditViewModel should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = true,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = false,
             isServerError = false,
             originalUserProfile = null,
@@ -130,6 +131,7 @@ class ProfileEditViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isServerError = false,
             isNetworkConnectionFail = false,
             originalUserProfile = correctUserProfile,
@@ -148,6 +150,7 @@ class ProfileEditViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isServerError = false,
             isNetworkConnectionFail = true,
             originalUserProfile = null,
@@ -166,6 +169,7 @@ class ProfileEditViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isServerError = true,
             isNetworkConnectionFail = false,
             originalUserProfile = null,
@@ -190,6 +194,7 @@ class ProfileEditViewModelTest {
         verify(exactly = 4) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = false,
             isServerError = false,
             originalUserProfile = editedUserProfile,
@@ -214,6 +219,7 @@ class ProfileEditViewModelTest {
         verify(exactly = 4) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = true,
             isServerError = false,
             originalUserProfile = correctUserProfile,
@@ -238,6 +244,7 @@ class ProfileEditViewModelTest {
         verify(exactly = 4) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
+            isUserProfileUpdating = false,
             isNetworkConnectionFail = false,
             isServerError = true,
             originalUserProfile = correctUserProfile,

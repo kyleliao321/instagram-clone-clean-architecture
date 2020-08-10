@@ -98,4 +98,7 @@ dependencies {
 
     // Material Design
     api 'com.google.android.material:material:1.2.0'
+
+    // Loading Animation
+    api 'com.github.ybq:Android-SpinKit:1.4.0'
 }
