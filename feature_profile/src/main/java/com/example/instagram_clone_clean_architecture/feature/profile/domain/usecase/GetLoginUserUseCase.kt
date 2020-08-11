@@ -1,6 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase
 
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase
@@ -8,19 +8,19 @@ import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class GetPostUseCase(
+class GetLoginUserUseCase(
     private val profileRepository: ProfileRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : UseCase<PostDomainModel, GetPostUseCase.Param>(defaultDispatcher) {
+) : UseCase<UserDomainModel, Unit>(defaultDispatcher) {
 
-    override suspend fun run(params: Param): Either<PostDomainModel, Failure> {
-        var result: Either<PostDomainModel, Failure>? = null
+    override suspend fun run(params: Unit): Either<UserDomainModel, Failure> {
+        var result: Either<UserDomainModel, Failure>? = null
 
-        profileRepository.getPostByPostId(params.id).fold(
-            onSucceed = { post ->
-                result = when (post) {
-                    null -> Either.Failure(Failure.ServerError)
-                    else -> Either.Success(post)
+        profileRepository.getLoginUserProfile().fold(
+            onSucceed = { userProfile ->
+                result = when (userProfile) {
+                    null -> Either.Failure(Failure.ServerError) // TODO: Add login type failure
+                    else -> Either.Success(userProfile)
                 }
             },
             onFail = { failure ->
@@ -30,6 +30,4 @@ class GetPostUseCase(
 
         return result!!
     }
-
-    data class Param(val id: Int)
 }

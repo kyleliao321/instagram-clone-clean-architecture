@@ -45,6 +45,11 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         )
     )
 
+    override suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure> {
+        val userProfile = userProfileMap[1]
+        return Either.Success(userProfile)
+    }
+
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
         delay(1500)
 

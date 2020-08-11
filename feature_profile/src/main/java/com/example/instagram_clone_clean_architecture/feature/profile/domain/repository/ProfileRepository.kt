@@ -7,6 +7,8 @@ import com.example.library_base.domain.utility.Either
 
 interface ProfileRepository {
 
+    suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure>
+
     suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure>
 
     suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure>

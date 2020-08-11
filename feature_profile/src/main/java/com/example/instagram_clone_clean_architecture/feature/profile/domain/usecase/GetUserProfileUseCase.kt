@@ -18,10 +18,9 @@ class GetUserProfileUseCase(
 
         profileRepository.getUserProfileById(params.id).fold(
             onSucceed = { userProfile ->
-                if (userProfile == null) {
-                    result = Either.Failure(Failure.ServerError)
-                } else {
-                    result = Either.Success(userProfile)
+                result = when (userProfile) {
+                    null -> Either.Failure(Failure.ServerError)
+                    else -> Either.Success(userProfile)
                 }
             },
             onFail = { failure ->
