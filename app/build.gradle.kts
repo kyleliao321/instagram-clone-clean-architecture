@@ -56,7 +56,7 @@ android {
 
 
 dependencies {
-    api(project(":library_base"))
+    api(project(ModuleDependency.LIBRARY_BASE))
     testImplementation(TestLibraryDependency.JUNIT)
 
 }

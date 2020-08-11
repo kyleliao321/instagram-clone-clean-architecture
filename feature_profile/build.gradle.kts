@@ -57,7 +57,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":app"))
+    implementation(project(ModuleDependency.APP))
     testImplementation(TestLibraryDependency.JUNIT)
     testImplementation(TestLibraryDependency.MOCKK)
     testImplementation(TestLibraryDependency.MOCKK_CO)
