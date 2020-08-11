@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.instagram_clone_clean_architecture.feature.profile.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditViewModel
@@ -69,5 +70,9 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
     /**
      * Mock fragment arguments. This should be deleted when the entire data flow is setup.
      */
-    bind<ProfileMainFragmentArgs>() with provider { ProfileMainFragmentArgs.Builder(1).build() }
+    bind<ProfileMainFragmentArgs>() with provider {
+        val bundle = Bundle()
+        bundle.putInt("userId", 1)
+        ProfileMainFragmentArgs.fromBundle(bundle)
+    }
 }

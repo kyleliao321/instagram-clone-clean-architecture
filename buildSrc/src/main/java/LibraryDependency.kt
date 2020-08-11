@@ -14,9 +14,10 @@ object LibraryVersions {
 }
 
 object LibraryDependency {
+    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib:${CoreVersion.KOTLIN}"
     const val KOTLIN_REFLECTION = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
     const val CORE_KTX = "androidx.core:core-ktx:${LibraryVersions.CORE_KTX}"
-    const val APP_COMPAT = "androidx.appcompat:appcompat::${LibraryVersions.APP_COMPAT}"
+    const val APP_COMPAT = "androidx.appcompat:appcompat:${LibraryVersions.APP_COMPAT}"
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout:${LibraryVersions.CONSTRAINT_LAYOUT}"
     const val NAVIGATION_FRAGMENT_KTX = "androidx.navigation:navigation-fragment-ktx:${LibraryVersions.NAVIGATION}"
     const val NAVIGATION_UI_KTX = "androidx.navigation:navigation-ui-ktx:${LibraryVersions.NAVIGATION}"
