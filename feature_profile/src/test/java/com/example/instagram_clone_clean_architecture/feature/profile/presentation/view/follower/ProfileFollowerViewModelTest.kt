@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowerUserUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerFragmentArgs
@@ -52,6 +53,8 @@ class ProfileFollowerViewModelTest {
 
     private lateinit var getFollowerUserUseCase: GetFollowerUserUseCase
 
+    private lateinit var getFollowingUserUseCase: GetFollowingUserUseCase
+
     private lateinit var navigationUseCase: NavigationUseCase
 
     private lateinit var testViewModel: ProfileFollowerViewModel
@@ -71,12 +74,17 @@ class ProfileFollowerViewModelTest {
         UserDomainModel(id = 1, name = "anna", userName = "Anna", followingNum = 1, followerNum = 2, postNum = 1)
     )
 
+    private val correctFollowingList = listOf(
+        UserDomainModel(id = 5, name = "anna", userName = "Anna", followingNum = 1, followerNum = 2, postNum = 1)
+    )
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
 
         getLoginUserUseCase = GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getFollowerUserUseCase = GetFollowerUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getFollowingUserUseCase = GetFollowingUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
         testViewModel =
@@ -84,6 +92,7 @@ class ProfileFollowerViewModelTest {
                 profileFollowerFragmentArgs,
                 getLoginUserUseCase,
                 getFollowerUserUseCase,
+                getFollowingUserUseCase,
                 navigationUseCase,
                 mainCoroutineRule.testDispatcher
             )
@@ -115,20 +124,23 @@ class ProfileFollowerViewModelTest {
     fun `profileFollowingViewModel should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = true,
+            isLoginUserFollowingLoading = true,
             isFollowerListLoading = true,
             isServerError = false,
             isNetworkError = false,
             isLocalAccountError = false,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followerList = listOf()
         )
     }
 
     @Test
-    fun `verify view state when getFollowerUserUseCase and getLoginUserUseCase succeed`() {
+    fun `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`() {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Success(correctFollowerList)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -136,11 +148,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
             followerList = correctFollowerList
         )
     }
@@ -150,6 +164,7 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -157,11 +172,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = true,
             isServerError = false,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
             followerList = listOf()
         )
     }
@@ -171,6 +188,7 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Success(correctFollowerList)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -178,11 +196,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followerList = correctFollowerList
         )
     }
@@ -192,6 +212,7 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -199,11 +220,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = false,
             isServerError = true,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
             followerList = listOf()
         )
     }
@@ -216,6 +239,7 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -223,11 +247,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = true,
             isServerError = false,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followerList = listOf()
         )
     }
@@ -237,6 +263,7 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -244,11 +271,13 @@ class ProfileFollowerViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowerListLoading = false,
             isNetworkError = false,
             isServerError = true,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followerList = listOf()
         )
     }

@@ -113,12 +113,14 @@ class ProfileFollowingViewModelTest {
     @Test
     fun `profileFollowingViewModel should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
+            isLoginUserFollowingLoading = true,
             isLoginUserLoading = true,
             isFollowingListLoading = true,
             isServerError = false,
             isNetworkError = false,
             isLocalAccountError = false,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followingList = listOf()
         )
     }
@@ -135,11 +137,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
             followingList = correctFollowingList
         )
     }
@@ -156,11 +160,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = true,
             isServerError = false,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = listOf(),
             followingList = listOf()
         )
     }
@@ -177,11 +183,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followingList = correctFollowingList
         )
     }
@@ -198,11 +206,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = true,
             isLocalAccountError = false,
             loginUser = correctUserProfile,
+            loginUserFollowingList = listOf(),
             followingList = listOf()
         )
     }
@@ -222,11 +232,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = true,
             isServerError = false,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followingList = listOf()
         )
     }
@@ -243,11 +255,13 @@ class ProfileFollowingViewModelTest {
         // expect
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowingViewModel.ViewState(
             isLoginUserLoading = false,
+            isLoginUserFollowingLoading = false,
             isFollowingListLoading = false,
             isNetworkError = false,
             isServerError = true,
             isLocalAccountError = true,
             loginUser = null,
+            loginUserFollowingList = listOf(),
             followingList = listOf()
         )
     }

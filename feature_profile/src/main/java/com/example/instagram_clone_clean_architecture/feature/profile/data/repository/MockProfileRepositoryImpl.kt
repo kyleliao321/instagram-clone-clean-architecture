@@ -12,6 +12,8 @@ import kotlin.collections.HashMap
 
 internal class MockProfileRepositoryImpl: ProfileRepository {
 
+    private val loginUserId = 1
+
     private val userProfileMap: HashMap<Int, UserDomainModel> = hashMapOf(
         1 to UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 4, followingNum = 1, followerNum = 2, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
         2 to UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 0, followingNum = 1,followerNum =  0, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
@@ -46,8 +48,24 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
     )
 
     override suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure> {
-        val userProfile = userProfileMap[1]
+        val userProfile = userProfileMap[loginUserId]
         return Either.Success(userProfile)
+    }
+
+    override suspend fun getLoginUserFollowingList(): Either<List<UserDomainModel>, Failure> {
+        delay(1000)
+
+        val result = mutableListOf<UserDomainModel>()
+
+        userFollowingMap[loginUserId]?.let {
+            it.forEach { id ->
+                userProfileMap[id]?.let {
+                    result.add(it)
+                }
+            }
+        }
+
+        return Either.Success(result)
     }
 
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {

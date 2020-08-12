@@ -44,6 +44,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
                 instance(),
                 instance(),
                 instance(),
+                instance(),
                 instance()
             )
         }
@@ -76,7 +77,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
      */
     bind<ProfileMainFragmentArgs>() with provider {
         val bundle = Bundle()
-        bundle.putInt("userId", 2)
+        bundle.putInt("userId", 1)
         ProfileMainFragmentArgs.fromBundle(bundle)
     }
 }

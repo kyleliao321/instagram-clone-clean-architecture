@@ -7,8 +7,16 @@ import com.example.library_base.domain.utility.Either
 
 interface ProfileRepository {
 
+    /**
+     * getter for local account data
+     */
     suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure>
 
+    suspend fun getLoginUserFollowingList(): Either<List<UserDomainModel>, Failure>
+
+    /**
+     * getter for view information
+     */
     suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure>
 
     suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure>

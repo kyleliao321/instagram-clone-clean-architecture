@@ -12,6 +12,8 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import kotlin.math.log
 
 class ProfileFollowingViewModel(
     private val args: ProfileFollowingFragmentArgs,
@@ -33,17 +35,37 @@ class ProfileFollowingViewModel(
         navigationUseCase(params)
     }
 
-    private fun loadLoginUser() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadLoginUserData() = viewModelScope.launch(defaultDispatcher) {
+        var loginUser: UserDomainModel? = null
+
         getLoginUserUseCase(Unit) {
             it.fold(
                 onSucceed = { userProfile ->
                     sendAction(Action.LoginUserProfileLoaded(userProfile))
+                    loginUser = userProfile
                 },
                 onFail = { failure ->
                     sendAction(Action.LoginUserProfileLoaded(null))
+                    sendAction(Action.LoginUserFollowingListLoaded(listOf()))
                     onFailure(failure)
                 }
             )
+        }
+
+        loginUser?.let { loginUserProfile ->
+            val params = GetFollowingUserUseCase.Param(loginUserProfile.id)
+
+            getFollowingUserUseCase(params) {
+                it.fold(
+                    onSucceed = { followingList ->
+                        sendAction(Action.LoginUserFollowingListLoaded(followingList))
+                    },
+                    onFail = { failure ->
+                        sendAction(Action.LoginUserFollowingListLoaded(listOf()))
+                        onFailure(failure)
+                    }
+                )
+            }
         }
     }
 
@@ -80,13 +102,17 @@ class ProfileFollowingViewModel(
 
     override fun onLoadData() {
         loadFollowingList()
-        loadLoginUser()
+        loadLoginUserData()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.LoginUserProfileLoaded -> state.copy(
             isLoginUserLoading = false,
             loginUser = action.userProfile
+        )
+        is Action.LoginUserFollowingListLoaded -> state.copy(
+            isLoginUserFollowingLoading = false,
+            loginUserFollowingList = action.followingList
         )
         is Action.FollowingListLoaded -> state.copy(
             isFollowingListLoading = false,
@@ -105,16 +131,19 @@ class ProfileFollowingViewModel(
 
     data class ViewState(
         val isLoginUserLoading: Boolean = true,
+        val isLoginUserFollowingLoading: Boolean = true,
         val isFollowingListLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isLocalAccountError: Boolean = false,
         val loginUser: UserDomainModel? = null,
+        val loginUserFollowingList: List<UserDomainModel> = listOf(),
         val followingList: List<UserDomainModel> = listOf()
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
+        class LoginUserFollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
         class FollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
