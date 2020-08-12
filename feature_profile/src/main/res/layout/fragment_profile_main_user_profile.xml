@@ -148,17 +148,42 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".8" />
 
-        <Button
-            android:id="@+id/user_profile_edit_button"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/user_profile_action_conatiner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Edit Profile"
             app:layout_constraintTop_toBottomOf="@+id/user_description_action_container_divider"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:onClick="@{() -> viewModel.onNavigateToEditProfile()}"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/user_profile_edit_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Edit Profile"
+                app:layout_constraintTop_toTopOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
+                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile == viewModel.stateLiveData.userProfile}"
+                android:onClick="@{() -> viewModel.onNavigateToEditProfile()}"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <Button
+                android:id="@+id/user_profile_follow_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Follow"
+                app:layout_constraintTop_toTopOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
+                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile != viewModel.stateLiveData.userProfile}"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

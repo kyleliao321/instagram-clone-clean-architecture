@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -39,4 +40,13 @@ fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
     else -> imageView.load(data) {
         transformations(CircleCropTransformation())
     }
+}
+
+/**
+ * Show the view if provided @{condition} is met.
+ */
+@BindingAdapter("app:visibleCondition")
+fun visibleCondition(view: View, condition: Boolean) = when (condition) {
+    true -> view.visibility = View.VISIBLE
+    false -> view.visibility = View.GONE
 }

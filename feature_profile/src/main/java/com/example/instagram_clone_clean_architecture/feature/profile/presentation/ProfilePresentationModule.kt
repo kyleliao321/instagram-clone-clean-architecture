@@ -76,7 +76,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
      */
     bind<ProfileMainFragmentArgs>() with provider {
         val bundle = Bundle()
-        bundle.putInt("userId", 1)
+        bundle.putInt("userId", 2)
         ProfileMainFragmentArgs.fromBundle(bundle)
     }
 }
