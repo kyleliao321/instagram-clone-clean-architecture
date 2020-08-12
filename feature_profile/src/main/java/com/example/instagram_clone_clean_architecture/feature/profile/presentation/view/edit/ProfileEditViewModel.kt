@@ -22,7 +22,6 @@ import java.util.*
 
 class ProfileEditViewModel(
     private val args: ProfileEditFragmentArgs,
-    private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val navigationUseCase: NavigationUseCase,

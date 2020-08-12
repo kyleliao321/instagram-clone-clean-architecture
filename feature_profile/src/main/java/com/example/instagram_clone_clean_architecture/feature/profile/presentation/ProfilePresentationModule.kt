@@ -33,7 +33,6 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
                 instance(),
                 instance(),
                 instance(),
-                instance(),
                 instance()
             )
         }
@@ -64,6 +63,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
     bind<ProfilePostViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) {
             ProfilePostViewModel(
+                instance(),
                 instance(),
                 instance(),
                 instance()

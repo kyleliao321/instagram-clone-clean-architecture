@@ -48,9 +48,7 @@ class ProfileEditViewModelTest {
 
     @MockK(relaxed = true)
     internal lateinit var observer: Observer<ProfileEditViewModel.ViewState>
-
-    private lateinit var getLoginUserUseCase: GetLoginUserUseCase
-
+    
     private lateinit var updateUserProfileUseCase: UpdateUserProfileUseCase
 
     private lateinit var getUserProfileUseCase: GetUserProfileUseCase
@@ -74,7 +72,6 @@ class ProfileEditViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLoginUserUseCase = GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         updateUserProfileUseCase = UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
@@ -82,7 +79,6 @@ class ProfileEditViewModelTest {
         testViewModel =
             ProfileEditViewModel(
                 profileEditFragmentArgs,
-                getLoginUserUseCase,
                 getUserProfileUseCase,
                 updateUserProfileUseCase,
                 navigationUseCase,

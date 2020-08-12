@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 
 class ProfilePostViewModel(
     private val args: ProfilePostFragmentArgs,
+    private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getPostUseCase: GetPostUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
@@ -23,7 +25,21 @@ class ProfilePostViewModel(
     ViewState()
 ) {
 
-    private fun onLoadPost() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadLoginUserProfile() = viewModelScope.launch(defaultDispatcher) {
+        getLoginUserUseCase(Unit) {
+            it.fold(
+                onSucceed = { userProfile ->
+                    sendAction(Action.LoginUserProfileLoaded(userProfile))
+                },
+                onFail = { failure ->
+                    sendAction(Action.LoginUserProfileLoaded(null))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun loadPost() = viewModelScope.launch(defaultDispatcher) {
         val params = GetPostUseCase.Param(args.postId)
         getPostUseCase(params) {
             it.fold(
@@ -34,41 +50,47 @@ class ProfilePostViewModel(
                         )
                     )
                 },
-                onFail = ::onFailureWhenLoadPost
+                onFail = { failure ->
+                    sendAction(Action.PostLoaded(null))
+                    onFailure(failure)
+                }
             )
         }
     }
 
-    private fun onLoadUserProfile() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserProfileUseCase.Param(args.userId)
         getUserProfileUseCase(params) {
             it.fold(
                 onSucceed = { userProfile ->
                     sendAction(Action.ProfileLoaded(userProfile))
                 },
-                onFail = ::onFailureWhenLoadProfile
+                onFail = { failure ->
+                    sendAction(Action.ProfileLoaded(null))
+                    onFailure(failure)
+                }
             )
         }
     }
 
-    private fun onFailureWhenLoadPost(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadPost)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadPost)
-        else -> throw Exception("Unknown failure when load post $failure")
-    }
-
-    private fun onFailureWhenLoadProfile(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadProfile)
-        else -> throw Exception("Unknown failure when load post $failure")
+    private fun onFailure(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
+        else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
     override fun onLoadData() {
-        onLoadPost()
-        onLoadUserProfile()
+        loadPost()
+        loadUserProfile()
+        loadLoginUserProfile()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
+        is Action.LoginUserProfileLoaded -> state.copy(
+            isLoginUserProfileLoading = false,
+            loginUserProfile = action.userProfile
+        )
         is Action.ProfileLoaded -> state.copy(
             isProfileLoading = false,
             userProfile = action.userProfile
@@ -77,47 +99,35 @@ class ProfilePostViewModel(
             isPostLoading = false,
             post = action.post
         )
-        is Action.NetworkConnectionFailWhenLoadProfile -> state.copy(
-            isProfileLoading = false,
-            isNetworkError = true,
-            isServerError = false,
-            userProfile = null
+        is Action.FailOnNetworkConnection -> state.copy(
+            isNetworkError = true
         )
-        is Action.ServerErrorWhenLoadProfile -> state.copy(
-            isProfileLoading = false,
-            isServerError = true,
-            isNetworkError = false,
-            userProfile = null
+        is Action.FailOnServerError -> state.copy(
+            isServerError = true
         )
-        is Action.NetworkConnectionFailWhenLoadPost -> state.copy(
-            isPostLoading = false,
-            isNetworkError = true,
-            isServerError = false,
-            post = null
-        )
-        is Action.ServerErrorWhenLoadPost -> state.copy(
-            isPostLoading = false,
-            isServerError = true,
-            isNetworkError = false,
-            post = null
+        is Action.FailOnLocalAccountError -> state.copy(
+            isLocalAccountError = true
         )
     }
 
     data class ViewState(
+        val isLoginUserProfileLoading: Boolean = true,
         val isProfileLoading: Boolean = true,
         val isPostLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isLocalAccountError: Boolean = false,
+        val loginUserProfile: UserDomainModel? = null,
         val userProfile: UserDomainModel? = null,
         val post: PostDomainModel? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class ProfileLoaded(val userProfile: UserDomainModel) : Action()
-        class PostLoaded(val post: PostDomainModel) : Action()
-        object NetworkConnectionFailWhenLoadProfile : Action()
-        object ServerErrorWhenLoadProfile : Action()
-        object NetworkConnectionFailWhenLoadPost : Action()
-        object ServerErrorWhenLoadPost : Action()
+        class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
+        class ProfileLoaded(val userProfile: UserDomainModel?) : Action()
+        class PostLoaded(val post: PostDomainModel?) : Action()
+        object FailOnNetworkConnection : Action()
+        object FailOnServerError : Action()
+        object FailOnLocalAccountError: Action()
     }
 }
