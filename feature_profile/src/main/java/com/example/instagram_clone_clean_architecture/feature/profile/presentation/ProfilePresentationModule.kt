@@ -43,6 +43,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
             ProfileFollowerViewModel(
                 instance(),
                 instance(),
+                instance(),
                 instance()
             )
         }
@@ -51,6 +52,7 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
     bind<ProfileFollowingViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) {
             ProfileFollowingViewModel(
+                instance(),
                 instance(),
                 instance(),
                 instance()

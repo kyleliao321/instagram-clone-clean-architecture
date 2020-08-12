@@ -3,9 +3,11 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -16,6 +18,7 @@ import kotlinx.coroutines.launch
 
 class ProfileFollowingViewModel(
     private val args: ProfileFollowingFragmentArgs,
+    private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getFollowingUserUseCase: GetFollowingUserUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
@@ -33,7 +36,21 @@ class ProfileFollowingViewModel(
         navigationUseCase(params)
     }
 
-    private fun onLoadFollowingList() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadLoginUser() = viewModelScope.launch(defaultDispatcher) {
+        getLoginUserUseCase(Unit) {
+            it.fold(
+                onSucceed = { userProfile ->
+                    sendAction(Action.LoginUserProfileLoaded(userProfile))
+                },
+                onFail = { failure ->
+                    sendAction(Action.LoginUserProfileLoaded(null))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun loadFollowingList() = viewModelScope.launch(defaultDispatcher) {
         val params = GetFollowingUserUseCase.Param(args.userId)
 
         getFollowingUserUseCase(params) {
@@ -45,50 +62,65 @@ class ProfileFollowingViewModel(
                         )
                     )
                 },
-                onFail = ::onFailureWhenLoadFollowingList
+                onFail = { failure ->
+                    sendAction(
+                        Action.FollowingListLoaded(
+                            listOf()
+                        )
+                    )
+                    onFailure(failure)
+                }
             )
         }
     }
 
-    private fun onFailureWhenLoadFollowingList(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFailWhenLoadFollowingList)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadFollowingList)
-        else -> throw Exception("Unknown failure when load following list $failure")
+    private fun onFailure(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.ServerError -> sendAction(Action.RequestFailOnServer)
+        is Failure.LocalAccountNotFound -> sendAction(Action.RequestFailOnLocalAccount)
+        else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
     override fun onLoadData() {
-        onLoadFollowingList()
+        loadFollowingList()
+        loadLoginUser()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
+        is Action.LoginUserProfileLoaded -> state.copy(
+            isLoginUserLoading = false,
+            loginUser = action.userProfile
+        )
         is Action.FollowingListLoaded -> state.copy(
             isFollowingListLoading = false,
             followingList = action.followingList
         )
-        is Action.NetworkConnectionFailWhenLoadFollowingList -> state.copy(
-            isFollowingListLoading = false,
-            isServerError = false,
-            isNetworkError = true,
-            followingList = listOf()
+        is Action.FailOnNetworkConnection -> state.copy(
+            isNetworkError = true
         )
-        is Action.ServerErrorWhenLoadFollowingList -> state.copy(
-            isFollowingListLoading = false,
-            isNetworkError = false,
-            isServerError = true,
-            followingList = listOf()
+        is Action.RequestFailOnServer -> state.copy(
+            isServerError = true
+        )
+        is Action.RequestFailOnLocalAccount -> state.copy(
+            isLocalAccountError = true
         )
     }
 
     data class ViewState(
+        val isLoginUserLoading: Boolean = true,
         val isFollowingListLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isLocalAccountError: Boolean = false,
+        val loginUser: UserDomainModel? = null,
         val followingList: List<UserDomainModel> = listOf()
     ) : BaseViewState
 
     sealed class Action : BaseAction {
+        class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class FollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
-        object NetworkConnectionFailWhenLoadFollowingList : Action()
-        object ServerErrorWhenLoadFollowingList : Action()
+        object FailOnNetworkConnection : Action()
+        object RequestFailOnServer : Action()
+        object RequestFailOnLocalAccount : Action()
     }
 }
