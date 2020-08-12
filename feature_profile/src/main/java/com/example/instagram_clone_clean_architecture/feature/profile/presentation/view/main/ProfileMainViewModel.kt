@@ -1,15 +1,12 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main
 
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentArgs
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentDirections
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -17,7 +14,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ProfileMainViewModel(
     private val args: ProfileMainFragmentArgs,
@@ -120,9 +116,9 @@ class ProfileMainViewModel(
     }
 
     private fun onFailure(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionFail)
-        is Failure.ServerError -> sendAction(Action.RequestFailOnServer)
-        is Failure.LocalAccountNotFound -> sendAction(Action.RequestFailOnLocalAccount)
+        is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
         else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
@@ -145,13 +141,13 @@ class ProfileMainViewModel(
             isPostLoading = false,
             userPosts = action.userPost
         )
-        is Action.NetworkConnectionFail -> state.copy(
+        is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
         )
-        is Action.RequestFailOnServer -> state.copy(
+        is Action.FailOnServerError -> state.copy(
             isServerError = true
         )
-        is Action.RequestFailOnLocalAccount -> state.copy(
+        is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
     }
@@ -172,8 +168,8 @@ class ProfileMainViewModel(
         class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class UserPostLoaded(val userPost: List<PostDomainModel>) : Action()
-        object NetworkConnectionFail : Action()
-        object RequestFailOnServer : Action()
-        object RequestFailOnLocalAccount : Action()
+        object FailOnNetworkConnection : Action()
+        object FailOnServerError : Action()
+        object FailOnLocalAccountError : Action()
     }
 }

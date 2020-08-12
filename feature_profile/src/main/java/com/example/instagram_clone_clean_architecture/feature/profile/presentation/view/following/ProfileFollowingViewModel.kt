@@ -5,9 +5,6 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentArgs
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingFragmentDirections
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -76,8 +73,8 @@ class ProfileFollowingViewModel(
 
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
-        is Failure.ServerError -> sendAction(Action.RequestFailOnServer)
-        is Failure.LocalAccountNotFound -> sendAction(Action.RequestFailOnLocalAccount)
+        is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
         else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
@@ -98,10 +95,10 @@ class ProfileFollowingViewModel(
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
         )
-        is Action.RequestFailOnServer -> state.copy(
+        is Action.FailOnServerError -> state.copy(
             isServerError = true
         )
-        is Action.RequestFailOnLocalAccount -> state.copy(
+        is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
     }
@@ -120,7 +117,7 @@ class ProfileFollowingViewModel(
         class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class FollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
         object FailOnNetworkConnection : Action()
-        object RequestFailOnServer : Action()
-        object RequestFailOnLocalAccount : Action()
+        object FailOnServerError : Action()
+        object FailOnLocalAccountError : Action()
     }
 }

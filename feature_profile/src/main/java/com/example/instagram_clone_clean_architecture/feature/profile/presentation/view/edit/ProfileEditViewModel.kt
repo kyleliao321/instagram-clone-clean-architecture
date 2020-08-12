@@ -2,11 +2,13 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentDirections
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerViewModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -20,6 +22,7 @@ import java.util.*
 
 class ProfileEditViewModel(
     private val args: ProfileEditFragmentArgs,
+    private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val navigationUseCase: NavigationUseCase,
@@ -53,14 +56,16 @@ class ProfileEditViewModel(
                             )
                         )
                     },
-                    onFail = ::onFailureWhenUpdateUserProfile
+                    onFail = { failure ->
+                        sendAction(Action.FinishUpdatingUserProfile(state.originalUserProfile!!))
+                        onFailure(failure)
+                    }
                 )
             }
         }
     }
 
-
-    private fun onLoadUserProfile() = viewModelScope.launch(defaultDispatcher) {
+    private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserProfileUseCase.Param(args.userId)
         getUserProfileUseCase(params) {
             it.fold(
@@ -71,58 +76,37 @@ class ProfileEditViewModel(
                         )
                     )
                 },
-                onFail = ::onFailureWhenLoadUserProfile
+                onFail = { failure ->
+                    sendAction(Action.UserProfileLoaded(null))
+                    onFailure(failure)
+                }
             )
         }
     }
 
-    private fun onFailureWhenLoadUserProfile(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenLoadUserProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenLoadUserProfile)
-        else -> throw Exception("Unknown failure when load user profile $failure")
+    private fun onFailure(failure: Failure) = when (failure) {
+        is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.ServerError -> sendAction(Action.FailOnServerError)
+//        is Failure.LocalAccountNotFound -> sendAction(Action.RequestFailOnLocalAccount)
+        else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
-    private fun onFailureWhenUpdateUserProfile(failure: Failure) = when (failure) {
-        is Failure.NetworkConnection -> sendAction(Action.NetworkConnectionErrorWhenUpdateUserProfile)
-        is Failure.ServerError -> sendAction(Action.ServerErrorWhenUpdateUserProfile)
-        else -> throw Exception("Unknown failure when update user profile $failure")
-    }
 
     override fun onLoadData() {
-        onLoadUserProfile()
+        loadUserProfile()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.UserProfileLoaded -> state.copy(
             isUserProfileLoading = false,
             originalUserProfile = action.userProfile,
-            bindingUserProfile = action.userProfile.copy()
+            bindingUserProfile = if (action.userProfile == null) null else action.userProfile.copy()
         )
-        is Action.NetworkConnectionErrorWhenLoadUserProfile -> state.copy(
-            isUserProfileLoading = false,
-            isNetworkConnectionFail = true,
-            isServerError = false,
-            originalUserProfile = null,
-            bindingUserProfile = null
+        is Action.FailOnNetworkConnection -> state.copy(
+            isNetworkError = true
         )
-        is Action.NetworkConnectionErrorWhenUpdateUserProfile -> state.copy(
-            isUserProfileUpdating = false,
-            isNetworkConnectionFail = true,
-            isServerError = false,
-            bindingUserProfile = state.originalUserProfile
-        )
-        is Action.ServerErrorWhenLoadUserProfile -> state.copy(
-            isUserProfileLoading = false,
-            isServerError = true,
-            isNetworkConnectionFail = false,
-            originalUserProfile = null,
-            bindingUserProfile = null
-        )
-        is Action.ServerErrorWhenUpdateUserProfile -> state.copy(
-            isUserProfileUpdating = false,
-            isNetworkConnectionFail = false,
-            isServerError = true,
-            bindingUserProfile = state.originalUserProfile
+        is Action.FailOnServerError -> state.copy(
+            isServerError = true
         )
         is Action.StartUpdatingUserProfile -> state.copy(
             isUserProfileUpdating = true
@@ -137,19 +121,17 @@ class ProfileEditViewModel(
     data class ViewState(
         val isUserProfileLoading: Boolean = true,
         val isUserProfileUpdating: Boolean = false,
-        val isNetworkConnectionFail: Boolean = false,
+        val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val originalUserProfile: UserDomainModel? = null,
         val bindingUserProfile: UserDomainModel? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class UserProfileLoaded(val userProfile: UserDomainModel) : Action()
+        class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class FinishUpdatingUserProfile(val userProfile: UserDomainModel) : Action()
         object StartUpdatingUserProfile : Action()
-        object ServerErrorWhenLoadUserProfile : Action()
-        object ServerErrorWhenUpdateUserProfile : Action()
-        object NetworkConnectionErrorWhenLoadUserProfile : Action()
-        object NetworkConnectionErrorWhenUpdateUserProfile : Action()
+        object FailOnNetworkConnection : Action()
+        object FailOnServerError : Action()
     }
 }

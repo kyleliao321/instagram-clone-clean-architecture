@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
@@ -48,6 +49,8 @@ class ProfileEditViewModelTest {
     @MockK(relaxed = true)
     internal lateinit var observer: Observer<ProfileEditViewModel.ViewState>
 
+    private lateinit var getLoginUserUseCase: GetLoginUserUseCase
+
     private lateinit var updateUserProfileUseCase: UpdateUserProfileUseCase
 
     private lateinit var getUserProfileUseCase: GetUserProfileUseCase
@@ -71,6 +74,7 @@ class ProfileEditViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
+        getLoginUserUseCase = GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         updateUserProfileUseCase = UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
@@ -78,6 +82,7 @@ class ProfileEditViewModelTest {
         testViewModel =
             ProfileEditViewModel(
                 profileEditFragmentArgs,
+                getLoginUserUseCase,
                 getUserProfileUseCase,
                 updateUserProfileUseCase,
                 navigationUseCase,
@@ -113,7 +118,7 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = true,
             isUserProfileUpdating = false,
-            isNetworkConnectionFail = false,
+            isNetworkError = false,
             isServerError = false,
             originalUserProfile = null,
             bindingUserProfile = null
@@ -133,7 +138,7 @@ class ProfileEditViewModelTest {
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
             isServerError = false,
-            isNetworkConnectionFail = false,
+            isNetworkError = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile
         )
@@ -152,7 +157,7 @@ class ProfileEditViewModelTest {
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
             isServerError = false,
-            isNetworkConnectionFail = true,
+            isNetworkError = true,
             originalUserProfile = null,
             bindingUserProfile = null
         )
@@ -171,7 +176,7 @@ class ProfileEditViewModelTest {
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
             isServerError = true,
-            isNetworkConnectionFail = false,
+            isNetworkError = false,
             originalUserProfile = null,
             bindingUserProfile = null
         )
@@ -195,7 +200,7 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
-            isNetworkConnectionFail = false,
+            isNetworkError = false,
             isServerError = false,
             originalUserProfile = editedUserProfile,
             bindingUserProfile = editedUserProfile
@@ -215,12 +220,12 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, load, updating, updated
-        verify(exactly = 4) { observer.onChanged(any()) }
+        // expect liveData updated four times: init, load, updating, updated, failOnNetwork
+        verify(exactly = 5) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
-            isNetworkConnectionFail = true,
+            isNetworkError = true,
             isServerError = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile
@@ -240,12 +245,12 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, load, updating, updated
-        verify(exactly = 4) { observer.onChanged(any()) }
+        // expect liveData updated four times: init, load, updating, updated, failOnServerError
+        verify(exactly = 5) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
-            isNetworkConnectionFail = false,
+            isNetworkError = false,
             isServerError = true,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile
