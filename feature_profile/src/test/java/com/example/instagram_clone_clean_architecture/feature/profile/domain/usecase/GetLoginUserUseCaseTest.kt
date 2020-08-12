@@ -75,7 +75,7 @@ class GetLoginUserUseCaseTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Failure(Failure.ServerError) // TODO: add login failure
+        result shouldBeEqualTo Either.Failure(Failure.LocalAccountNotFound)
     }
 
 }

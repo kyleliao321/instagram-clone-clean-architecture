@@ -18,4 +18,9 @@ sealed class Failure {
      *      2. Server request is invalid.
      */
     object ServerError: Failure()
+
+    /**
+     * Indicate that the failure is caused by application has no login-user
+     */
+    object LocalAccountNotFound: Failure()
 }

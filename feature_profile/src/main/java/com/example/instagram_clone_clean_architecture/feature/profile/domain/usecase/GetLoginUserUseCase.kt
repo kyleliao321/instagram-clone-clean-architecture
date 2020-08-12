@@ -19,7 +19,7 @@ class GetLoginUserUseCase(
         profileRepository.getLoginUserProfile().fold(
             onSucceed = { userProfile ->
                 result = when (userProfile) {
-                    null -> Either.Failure(Failure.ServerError) // TODO: Add login type failure
+                    null -> Either.Failure(Failure.LocalAccountNotFound)
                     else -> Either.Success(userProfile)
                 }
             },
