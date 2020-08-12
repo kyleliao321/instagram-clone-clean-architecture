@@ -8,6 +8,8 @@ import org.kodein.di.instance
 import org.kodein.di.singleton
 
 internal val domainModule = DI.Module("${MODULE_NAME}DomainModule") {
+    
+    bind() from singleton { GetLoginUserUseCase(instance()) }
 
     bind() from singleton { GetUserProfileUseCase(instance()) }
 
