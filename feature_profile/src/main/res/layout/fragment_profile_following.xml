@@ -42,7 +42,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:userProfileList="@{viewModel.stateLiveData.followingList}"
+            app:followUserList="@{viewModel.stateLiveData.followingList}"
+            app:compareList="@{viewModel.stateLiveData.loginUserFollowingList}"
             tools:listitem="@layout/fragment_profile_follow_user_view_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

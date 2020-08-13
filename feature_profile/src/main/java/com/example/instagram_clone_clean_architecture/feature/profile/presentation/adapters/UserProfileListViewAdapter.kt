@@ -12,15 +12,15 @@ import timber.log.Timber
 
 class UserProfileListViewAdapter(
     private val onClickListener: OnClickListener
-) : ListAdapter<UserDomainModel, UserProfileListViewAdapter.UserProfileViewHolder>(DiffCallback)  {
+) : ListAdapter<UserProfileListViewAdapter.DataItem, UserProfileListViewAdapter.UserProfileViewHolder>(DiffCallback)  {
 
     override fun onBindViewHolder(holder: UserProfileViewHolder, position: Int) {
-        val userProfile = getItem(position)
+        val dataItem = getItem(position)
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(userProfile)
+            onClickListener.onClick(dataItem)
         }
 
-        holder.bind(userProfile)
+        holder.bind(dataItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserProfileViewHolder {
@@ -31,8 +31,8 @@ class UserProfileListViewAdapter(
         private val binding: FragmentProfileFollowUserViewItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(userProfile: UserDomainModel) {
-            binding.userProfile = userProfile
+        fun bind(dataItem: DataItem) {
+            binding.dataItem = dataItem
         }
 
         companion object {
@@ -43,20 +43,40 @@ class UserProfileListViewAdapter(
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<UserDomainModel>() {
+    companion object DiffCallback: DiffUtil.ItemCallback<DataItem>() {
         override fun areContentsTheSame(
-            oldItem: UserDomainModel,
-            newItem: UserDomainModel
+            oldItem: DataItem,
+            newItem: DataItem
         ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areItemsTheSame(oldItem: UserDomainModel, newItem: UserDomainModel): Boolean {
-            return oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: DataItem, newItem: DataItem): Boolean {
+            return oldItem.userProfile.id == newItem.userProfile.id
         }
     }
 
-    class OnClickListener(private val clickCallback: (userProfile: UserDomainModel) -> Unit) {
-        fun onClick(userProfile: UserDomainModel) = clickCallback(userProfile)
+    class OnClickListener(private val clickCallback: (dataItem: DataItem) -> Unit) {
+        fun onClick(dataItem: DataItem) = clickCallback(dataItem)
+    }
+
+    sealed class DataItem {
+        abstract val userProfile : UserDomainModel
+        abstract val isFollowingType : Boolean
+        abstract val isCancelingType : Boolean
+
+        data class FollowingItem(override val userProfile: UserDomainModel) : DataItem() {
+            override val isFollowingType: Boolean
+                get() = true
+            override val isCancelingType: Boolean
+                get() = false
+        }
+
+        data class CancelingType(override val userProfile: UserDomainModel) : DataItem() {
+            override val isFollowingType: Boolean
+                get() = false
+            override val isCancelingType: Boolean
+                get() = true
+        }
     }
 }

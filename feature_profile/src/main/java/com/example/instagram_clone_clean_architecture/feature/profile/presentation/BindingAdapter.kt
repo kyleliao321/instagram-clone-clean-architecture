@@ -11,6 +11,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
+import timber.log.Timber
 
 @BindingAdapter("app:userPostData")
 fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>) {
@@ -18,10 +19,24 @@ fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>
     adapter.submitList(data)
 }
 
-@BindingAdapter("app:userProfileList")
-fun bindUserProfileList(recyclerView: RecyclerView, data: List<UserDomainModel>) {
+//@BindingAdapter("app:userProfileList")
+//fun bindUserProfileList(recyclerView: RecyclerView, data: List<UserDomainModel>) {
+//    val adapter = recyclerView.adapter as UserProfileListViewAdapter
+//    adapter.submitList(data)
+//}
+
+@BindingAdapter("app:followUserList", "app:compareList")
+fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDomainModel>, compare: List<UserDomainModel>) {
     val adapter = recyclerView.adapter as UserProfileListViewAdapter
-    adapter.submitList(data)
+    val dataItems = data
+        .map {
+            when (it) {
+                in compare -> UserProfileListViewAdapter.DataItem.CancelingType(it)
+                !in compare -> UserProfileListViewAdapter.DataItem.FollowingItem(it)
+                else -> throw IllegalStateException("Condition should be exhausted")
+            }
+        }
+    adapter.submitList(dataItems)
 }
 
 @BindingAdapter("app:postImage")

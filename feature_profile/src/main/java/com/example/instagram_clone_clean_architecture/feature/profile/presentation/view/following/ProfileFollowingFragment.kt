@@ -47,7 +47,7 @@ class ProfileFollowingFragment: InjectionFragment() {
     private fun setupFollowingUserListAdapter() {
         binding.userFollowingListContainer.adapter = UserProfileListViewAdapter(
             UserProfileListViewAdapter.OnClickListener {
-                viewModel.onNavigateToUserProfile(it)
+                viewModel.onNavigateToUserProfile(it.userProfile)
             }
         )
     }
