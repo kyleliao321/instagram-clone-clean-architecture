@@ -4,10 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowerUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingViewModel
 import com.example.library_base.domain.exception.Failure
@@ -55,6 +52,10 @@ class ProfileFollowerViewModelTest {
 
     private lateinit var getFollowingUserUseCase: GetFollowingUserUseCase
 
+    private lateinit var addUserRelationUseCase: AddUserRelationUseCase
+
+    private lateinit var removeUserRelationUseCase: RemoveUserRelationUseCase
+
     private lateinit var navigationUseCase: NavigationUseCase
 
     private lateinit var testViewModel: ProfileFollowerViewModel
@@ -85,6 +86,8 @@ class ProfileFollowerViewModelTest {
         getLoginUserUseCase = GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getFollowerUserUseCase = GetFollowerUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getFollowingUserUseCase = GetFollowingUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        addUserRelationUseCase = AddUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        removeUserRelationUseCase = RemoveUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
 
         testViewModel =
@@ -93,6 +96,8 @@ class ProfileFollowerViewModelTest {
                 getLoginUserUseCase,
                 getFollowerUserUseCase,
                 getFollowingUserUseCase,
+                addUserRelationUseCase,
+                removeUserRelationUseCase,
                 navigationUseCase,
                 mainCoroutineRule.testDispatcher
             )
@@ -231,6 +236,110 @@ class ProfileFollowerViewModelTest {
         )
     }
 
+    @Test
+    fun `verify view state when addUserRelationUseCase invoke successfully`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.addUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Success(correctFollowerList)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 8) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, reload, loginUser, loginFollowing, following
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = false,
+            isServerError = false,
+            isNetworkError = false,
+            loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
+            followerList = correctFollowerList
+        )
+    }
+
+    @Test
+    fun `verify view state when addUserRelationUseCase fail on network connection`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.addUserRelation(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 5) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, fail
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = false,
+            isServerError = false,
+            isNetworkError = true,
+            loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
+            followerList = correctFollowerList
+        )
+    }
+
+    @Test
+    fun `verify view state when removeUserRelationUseCase invoke successfully`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.removeUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Success(correctFollowerList)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Success(correctFollowingList)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 8) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, reload, loginUser, loginFollowing, following
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = false,
+            isServerError = false,
+            isNetworkError = false,
+            loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
+            followerList = correctFollowerList
+        )
+    }
+
+    @Test
+    fun `verify view state when removeUserRelationUseCase fail on network connection`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.removeUserRelation(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 5) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, fail
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = false,
+            isServerError = false,
+            isNetworkError = true,
+            loginUser = correctUserProfile,
+            loginUserFollowingList = correctFollowingList,
+            followerList = correctFollowerList
+        )
+    }
+
     /**
      * ViewState edge-case test (i.e: useCases failed on different failure type)
      */
@@ -281,5 +390,62 @@ class ProfileFollowerViewModelTest {
             followerList = listOf()
         )
     }
+
+    @Test
+    fun `verify view state when addUserRelationUseCase invoke successfully but reload data all fail`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.addUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 10) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, reload, followingLoaded, fail, loginUserLoaded, fail*2
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = true,
+            isServerError = true,
+            isNetworkError = false,
+            loginUser = null,
+            loginUserFollowingList = listOf(),
+            followerList = listOf()
+        )
+    }
+
+    @Test
+    fun `verify view state when removeUserRelationUseCase invoke successfully but reload data all fail`() {
+        `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
+
+        // given
+        every { runBlocking { profileRepository.removeUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { profileRepository.getFollowerById(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.getFollowingById(any()) }} returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }
+
+        // expect
+        verify(exactly = 10) { observer.onChanged(any()) } // Init, loginUser, loginFollowing, following, reload, followingLoaded, fail, loginUserLoaded, fail*2
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileFollowerViewModel.ViewState(
+            isLoginUserFollowingLoading = false,
+            isFollowerListLoading = false,
+            isLoginUserLoading = false,
+            isLocalAccountError = true,
+            isServerError = true,
+            isNetworkError = false,
+            loginUser = null,
+            loginUserFollowingList = listOf(),
+            followerList = listOf()
+        )
+    }
+
 
 }
