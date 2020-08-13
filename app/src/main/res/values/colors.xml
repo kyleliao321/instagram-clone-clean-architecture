@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="material_gray_050">#FAFAFA</color>
-    <color name="material_gray_100">#F5F5F5</color>
-    <color name="material_gray_200">#EEEEEE</color>
-    <color name="material_gray_300">#E0E0E0</color>
-    <color name="material_gray_400">#BDBDBD</color>
-    <color name="material_gray_500">#9E9E9E</color>
-    <color name="material_gray_600">#757575</color>
-    <color name="material_gray_700">#616161</color>
-    <color name="material_gray_800">#424242</color>
-    <color name="material_gray_900">#212121</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray_light">#dddddd</color>
+    <color name="gray_dark">#212121</color>
+    <color name="black">#000000</color>
 
+    <color name="blue_light">#2962FF</color>
+    <color name="blue_dark">#0039CB</color>
+
+    <color name="red">#F44336</color>
+
+    <color name="green">#00FF00</color>
 </resources>

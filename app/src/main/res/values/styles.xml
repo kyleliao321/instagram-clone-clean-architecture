@@ -2,18 +2,28 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#212121</item>
-        <item name="colorPrimaryVariant">#000000</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorSecondary">#2962FF</item>
-        <item name="colorSecondaryVariant">#0039CB</item>
-        <item name="colorOnSecondary">#FFFFFF</item>
-        <item name="colorError">#F44336</item>
-        <item name="colorOnError">#FFFFFF</item>
-        <item name="colorSurface">#FFFFFF</item>
-        <item name="colorOnSurface">#212121</item>
-        <item name="colorOnBackground">#212121</item>
-        <item name="backgroundColor">#dddddd</item>
+        <item name="colorPrimary">@color/gray_dark</item>
+        <item name="colorPrimaryVariant">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/blue_light</item>
+        <item name="colorSecondaryVariant">@color/blue_dark</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorError">@color/red</item>
+        <item name="colorOnError">@color/white</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/gray_dark</item>
+        <item name="colorOnBackground">@color/gray_dark</item>
+        <item name="backgroundColor">@color/gray_light</item>
+    </style>
+
+    <style name="FollowButtonTheme" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="colorPrimary">@color/green</item>
+        <item name="colorOnSurface">@color/green</item>
+    </style>
+
+    <style name="CancelButtonTheme" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="colorPrimary">@color/red</item>
+        <item name="colorOnSurface">@color/red</item>
     </style>
 
 </resources>
