@@ -27,5 +27,12 @@ interface ProfileRepository {
 
     suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure>
 
+    /**
+     * Data update operations
+     */
     suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure>
+
+    suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure>
+
+    suspend fun removeUserRelation(follower: Int, following: Int): Either<Unit, Failure>
 }

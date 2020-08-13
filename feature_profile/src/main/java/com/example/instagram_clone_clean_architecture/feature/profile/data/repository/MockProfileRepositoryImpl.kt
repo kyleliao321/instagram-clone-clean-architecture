@@ -20,16 +20,16 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         3 to UserDomainModel(id = 3, name = "John", userName = "john", postNum = 0, followingNum = 1, followerNum = 0)
     )
 
-    private val userFollowerMap: HashMap<Int, List<Int>> = hashMapOf(
-        1 to listOf(2, 3),
-        2 to listOf(),
-        3 to listOf()
+    private val userFollowerMap: HashMap<Int, MutableList<Int>> = hashMapOf(
+        1 to mutableListOf(2, 3),
+        2 to mutableListOf(),
+        3 to mutableListOf()
     )
 
-    private val userFollowingMap: HashMap<Int, List<Int>> = hashMapOf(
-        1 to listOf(2),
-        2 to listOf(1, 3),
-        3 to listOf(1)
+    private val userFollowingMap: HashMap<Int, MutableList<Int>> = hashMapOf(
+        1 to mutableListOf(2),
+        2 to mutableListOf(1, 3),
+        3 to mutableListOf(1)
     )
 
     private val postMap: HashMap<Int, PostDomainModel> = hashMapOf(
@@ -137,6 +137,48 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
                 Either.Success(userProfileMap[userId]!!)
             }
         }
+    }
+
+    override suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
+
+        userFollowingMap[follower]?.let { _ ->
+            if (following !in userFollowerMap[follower]!!) {
+                userFollowingMap[follower]!!.add(following)
+            } else {
+                throw IllegalArgumentException("Cannot add relationship that is already exist")
+            }
+        }
+
+        userFollowerMap[following]?.let { _ ->
+            if (follower !in userFollowingMap[following]!!) {
+                userFollowingMap[following]!!.add(follower)
+            } else {
+                throw IllegalArgumentException("Cannot add relationship that is already exist")
+            }
+        }
+
+        return Either.Success(Unit)
+    }
+
+    override suspend fun removeUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
+
+        userFollowingMap[follower]?.let { _ ->
+            if (following in userFollowingMap[follower]!!) {
+                userFollowingMap[follower]!!.remove(following)
+            } else {
+                throw IllegalArgumentException("Cannot remove relationship that is not exist")
+            }
+        }
+
+        userFollowerMap[following]?.let { _ ->
+            if (follower in userFollowerMap[following]!!) {
+                userFollowerMap[following]!!.remove(follower)
+            } else {
+                throw IllegalArgumentException("Cannot remove relationship that is not exist")
+            }
+        }
+
+        return Either.Success(Unit)
     }
 
 }
