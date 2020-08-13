@@ -23,5 +23,9 @@ internal val domainModule = DI.Module("${MODULE_NAME}DomainModule") {
 
     bind() from singleton { UpdateUserProfileUseCase(instance()) }
 
+    bind() from singleton { AddUserRelationUseCase(instance()) }
+
+    bind() from singleton { RemoveUserRelationUseCase(instance()) }
+
     bind() from singleton { NavigationUseCase(instance()) }
 }

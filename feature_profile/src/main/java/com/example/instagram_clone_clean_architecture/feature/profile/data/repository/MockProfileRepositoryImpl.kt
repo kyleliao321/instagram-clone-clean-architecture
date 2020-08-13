@@ -22,8 +22,8 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
 
     private val userFollowerMap: HashMap<Int, MutableList<Int>> = hashMapOf(
         1 to mutableListOf(2, 3),
-        2 to mutableListOf(),
-        3 to mutableListOf()
+        2 to mutableListOf(1),
+        3 to mutableListOf(2)
     )
 
     private val userFollowingMap: HashMap<Int, MutableList<Int>> = hashMapOf(

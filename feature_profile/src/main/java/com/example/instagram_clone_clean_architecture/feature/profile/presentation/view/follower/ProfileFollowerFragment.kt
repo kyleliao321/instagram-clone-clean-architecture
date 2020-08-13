@@ -46,8 +46,14 @@ class ProfileFollowerFragment: InjectionFragment() {
 
     private fun setFollowerListAdapter() {
         binding.userFollowerListContainer.adapter = UserProfileListViewAdapter(
-            UserProfileListViewAdapter.OnClickListener {
+            itemOnClickListener = UserProfileListViewAdapter.OnClickListener {
                 viewModel.onNavigateToUserProfile(it.userProfile)
+            },
+            followButtonClickListener = UserProfileListViewAdapter.OnClickListener {
+                viewModel.addUserRelation(it.userProfile)
+            },
+            removeButtonClickListener = UserProfileListViewAdapter.OnClickListener {
+                viewModel.removeUserRelation(it.userProfile)
             }
         )
     }

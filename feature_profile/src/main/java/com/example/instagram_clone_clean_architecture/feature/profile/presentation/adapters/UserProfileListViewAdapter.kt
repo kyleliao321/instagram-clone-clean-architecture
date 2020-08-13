@@ -11,16 +11,18 @@ import org.jetbrains.annotations.NotNull
 import timber.log.Timber
 
 class UserProfileListViewAdapter(
-    private val onClickListener: OnClickListener
+    private val itemOnClickListener: OnClickListener<DataItem>,
+    private val followButtonClickListener: OnClickListener<DataItem>,
+    private val removeButtonClickListener: OnClickListener<DataItem>
 ) : ListAdapter<UserProfileListViewAdapter.DataItem, UserProfileListViewAdapter.UserProfileViewHolder>(DiffCallback)  {
 
     override fun onBindViewHolder(holder: UserProfileViewHolder, position: Int) {
         val dataItem = getItem(position)
         holder.itemView.setOnClickListener {
-            onClickListener.onClick(dataItem)
+            itemOnClickListener.onClick(dataItem)
         }
 
-        holder.bind(dataItem)
+        holder.bind(dataItem, followButtonClickListener, removeButtonClickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserProfileViewHolder {
@@ -31,8 +33,18 @@ class UserProfileListViewAdapter(
         private val binding: FragmentProfileFollowUserViewItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(dataItem: DataItem) {
+        fun bind(
+            dataItem: DataItem,
+            followButtonClickListener: OnClickListener<DataItem>,
+            removeButtonClickListener: OnClickListener<DataItem>
+        ) {
             binding.dataItem = dataItem
+            binding.followButton.setOnClickListener {
+                followButtonClickListener.onClick(dataItem)
+            }
+            binding.removeFollowerButton.setOnClickListener {
+                removeButtonClickListener.onClick(dataItem)
+            }
         }
 
         companion object {
@@ -56,10 +68,14 @@ class UserProfileListViewAdapter(
         }
     }
 
-    class OnClickListener(private val clickCallback: (dataItem: DataItem) -> Unit) {
-        fun onClick(dataItem: DataItem) = clickCallback(dataItem)
+    class OnClickListener<in CallbackParam>(private val clickCallback: (param: CallbackParam) -> Unit) {
+        fun onClick(param: CallbackParam) = clickCallback(param)
     }
 
+    /**
+     * Since each follower-following relation view has two status: following, not-following
+     * it is required to have two type of class to represent the status.
+     */
     sealed class DataItem {
         abstract val userProfile : UserDomainModel
         abstract val isFollowingType : Boolean
