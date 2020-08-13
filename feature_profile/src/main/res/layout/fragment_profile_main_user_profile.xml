@@ -166,7 +166,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
-                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile == viewModel.stateLiveData.userProfile}"
+                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile.id == viewModel.stateLiveData.userProfile.id}"
                 android:onClick="@{() -> viewModel.onNavigateToEditProfile()}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
@@ -179,7 +179,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
-                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile != viewModel.stateLiveData.userProfile}"
+                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile.id != viewModel.stateLiveData.userProfile.id}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
 
