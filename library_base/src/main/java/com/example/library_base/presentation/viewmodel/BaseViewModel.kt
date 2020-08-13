@@ -12,9 +12,7 @@ import kotlin.properties.Delegates
  *
  * Usage: Any ViewModel extends from BaseViewModel must defined its own ViewState and Action it can take.
  *        Then, it should override onReduceState function to indicate how the state should updated based
- *        on Action.
- *
- *        When there's a need to update the state, using sendAction with Action argument.
+ *        on Action. When there's a need to update the state, using sendAction with Action argument.
  */
 abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initialState: ViewState): ViewModel() {
 

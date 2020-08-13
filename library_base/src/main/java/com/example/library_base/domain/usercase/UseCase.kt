@@ -4,6 +4,14 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.*
 
+/**
+ * A abstract class that can be extends to define a use case to run in provided thread.
+ *
+ * @param Type Return type when extended use case invoke successfully.
+ * @param Params Parameters that will be used in side member run function.
+ *
+ * @property defaultDispatcher The thread that the use case will be running in.
+ */
 abstract class UseCase<out Type, in Params>(
     var defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) {
@@ -16,8 +24,8 @@ abstract class UseCase<out Type, in Params>(
     /**
      * By overriding the invoke function, the client can simply call UseCase(params) { ... }
      *
-     * Since the UseCase is the bridge between ViewModel and Data Repository, by design,
-     * it always involve data manipulation. So we can launch the callback in IO thread.
+     * @param params Parameters that should be re-directed to its own run member function.
+     * @param onResult Callback function that will be called when use case complete.
      */
     suspend operator fun invoke(params: Params, onResult: (Either<Type, Failure>) -> Unit = {}) {
         val job = withContext(defaultDispatcher) { return@withContext run(params) }

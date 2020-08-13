@@ -13,21 +13,30 @@ import com.example.instagram_clone_clean_architecture.feature.profile.presentati
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
 import timber.log.Timber
 
+/**
+ * Submit the list of post to recycler view's adapter
+ *
+ * @param data List of post.
+ */
 @BindingAdapter("app:userPostData")
 fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>) {
-    val adapter = recyclerView.adapter as UserPostGridViewAdapter
-    adapter.submitList(data)
+    val adapter = recyclerView.adapter as? UserPostGridViewAdapter
+    if (adapter == null) {
+        throw IllegalArgumentException("Given recycler view should implement ${UserPostGridViewAdapter.javaClass} as adapter")
+    } else {
+        adapter.submitList(data)
+    }
 }
 
-//@BindingAdapter("app:userProfileList")
-//fun bindUserProfileList(recyclerView: RecyclerView, data: List<UserDomainModel>) {
-//    val adapter = recyclerView.adapter as UserProfileListViewAdapter
-//    adapter.submitList(data)
-//}
-
+/**
+ * User for checking how to show the userProfile view item in following and follower list view.
+ *
+ * @param data Actual list of user profile that will be shown on screen.
+ * @param compare List of use profile for checking whether the item of @{data} is inside it.
+ */
 @BindingAdapter("app:followUserList", "app:compareList")
 fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDomainModel>, compare: List<UserDomainModel>) {
-    val adapter = recyclerView.adapter as UserProfileListViewAdapter
+    val adapter = recyclerView.adapter as? UserProfileListViewAdapter
     val dataItems = data
         .map {
             when (it) {
@@ -36,9 +45,19 @@ fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDom
                 else -> throw IllegalStateException("Condition should be exhausted")
             }
         }
-    adapter.submitList(dataItems)
+
+    if (adapter == null) {
+        throw IllegalArgumentException("Given recycler view should implement ${UserProfileListViewAdapter.javaClass} as adapter")
+    } else {
+        adapter.submitList(dataItems)
+    }
 }
 
+/**
+ * Fetch post image from remote using Coil.
+ *
+ * @param data Url source or local drawable asset for image.
+ */
 @BindingAdapter("app:postImage")
 fun loadPostImage(imageView: ImageView, data: String?) {
     data?.let {
@@ -49,6 +68,11 @@ fun loadPostImage(imageView: ImageView, data: String?) {
     }
 }
 
+/**
+ * Fetch user profile image from remote using Coil.
+ *
+ * @param data Url source or local drawable asset for image.
+ */
 @BindingAdapter("app:userImage")
 fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
     null -> imageView.load(R.drawable.user_profile_default_image)
@@ -59,6 +83,8 @@ fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
 
 /**
  * Show the view if provided @{condition} is met.
+ *
+ * @param condition Boolean value that indicate whether to allow the view to be visible or not.
  */
 @BindingAdapter("app:visibleCondition")
 fun visibleCondition(view: View, condition: Boolean) = when (condition) {
