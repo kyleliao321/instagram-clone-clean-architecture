@@ -2,6 +2,9 @@ package com.example.library_base.presentation.navigation
 
 import androidx.navigation.NavDirections
 
+/**
+ *
+ */
 class NavigationManager {
 
     private lateinit var navEventCallbackListener: (NavDirections) -> Unit

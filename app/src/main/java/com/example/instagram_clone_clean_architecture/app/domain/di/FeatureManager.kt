@@ -2,6 +2,11 @@ package com.example.instagram_clone_clean_architecture.app.domain.di
 
 import timber.log.Timber
 
+/**
+ * By using consistent naming convention for all DI modules in feature modules,
+ * we can use FeatureManager to collect all object by name, and apply them into
+ * top-level DI Module.
+ */
 object FeatureManager {
 
     private const val featurePackagePrefix = "com.example.instagram_clone_clean_architecture.feature"

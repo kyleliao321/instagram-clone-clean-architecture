@@ -1,3 +1,9 @@
+/**
+ * Since version 6.0 of Gradle update, properties defined inside buildSrc cannot be
+ * accessed from setting.gradle.kts. As a result, it is necessary to synchronize
+ * the version of plugins and including module in two places.
+ */
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

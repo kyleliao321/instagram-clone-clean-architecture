@@ -12,6 +12,9 @@ import timber.log.Timber
 
 class InstagramCloneApplication: Application(), DIAware {
 
+    /**
+     * Top-level DI module manager, includes all dependencies.
+     */
     override val di: DI = DI.lazy {
         import(androidXModule(this@InstagramCloneApplication))
         import(baseModule)

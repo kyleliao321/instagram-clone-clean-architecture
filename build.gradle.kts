@@ -19,6 +19,9 @@ allprojects {
 }
 
 subprojects {
+    // detekt can auto-reference the required file while working on module-level gradle.build.kts
+    // Without it, any plugins that apply in module-level cannot be resolved when written.
+    // (i.e: android block)
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
     detekt {
