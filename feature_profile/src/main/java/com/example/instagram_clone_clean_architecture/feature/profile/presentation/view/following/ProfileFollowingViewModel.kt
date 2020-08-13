@@ -1,10 +1,10 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following
 
+import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetFollowingUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerViewModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
@@ -19,6 +19,8 @@ class ProfileFollowingViewModel(
     private val args: ProfileFollowingFragmentArgs,
     private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getFollowingUserUseCase: GetFollowingUserUseCase,
+    private val addUserRelationUseCase: AddUserRelationUseCase,
+    private val removeUserRelationUseCase: RemoveUserRelationUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfileFollowingViewModel.ViewState, ProfileFollowingViewModel.Action>(
@@ -33,6 +35,34 @@ class ProfileFollowingViewModel(
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
+    }
+
+    fun addUserRelation(following: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
+        val params = AddUserRelationUseCase.Param(state.loginUser!!.id, following.id)
+
+        addUserRelationUseCase(params) {
+            it.fold(
+                onSucceed = {
+                    sendAction(Action.ReloadData)
+                    loadData()
+                },
+                onFail = ::onFailure
+            )
+        }
+    }
+
+    fun removeUserRelation(following: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
+        val params = RemoveUserRelationUseCase.Param(state.loginUser!!.id, following.id)
+
+        removeUserRelationUseCase(params) {
+            it.fold(
+                onSucceed = {
+                    sendAction(Action.ReloadData)
+                    loadData()
+                },
+                onFail = ::onFailure
+            )
+        }
     }
 
     private fun loadLoginUserData() = viewModelScope.launch(defaultDispatcher) {
@@ -127,6 +157,7 @@ class ProfileFollowingViewModel(
         is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
+        is Action.ReloadData -> ViewState()
     }
 
     data class ViewState(
@@ -148,5 +179,6 @@ class ProfileFollowingViewModel(
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnLocalAccountError : Action()
+        object ReloadData : Action()
     }
 }
