@@ -45,10 +45,16 @@ class ProfileFollowingFragment: InjectionFragment() {
     }
 
     private fun setupFollowingUserListAdapter() {
-//        binding.userFollowingListContainer.adapter = UserProfileListViewAdapter(
-//            UserProfileListViewAdapter.OnClickListener {
-//                viewModel.onNavigateToUserProfile(it.userProfile)
-//            }
-//        )
+        binding.userFollowingListContainer.adapter = UserProfileListViewAdapter(
+            itemOnClickListener = UserProfileListViewAdapter.OnClickListener {
+                viewModel.onNavigateToUserProfile(it.userProfile)
+            },
+            followButtonClickListener = UserProfileListViewAdapter.OnClickListener {
+                viewModel.addUserRelation(it.userProfile)
+            },
+            removeButtonClickListener = UserProfileListViewAdapter.OnClickListener {
+                viewModel.removeUserRelation(it.userProfile)
+            }
+        )
     }
 }
