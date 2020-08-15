@@ -5,6 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter.DataItem.Type" />
+
         <variable
             name="dataItem"
             type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter.DataItem" />
@@ -55,7 +57,7 @@
                 android:layout_centerVertical="true"
                 android:text="remove"
                 android:theme="@style/CancelButtonTheme"
-                app:visibleCondition="@{dataItem.cancelingType}"
+                app:visibleCondition="@{dataItem.type == Type.CANCELING}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
             <Button
@@ -67,7 +69,7 @@
                 android:layout_centerVertical="true"
                 android:text="follow"
                 android:theme="@style/FollowButtonTheme"
-                app:visibleCondition="@{dataItem.followingType}"
+                app:visibleCondition="@{dataItem.type == Type.FOLLOWING}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
 
         </RelativeLayout>

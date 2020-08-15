@@ -33,16 +33,21 @@ fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>
  *
  * @param data Actual list of user profile that will be shown on screen.
  * @param compare List of use profile for checking whether the item of @{data} is inside it.
+ * @param loginUser Currently login user, to check whether the item of @{data} is user it-self.
  */
-@BindingAdapter("app:followUserList", "app:compareList")
-fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDomainModel>, compare: List<UserDomainModel>) {
+@BindingAdapter("app:followUserList", "app:compareList", "app:loginUser")
+fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDomainModel>, compare: List<UserDomainModel>, loginUser: UserDomainModel?) {
     val adapter = recyclerView.adapter as? UserProfileListViewAdapter
     val dataItems = data
         .map {
-            when (it) {
-                in compare -> UserProfileListViewAdapter.DataItem.CancelingType(it)
-                !in compare -> UserProfileListViewAdapter.DataItem.FollowingItem(it)
-                else -> throw IllegalStateException("Condition should be exhausted")
+            if (it == loginUser) {
+                UserProfileListViewAdapter.DataItem.GoneType(it)
+            } else {
+                when (it) {
+                    in compare -> UserProfileListViewAdapter.DataItem.CancelingType(it)
+                    !in compare -> UserProfileListViewAdapter.DataItem.FollowingItem(it)
+                    else -> throw IllegalStateException("Condition should be exhausted")
+                }
             }
         }
 

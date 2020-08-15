@@ -44,6 +44,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:followUserList="@{viewModel.stateLiveData.followingList}"
             app:compareList="@{viewModel.stateLiveData.loginUserFollowingList}"
+            app:loginUser="@{viewModel.stateLiveData.loginUser}"
             tools:listitem="@layout/fragment_profile_follow_user_view_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

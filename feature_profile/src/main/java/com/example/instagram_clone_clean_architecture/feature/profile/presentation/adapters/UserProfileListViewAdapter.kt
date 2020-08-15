@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters
 
+import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -73,26 +74,31 @@ class UserProfileListViewAdapter(
     }
 
     /**
-     * Since each follower-following relation view has two status: following, not-following
-     * it is required to have two type of class to represent the status.
+     * Since each follower-following relation view has three status: following, not-following, gone
+     * it is required to have three type of class to represent the status.
      */
     sealed class DataItem {
+
+        enum class Type {
+            FOLLOWING, CANCELING, GONE
+        }
+
         abstract val userProfile : UserDomainModel
-        abstract val isFollowingType : Boolean
-        abstract val isCancelingType : Boolean
+        abstract val type: Type
 
         data class FollowingItem(override val userProfile: UserDomainModel) : DataItem() {
-            override val isFollowingType: Boolean
-                get() = true
-            override val isCancelingType: Boolean
-                get() = false
+            override val type: Type
+                get() = Type.FOLLOWING
         }
 
         data class CancelingType(override val userProfile: UserDomainModel) : DataItem() {
-            override val isFollowingType: Boolean
-                get() = false
-            override val isCancelingType: Boolean
-                get() = true
+            override val type: Type
+                get() = Type.CANCELING
+        }
+
+        data class GoneType(override val userProfile: UserDomainModel) : DataItem() {
+            override val type: Type
+                get() = Type.GONE
         }
     }
 }

@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
+import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -151,7 +152,7 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
 
         userFollowerMap[following]?.let { _ ->
             if (follower !in userFollowingMap[following]!!) {
-                userFollowingMap[following]!!.add(follower)
+                userFollowerMap[following]!!.add(follower)
             } else {
                 throw IllegalArgumentException("Cannot add relationship that is already exist")
             }
