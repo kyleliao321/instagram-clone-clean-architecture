@@ -15,6 +15,14 @@ data class UserDomainModel(
         SAME, REMOVE, FOLLOW
     }
 
+    /**
+     * Depending on @{userProfile} and @{followingList}, the given userProfile can have three types
+     * for user following/editing actions.
+     *
+     * @param userProfile Another userProfile for comparing if two are the same.
+     * @param followingList List of userProfiles to determining is given profile followable or
+     *                      removable.
+     */
     inline fun getType(userProfile: UserDomainModel, followingList: List<UserDomainModel>) : Type {
 
         if (userProfile == this) {

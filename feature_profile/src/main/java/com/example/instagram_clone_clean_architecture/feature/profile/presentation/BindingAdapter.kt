@@ -31,6 +31,10 @@ fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>
 /**
  * User for checking how to show the userProfile view item in following and follower list view.
  *
+ * Although this behaviour can be done by allowing each view to call userProfile.getType(...),
+ * it will have to do data manipulation for N times. In contrast, by implementing comparing logic on
+ * recyclerView level, it can reduce amount of CPU cycles for manipulation.
+ *
  * @param data Actual list of user profile that will be shown on screen.
  * @param compare List of use profile for checking whether the item of @{data} is inside it.
  * @param loginUser Currently login user, to check whether the item of @{data} is user it-self.
