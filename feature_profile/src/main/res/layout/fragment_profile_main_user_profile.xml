@@ -5,6 +5,7 @@
 
     <data>
         <import type="android.view.View"/>
+        <import type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel.Type" />
 
         <variable
             name="viewModel"
@@ -166,7 +167,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
-                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile.id == viewModel.stateLiveData.userProfile.id}"
+                app:visibleCondition="@{viewModel.stateLiveData.userProfile.getType(viewModel.stateLiveData.loginUserProfile,viewModel.stateLiveData.loginUserFollowingList) == Type.SAME}"
                 android:onClick="@{() -> viewModel.onNavigateToEditProfile()}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
@@ -175,11 +176,27 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Follow"
+                android:theme="@style/FollowButtonTheme"
                 app:layout_constraintTop_toTopOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
                 app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
-                app:visibleCondition="@{viewModel.stateLiveData.loginUserProfile.id != viewModel.stateLiveData.userProfile.id}"
+                app:visibleCondition="@{viewModel.stateLiveData.userProfile.getType(viewModel.stateLiveData.loginUserProfile,viewModel.stateLiveData.loginUserFollowingList) == Type.FOLLOW}"
+                android:onClick="@{() -> viewModel.addUserRelation()}"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+            <Button
+                android:id="@+id/user_profile_remove_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Remove"
+                android:theme="@style/CancelButtonTheme"
+                app:layout_constraintTop_toTopOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintBottom_toBottomOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintStart_toStartOf="@+id/user_profile_action_conatiner"
+                app:layout_constraintEnd_toEndOf="@+id/user_profile_action_conatiner"
+                app:visibleCondition="@{viewModel.stateLiveData.userProfile.getType(viewModel.stateLiveData.loginUserProfile,viewModel.stateLiveData.loginUserFollowingList) == Type.REMOVE}"
+                android:onClick="@{() -> viewModel.removeUserRelation()}"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
 

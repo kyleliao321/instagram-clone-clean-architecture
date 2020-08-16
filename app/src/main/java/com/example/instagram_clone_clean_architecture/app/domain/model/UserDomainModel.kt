@@ -9,4 +9,23 @@ data class UserDomainModel(
     var postNum: Int,
     var followingNum: Int,
     var followerNum: Int
-)
+) {
+
+    enum class Type {
+        SAME, REMOVE, FOLLOW
+    }
+
+    inline fun getType(userProfile: UserDomainModel, followingList: List<UserDomainModel>) : Type {
+
+        if (userProfile == this) {
+            return Type.SAME
+        }
+
+        return when (this) {
+            in followingList -> Type.REMOVE
+            !in followingList -> Type.FOLLOW
+            else -> throw IllegalStateException("Conditions should be exhausted")
+        }
+    }
+
+}
