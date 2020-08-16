@@ -6,7 +6,6 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
-import timber.log.Timber
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -141,10 +140,6 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
     }
 
     override suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
-
-        Timber.d("Current followingMap: $userFollowingMap")
-        Timber.d("Current followerMap: $userFollowerMap")
-        Timber.d("$follower tries to follow $following")
 
         userFollowingMap[follower]?.let { _ ->
             if (following !in userFollowingMap[follower]!!) {

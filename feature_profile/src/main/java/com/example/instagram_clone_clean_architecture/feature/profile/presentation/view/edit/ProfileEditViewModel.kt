@@ -86,7 +86,6 @@ class ProfileEditViewModel(
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
-//        is Failure.LocalAccountNotFound -> sendAction(Action.RequestFailOnLocalAccount)
         else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
