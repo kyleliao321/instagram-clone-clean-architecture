@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp"
+    android:paddingHorizontal="10dp">
+
+    <ImageView
+        android:id="@+id/user_profile_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:cropToPadding="true"
+        android:scaleType="fitXY"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="10dp"
+        android:src="@drawable/user_profile_image_background_shape"/>
+
+    <TextView
+        android:id="@+id/user_profile_user_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:layout_toEndOf="@id/user_profile_image"
+        android:layout_toStartOf="@+id/action_container"
+        android:layout_centerVertical="true"
+        android:background="?attr/backgroundColor"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <RelativeLayout
+        android:id="@+id/action_container"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        android:background="?attr/backgroundColor">
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

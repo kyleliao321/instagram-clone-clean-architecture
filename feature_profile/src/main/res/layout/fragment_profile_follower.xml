@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerViewModel" />
@@ -32,11 +34,41 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent=".1" />
 
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/user_follower_list_container_shimmers"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:visibleCondition="@{viewModel.stateLiveData.loginUserFollowingLoading || viewModel.stateLiveData.followerListLoading}"
+            app:layout_constraintTop_toBottomOf="@+id/text_list_divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+                <include layout="@layout/fragment_profile_follow_user_view_item_shimmer" />
+
+            </LinearLayout>
+
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_follower_list_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
+            app:visibleCondition="@{!(viewModel.stateLiveData.loginUserFollowingLoading || viewModel.stateLiveData.followerListLoading)}"
             app:layout_constraintTop_toBottomOf="@+id/text_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
