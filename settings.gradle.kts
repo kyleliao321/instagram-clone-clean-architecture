@@ -34,6 +34,7 @@ pluginManagement {
 }
 
 include(":feature_profile")
+include(":feature_search")
 include(":library_base")
 include(":app")
 rootProject.name = "instagram-clone-clean-architecture"

@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/featureProfileNavGraph">
+    app:startDestination="@id/featureSearchNavGraph">
 
     <include-dynamic
         android:id="@+id/featureProfileNavGraph"
         app:moduleName="feature_profile"
         app:graphResName="feature_profile_nav_graph" />
+
+    <include-dynamic
+        android:id="@+id/featureSearchNavGraph"
+        app:moduleName="feature_search"
+        app:graphResName="feature_search_nav_graph" />
 
 </navigation>
