@@ -142,8 +142,12 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
 
     override suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
 
+        Timber.d("Current followingMap: $userFollowingMap")
+        Timber.d("Current followerMap: $userFollowerMap")
+        Timber.d("$follower tries to follow $following")
+
         userFollowingMap[follower]?.let { _ ->
-            if (following !in userFollowerMap[follower]!!) {
+            if (following !in userFollowingMap[follower]!!) {
                 userFollowingMap[follower]!!.add(following)
             } else {
                 throw IllegalArgumentException("Cannot add relationship that is already exist")
@@ -151,7 +155,7 @@ internal class MockProfileRepositoryImpl: ProfileRepository {
         }
 
         userFollowerMap[following]?.let { _ ->
-            if (follower !in userFollowingMap[following]!!) {
+            if (follower !in userFollowerMap[following]!!) {
                 userFollowerMap[following]!!.add(follower)
             } else {
                 throw IllegalArgumentException("Cannot add relationship that is already exist")
