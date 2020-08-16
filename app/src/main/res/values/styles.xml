@@ -25,5 +25,4 @@
         <item name="colorPrimary">@color/red</item>
         <item name="colorOnSurface">@color/red</item>
     </style>
-
 </resources>

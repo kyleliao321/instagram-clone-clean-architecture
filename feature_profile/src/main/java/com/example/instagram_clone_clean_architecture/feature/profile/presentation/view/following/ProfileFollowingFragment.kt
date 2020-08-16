@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.feature_profile.databinding.FragmentProfileFollowingBinding
+import com.example.instagram_clone_clean_architecture.app.presentation.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
@@ -38,6 +39,7 @@ class ProfileFollowingFragment: InjectionFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.followingProfileAppBar)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 

@@ -13,15 +13,40 @@
             type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel" />
     </data>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/main_profile_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main_profile_app_bar_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintStart_toStartOf="@id/main_profile_app_bar_content"
+                    app:layout_constraintEnd_toEndOf="@id/main_profile_app_bar_content"
+                    app:layout_constraintTop_toTopOf="@id/main_profile_app_bar_content"
+                    app:layout_constraintBottom_toBottomOf="@id/main_profile_app_bar_content"
+                    android:text="@{viewModel.stateLiveData.loginUserProfile.userName}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/user_profile_container_shimmer"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_profile_app_bar"
             app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -40,7 +65,7 @@
             android:id="@+id/user_profile_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_profile_app_bar"
             app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

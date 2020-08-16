@@ -80,14 +80,4 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent=".7" />
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
-        android:backgroundTint="?attr/backgroundColor"
-        app:layout_constraintTop_toBottomOf="@+id/description_end_guideline_shimmer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

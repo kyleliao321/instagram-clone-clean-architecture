@@ -14,6 +14,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/following_profile_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/following_profile_app_bar_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintStart_toStartOf="@id/following_profile_app_bar_content"
+                    app:layout_constraintEnd_toEndOf="@id/following_profile_app_bar_content"
+                    app:layout_constraintTop_toTopOf="@id/following_profile_app_bar_content"
+                    app:layout_constraintBottom_toBottomOf="@id/following_profile_app_bar_content"
+                    android:text="@{viewModel.stateLiveData.loginUser.userName}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
         <TextView
             android:id="@+id/user_following_info_text"
             android:layout_width="match_parent"
@@ -21,7 +45,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:gravity="center_vertical"
             android:paddingHorizontal="10dp"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/following_profile_app_bar"
             app:layout_constraintBottom_toTopOf="@id/text_list_divider"
             android:text="All Followings"/>
 
@@ -30,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".1" />
+            app:layout_constraintGuide_percent=".15" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/user_follower_list_container_shimmers"

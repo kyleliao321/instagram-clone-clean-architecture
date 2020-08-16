@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.feature_profile.databinding.FragmentProfileMainBinding
+import com.example.instagram_clone_clean_architecture.app.presentation.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
@@ -37,6 +38,7 @@ class ProfileMainFragment: InjectionFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.mainProfileAppBar)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 

@@ -13,7 +13,7 @@ import kotlin.collections.HashMap
 
 internal class MockProfileRepositoryImpl: ProfileRepository {
 
-    private val loginUserId = 2
+    private val loginUserId = 1
 
     private val userProfileMap: HashMap<Int, UserDomainModel> = hashMapOf(
         1 to UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 4, followingNum = 1, followerNum = 2, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),

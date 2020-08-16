@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.feature_profile.databinding.FragmentProfileFollowerBinding
+import com.example.instagram_clone_clean_architecture.app.presentation.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel
 import com.example.library_base.presentation.fragment.InjectionFragment
@@ -38,6 +39,7 @@ class ProfileFollowerFragment: InjectionFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.followerProfileAppBar)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 
