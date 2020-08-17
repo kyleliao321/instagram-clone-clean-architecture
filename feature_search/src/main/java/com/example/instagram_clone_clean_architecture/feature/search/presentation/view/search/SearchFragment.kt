@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.presentation.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.search.databinding.FragmentSearchBinding
+import com.example.instagram_clone_clean_architecture.feature.search.presentation.adapters.SearchUserProfileListAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 import timber.log.Timber
@@ -29,7 +30,9 @@ class SearchFragment : InjectionFragment() {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
+        setupRecyclerViewAdapter()
         return binding.root
     }
 
@@ -38,5 +41,13 @@ class SearchFragment : InjectionFragment() {
         (requireActivity() as MainActivity).setSupportActionBar(binding.searchFragmentAppBar)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
+
+    private fun setupRecyclerViewAdapter() {
+        binding.searchResultContainer.adapter = SearchUserProfileListAdapter(
+            SearchUserProfileListAdapter.OnClickListener {
+                Timber.d("Navigate to $it")
+            }
+        )
     }
 }
