@@ -12,8 +12,6 @@ interface ProfileRepository {
      */
     suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure>
 
-    suspend fun getLoginUserFollowingList(): Either<List<UserDomainModel>, Failure>
-
     /**
      * getter for view information
      */

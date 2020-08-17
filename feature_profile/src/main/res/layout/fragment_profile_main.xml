@@ -50,7 +50,7 @@
             app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:visibility="@{viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
+            app:visibleCondition="@{viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading}">
 
             <include
                 layout="@layout/fragment_profile_main_user_profile_shimmer"
@@ -61,7 +61,7 @@
 
         <include
             layout="@layout/fragment_profile_main_user_profile"
-            android:visibility="@{viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
+            app:visibleCondition="@{!(viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading)}"
             android:id="@+id/user_profile_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -79,7 +79,7 @@
             app:layout_constraintGuide_percent="@integer/user_profile_and_post_guide_line_percent" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading? View.GONE : View.VISIBLE}"
+            app:visibleCondition="@{!(viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading)}"
             android:id="@+id/user_post_container"
             android:clipToPadding="false"
             android:scrollbars="vertical"

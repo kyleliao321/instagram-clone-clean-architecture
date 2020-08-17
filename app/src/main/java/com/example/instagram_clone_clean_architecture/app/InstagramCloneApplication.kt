@@ -17,6 +17,7 @@ class InstagramCloneApplication: Application(), DIAware {
      */
     override val di: DI = DI.lazy {
         import(androidXModule(this@InstagramCloneApplication))
+        import(appModule)
         import(baseModule)
         importAll(FeatureManager.diModules)
 

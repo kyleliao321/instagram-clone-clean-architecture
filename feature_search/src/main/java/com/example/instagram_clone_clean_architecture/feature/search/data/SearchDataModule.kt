@@ -5,8 +5,9 @@ import com.example.instagram_clone_clean_architecture.feature.search.data.reposi
 import com.example.instagram_clone_clean_architecture.feature.search.domain.repository.SearchRepository
 import org.kodein.di.DI
 import org.kodein.di.bind
+import org.kodein.di.instance
 import org.kodein.di.singleton
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {
-    bind<SearchRepository>() with singleton { MockSearchRepositoryImpl() }
+    bind<SearchRepository>() with singleton { MockSearchRepositoryImpl(instance()) }
 }
