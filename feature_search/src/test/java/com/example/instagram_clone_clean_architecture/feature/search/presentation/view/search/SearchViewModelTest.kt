@@ -10,6 +10,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -39,6 +40,7 @@ class SearchViewModelTest {
 
     @MockK(relaxed = true)
     internal lateinit var observer: Observer<SearchViewModel.ViewState>
+
 
     private lateinit var getUserProfileListUseCase: GetUserProfileListUseCase
 

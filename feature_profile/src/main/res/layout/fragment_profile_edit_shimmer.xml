@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".4" />
+        app:layout_constraintGuide_percent=".45" />
 
     <TextView
         android:id="@+id/user_profile_user_name_shimmer"
@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".5" />
+        app:layout_constraintGuide_percent=".6" />
 
     <TextView
         android:id="@+id/user_profile_description_shimmer"
@@ -78,6 +78,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent=".7" />
+        app:layout_constraintGuide_percent=".8" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

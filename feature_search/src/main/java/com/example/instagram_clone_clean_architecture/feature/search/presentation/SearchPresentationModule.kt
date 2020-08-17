@@ -10,7 +10,11 @@ import org.kodein.di.android.x.AndroidLifecycleScope
 val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
 
     bind<SearchViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
-        KotlinViewModelProvider.of(context) { SearchViewModel(instance()) }
+        KotlinViewModelProvider.of(context) {
+            SearchViewModel(
+                instance()
+            )
+        }
     }
 
 }

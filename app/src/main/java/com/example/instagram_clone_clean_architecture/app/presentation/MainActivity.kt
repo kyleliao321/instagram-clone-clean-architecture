@@ -1,9 +1,11 @@
 package com.example.instagram_clone_clean_architecture.app.presentation
 
 import android.os.Bundle
+import androidx.navigation.NavDirections
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.instagram_clone_clean_architecture.R
 import com.example.library_base.presentation.activity.InjectionActivity
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -19,7 +21,12 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         Timber.i("Main Activity is created!")
 
+        setBottomNavigationController()
         setNavEventListener()
+    }
+
+    private fun setBottomNavigationController() {
+        bottomNav.setupWithNavController(appNavGraph.findNavController())
     }
 
     private fun setNavEventListener() {

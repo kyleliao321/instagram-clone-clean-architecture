@@ -128,7 +128,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".4" />
+                app:layout_constraintGuide_percent=".45" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_profile_user_name"
@@ -157,7 +157,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".5" />
+                app:layout_constraintGuide_percent=".6" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/user_profile_description"
@@ -186,7 +186,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".7" />
+                app:layout_constraintGuide_percent=".8" />
 
 <!--            <Button-->
 <!--                android:id="@+id/save_button"-->

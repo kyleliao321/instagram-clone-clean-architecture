@@ -12,5 +12,4 @@
         android:id="@+id/featureSearchNavGraph"
         app:moduleName="feature_search"
         app:graphResName="feature_search_nav_graph" />
-
 </navigation>
