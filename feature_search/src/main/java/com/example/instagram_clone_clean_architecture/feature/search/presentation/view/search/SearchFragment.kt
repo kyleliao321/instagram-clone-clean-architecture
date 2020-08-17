@@ -47,7 +47,7 @@ class SearchFragment : InjectionFragment() {
     private fun setupRecyclerViewAdapter() {
         binding.searchResultContainer.adapter = SearchUserProfileListAdapter(
             SearchUserProfileListAdapter.OnClickListener {
-                TODO("Dynamic-Feature Module's destinations are not visible to each other.")
+                (requireActivity() as MainActivity).navigateToProfile(it.id)
             }
         )
     }

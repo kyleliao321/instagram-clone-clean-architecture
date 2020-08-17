@@ -78,13 +78,4 @@ internal val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") 
             )
         }
     }
-
-    /**
-     * Mock fragment arguments. This should be deleted when the entire data flow is setup.
-     */
-    bind<ProfileMainFragmentArgs>() with provider {
-        val bundle = Bundle()
-        bundle.putInt("userId", 1)
-        ProfileMainFragmentArgs.fromBundle(bundle)
-    }
 }

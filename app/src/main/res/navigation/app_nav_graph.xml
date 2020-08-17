@@ -6,7 +6,11 @@
     <include-dynamic
         android:id="@+id/featureProfileNavGraph"
         app:moduleName="feature_profile"
-        app:graphResName="feature_profile_nav_graph" />
+        app:graphResName="feature_profile_nav_graph">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </include-dynamic>
 
     <include-dynamic
         android:id="@+id/featureSearchNavGraph"
