@@ -6,7 +6,9 @@
         dist:instant="false"
         dist:title="@string/title_feature_profile">
         <dist:delivery>
-            <dist:on-demand />
+            <dist:install-time>
+                <dist:removable value="false" />
+            </dist:install-time>
         </dist:delivery>
         <dist:fusing dist:include="true" />
     </dist:module>
