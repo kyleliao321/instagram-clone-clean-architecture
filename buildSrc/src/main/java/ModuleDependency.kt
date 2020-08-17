@@ -16,4 +16,8 @@ object ModuleDependency {
     fun getDynamicFeatureModules() = getAllModules()
         .filter { it.startsWith(FEATURE_PREFIX) }
         .toSet()
+
+    fun getDynamicFeatureModuleNames() = getDynamicFeatureModules()
+        .map { it.replace(FEATURE_PREFIX, "") }
+        .toSet()
 }

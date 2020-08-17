@@ -17,6 +17,8 @@ android {
         versionCode = AndroidConfig.VERSION_CODE
         versionName = AndroidConfig.VERSION_NAME
         testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
+
+        buildConfigField("FEATURE_MODULE_NAMES", ModuleDependency.getDynamicFeatureModuleNames())
     }
 
     buildTypes {
@@ -59,4 +61,15 @@ dependencies {
     api(project(ModuleDependency.LIBRARY_BASE))
     testImplementation(TestLibraryDependency.JUNIT)
 
+}
+
+/**
+ * Generate new field from String arry inside BuildConfig.
+ *
+ * @param name Name of the field.
+ * @param value Array of String, which will be transform into format like ["test", "test1"].
+ */
+fun com.android.build.gradle.internal.dsl.DefaultConfig.buildConfigField(name: String, value: Set<String>) {
+    val formattedStringArray = value.joinToString(prefix = "{", postfix = "}", separator = ",", transform = { "\"$it\"" })
+    buildConfigField("String[]", name, formattedStringArray)
 }

@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.domain.di
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import timber.log.Timber
 
 /**
@@ -12,7 +13,7 @@ object FeatureManager {
     private const val featurePackagePrefix = "com.example.instagram_clone_clean_architecture.feature"
 
     // TODO: Move names of feature modules into buildSrc
-    private val featureModuleNames = listOf("profile")
+    private val featureModuleNames = BuildConfig.FEATURE_MODULE_NAMES
 
     val diModules = featureModuleNames
         .map { "${featurePackagePrefix}.$it.FeatureDIModule" }

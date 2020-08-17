@@ -3,21 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.example.instagram_clone_clean_architecture.feature.search.presentation.view.search.SearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/search_fragment_app_bar_container"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:text="@string/module_name"/>
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/search_fragment_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorSurface">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/search_fragment_app_bar_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="5dp">
+
+                    <EditText
+                        android:id="@+id/search_field"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/search_field_background"
+                        android:paddingHorizontal="10dp"
+                        android:hint="Search"
+                        android:text="@={viewModel.stateLiveData.keyword}"
+                        android:lines="1"
+                        android:ellipsize="end"
+                        app:layout_constraintStart_toStartOf="@+id/search_fragment_app_bar_content"
+                        app:layout_constraintEnd_toStartOf="@+id/search_button" />
+
+                    <ImageButton
+                        android:id="@+id/search_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="?attr/colorSurface"
+                        android:src="@drawable/search_field_icon"
+                        android:onClick="@{() -> viewModel.loadUserProfileList()}"
+                        app:layout_constraintTop_toTopOf="@id/search_fragment_app_bar_content"
+                        app:layout_constraintEnd_toEndOf="@+id/search_fragment_app_bar_content" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
