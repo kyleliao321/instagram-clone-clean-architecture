@@ -49,7 +49,17 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         userName: String,
         password: String
     ): Either<UserDomainModel, Failure> {
-        TODO("Not yet implemented")
+        for (userProfile in userProfileList) {
+            if (userProfile.userName == userName) {
+                for (loginData in userLoginDataList) {
+                    if (loginData.first == userProfile.id && loginData.second == password) {
+                        return Either.Success(userProfile)
+                    }
+                }
+            }
+        }
+
+        return Either.Failure(Failure.ServerError)
     }
 
     override suspend fun userRegister(
