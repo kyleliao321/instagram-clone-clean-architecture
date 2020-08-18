@@ -1,4 +1,4 @@
-package com.example.instagram_clone_clean_architecture.feature.login.domain
+package com.example.instagram_clone_clean_architecture.feature.login.domain.repository
 
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
