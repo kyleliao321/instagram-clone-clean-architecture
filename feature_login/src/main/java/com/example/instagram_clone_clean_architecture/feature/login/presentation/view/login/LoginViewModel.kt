@@ -17,10 +17,9 @@ class LoginViewModel(
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.Action>(ViewState()) {
 
     fun userLogin() = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartLogin)
-
         if (state.userName != null && state.userPassword != null) {
             if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
+                sendAction(Action.StartLogin)
                 val param = UserLoginUseCase.Param(state.userName!!, state.userPassword!!)
 
                 userLoginUseCase(param) {

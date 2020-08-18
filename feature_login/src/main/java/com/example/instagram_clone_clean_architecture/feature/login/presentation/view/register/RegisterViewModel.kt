@@ -17,10 +17,9 @@ class RegisterViewModel(
 ) : BaseViewModel<RegisterViewModel.ViewState, RegisterViewModel.Action>(ViewState()) {
 
     fun userRegister() = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartRegister)
-
         if (state.userName != null && state.userPassword != null) {
             if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
+                sendAction(Action.StartRegister)
                 val param = UserRegisterUseCase.Param(state.userName!!, state.userPassword!!)
 
                 userRegisterUseCase(param) {
