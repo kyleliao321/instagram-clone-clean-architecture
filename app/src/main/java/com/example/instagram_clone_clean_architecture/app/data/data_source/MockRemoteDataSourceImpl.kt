@@ -10,6 +10,12 @@ import java.util.*
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
+    private val userLoginDataList = mutableListOf(
+        Pair(1, "12345"),
+        Pair(2, "23456"),
+        Pair(3, "34567")
+    )
+
     private val userProfileList = mutableListOf(
         UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
         UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
@@ -38,6 +44,20 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         )
 
     )
+
+    override suspend fun userLogin(
+        userName: String,
+        password: String
+    ): Either<UserDomainModel, Failure> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun userRegister(
+        userName: String,
+        password: String
+    ): Either<UserDomainModel, Failure> {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun getUserProfileById(userId: Int): Either<UserDomainModel?, Failure> {
         delay(1000)
