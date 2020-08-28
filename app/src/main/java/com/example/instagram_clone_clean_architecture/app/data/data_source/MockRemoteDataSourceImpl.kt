@@ -10,6 +10,8 @@ import java.util.*
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
+    private var tmpIdCount = 5
+
     private val userLoginDataList = mutableListOf(
         Pair(1, "12345"),
         Pair(2, "23456"),
@@ -66,7 +68,23 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         userName: String,
         password: String
     ): Either<UserDomainModel, Failure> {
-        TODO("Not yet implemented")
+        // check if the user name already exist
+        for (userProfile in userProfileList) {
+            if (userProfile.userName == userName) {
+                return Either.Failure(Failure.ServerError)
+            }
+        }
+
+        // first, create a user profile in database
+        val newUserProfile = UserDomainModel(
+            id = ++tmpIdCount, name = userName, userName = userName, postNum = 0, followingNum = 0, followerNum = 0
+        )
+        userProfileList.add(newUserProfile)
+
+        // second, add id-password pair in database
+        userLoginDataList.add(Pair(newUserProfile.id, password))
+
+        return Either.Success(newUserProfile)
     }
 
     override suspend fun getUserProfileById(userId: Int): Either<UserDomainModel?, Failure> {
