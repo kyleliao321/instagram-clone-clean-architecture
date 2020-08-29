@@ -22,12 +22,23 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
 
     private val navigationManager: NavigationManager by instance()
 
+    private val viewModel: MainViewModel by instance()
+
+    fun loadData() {
+        viewModel.loadData()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.i("Main Activity is created!")
 
-        setBottomNavigationController()
         setNavEventListener()
+        setBottomNavigationController()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        loadData()
     }
 
     private fun setNavEventListener() {
@@ -56,14 +67,11 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
         bottomNav.setupNavControllerWithNavCallback(navController) setupNavControllerWithCallback@{
             when (it.itemId) {
                 R.id.featureSearchNavGraph -> {
-                    navController.navigate(R.id.featureSearchNavGraph)
+                    viewModel.onNavigateToSearch()
                     return@setupNavControllerWithCallback true
                 }
                 R.id.featureProfileNavGraph -> {
-                    // TODO: safe-args cannot resolve navigation direction when it is in separate module.
-                    val args = Bundle()
-                    args.putInt("userId", 1)
-                    navController.navigate(R.id.featureProfileNavGraph, args)
+                    viewModel.onNavigateToProfile()
                     return@setupNavControllerWithCallback true
                 }
                 else -> throw IllegalArgumentException("Unknown destination ${it.itemId}")

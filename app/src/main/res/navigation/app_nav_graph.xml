@@ -10,6 +10,9 @@
         <argument
             android:name="userId"
             app:argType="integer" />
+        <action
+            android:id="@id/featureSearchNavGraph"
+            app:destination="@id/featureSearchNavGraph" />
     </include-dynamic>
 
     <include-dynamic

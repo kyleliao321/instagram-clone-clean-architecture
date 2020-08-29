@@ -25,6 +25,7 @@ object LibraryDependency {
     const val VIEWMODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${LibraryVersions.LIFECYCLE}"
     const val LIVEDATA = "androidx.lifecycle:lifecycle-livedata-ktx:${LibraryVersions.LIFECYCLE}"
     const val KODEIN_DI = "org.kodein.di:kodein-di:${LibraryVersions.KODEIN}"
+    const val KODEIN_DI_GENERIC = "org.kodein.di:kodein-di-generic-jvm:${LibraryVersions.KODEIN}"
     const val KODEIN_ANDROID_X = "org.kodein.di:kodein-di-framework-android-x:${LibraryVersions.KODEIN}"
     const val TIMBER = "com.jakewharton.timber:timber:${LibraryVersions.TIMBER}"
     const val COIL = "io.coil-kt:coil:${LibraryVersions.COIL}"

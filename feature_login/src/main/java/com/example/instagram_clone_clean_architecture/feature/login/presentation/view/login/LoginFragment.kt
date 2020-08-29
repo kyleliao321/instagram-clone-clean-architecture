@@ -21,6 +21,11 @@ class LoginFragment : InjectionFragment() {
         if (it.isLoginFail) {
             onLoginFail()
         }
+
+        it.loginUserProfile?.let { userProfile ->
+            (requireActivity() as MainActivity).loadData()
+            viewModel.onNavigationToUserProfile(userProfile.id)
+        }
     }
 
     private lateinit var binding: FragmentLoginBinding

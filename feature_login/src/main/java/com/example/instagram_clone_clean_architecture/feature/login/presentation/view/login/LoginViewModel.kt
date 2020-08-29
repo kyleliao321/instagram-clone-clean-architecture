@@ -57,7 +57,6 @@ class LoginViewModel(
                         it.fold(
                             onSucceed = {
                                 sendAction(Action.FinishLogin(userProfile))
-                                onNavigationToUserProfile(userProfile.id)
                             },
                             onFail = { failure ->
                                 sendAction(Action.FinishLogin(null))
