@@ -6,10 +6,6 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import kotlinx.coroutines.delay
-import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 internal class MockProfileRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
