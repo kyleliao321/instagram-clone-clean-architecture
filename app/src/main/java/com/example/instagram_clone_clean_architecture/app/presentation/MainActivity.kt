@@ -46,6 +46,7 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
         }
     }
 
+    // TODO: Hide bottom navigation when user is in login feature
     private fun setBottomNavigationController() {
         bottomNav.selectedItemId = R.id.featureSearchNavGraph
 
