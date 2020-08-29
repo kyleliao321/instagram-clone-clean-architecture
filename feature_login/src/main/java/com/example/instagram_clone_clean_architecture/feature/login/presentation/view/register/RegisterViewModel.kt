@@ -18,7 +18,7 @@ class RegisterViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<RegisterViewModel.ViewState, RegisterViewModel.Action>(ViewState()) {
 
-    private fun navigateToLoginFragment() {
+    fun navigateToLoginFragment() {
         val navDir = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
         navManager.onNavEvent(navDir)
     }
@@ -48,6 +48,7 @@ class RegisterViewModel(
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.DuplicatedUserName -> sendAction(Action.FailOnRegisterData)
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
@@ -69,12 +70,16 @@ class RegisterViewModel(
         is Action.FailOnServerError -> state.copy(
             isServerError = true
         )
+        is Action.FailOnRegisterData -> state.copy(
+            isRegisterFail = true
+        )
     }
 
     data class ViewState(
         val isRegistering: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isRegisterFail: Boolean = false,
         var userName: String? = null,
         var userPassword: String? = null,
         val registerUserProfile: UserDomainModel? = null
@@ -85,5 +90,6 @@ class RegisterViewModel(
         object StartRegister : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
+        object FailOnRegisterData: Action()
     }
 }

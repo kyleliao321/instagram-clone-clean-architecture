@@ -23,4 +23,14 @@ sealed class Failure {
      * Indicate that the failure is caused by application has no login-user
      */
     object LocalAccountNotFound: Failure()
+
+    /**
+     * Indicate that the failure is caused by duplicated user name when register
+     */
+    object DuplicatedUserName: Failure()
+
+    /**
+     * Indicate that the failure is caused by incorrect user name or password
+     */
+    object LoginUserNameOrPasswordNotMatched: Failure()
 }

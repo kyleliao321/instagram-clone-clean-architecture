@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.presentation.MainActivity
+import com.example.instagram_clone_clean_architecture.feature.login.R
 import com.example.instagram_clone_clean_architecture.feature.login.databinding.FragmentLoginBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
+import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
 import timber.log.Timber
 
@@ -18,6 +20,10 @@ class LoginFragment : InjectionFragment() {
     private val observer = Observer<LoginViewModel.ViewState> {
         if (it.loginUserProfile != null) {
             (requireActivity() as MainActivity).navigateToProfile(it.loginUserProfile!!.id)
+        }
+
+        if (it.isLoginFail) {
+            onLoginFail()
         }
     }
 
@@ -40,6 +46,12 @@ class LoginFragment : InjectionFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
+
+    private fun onLoginFail() {
+        Snackbar
+            .make(requireView(), resources.getString(R.string.login_error_message), Snackbar.LENGTH_SHORT)
+            .show()
     }
 
 }

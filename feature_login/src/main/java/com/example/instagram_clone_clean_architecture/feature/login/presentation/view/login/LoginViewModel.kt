@@ -5,6 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
@@ -13,10 +14,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
+    private val navManager: NavigationManager,
     private val userLoginUseCase: UserLoginUseCase,
     private val updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.Action>(ViewState()) {
+
+    fun onNavigateToRegisterFragment() {
+        val navDir = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+        navManager.onNavEvent(navDir)
+    }
 
     fun userLogin() = viewModelScope.launch(defaultDispatcher) {
         if (state.userName != null && state.userPassword != null) {
@@ -57,6 +64,7 @@ class LoginViewModel(
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.LoginUserNameOrPasswordNotMatched -> sendAction(Action.FailOnLoginData)
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
@@ -78,12 +86,16 @@ class LoginViewModel(
         is Action.FailOnServerError -> state.copy(
             isServerError = true
         )
+        is Action.FailOnLoginData -> state.copy(
+            isLoginFail = true
+        )
     }
 
     data class ViewState(
         val isLoginRunning: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isLoginFail: Boolean = false,
         var userName: String? = null,
         var userPassword: String? = null,
         val loginUserProfile: UserDomainModel? = null
@@ -94,6 +106,7 @@ class LoginViewModel(
         class FinishLogin(val userProfile: UserDomainModel?) : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError: Action()
+        object FailOnLoginData: Action()
     }
 
 }

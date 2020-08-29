@@ -3,13 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:moduleName="@string/module_name"
-    app:startDestination="@id/registerFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
         android:label="LoginFragment"
         android:name="com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login.LoginFragment"
-        app:moduleName="@string/module_name" />
+        app:moduleName="@string/module_name" >
+
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/registerFragment"

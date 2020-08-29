@@ -66,7 +66,7 @@ class UserRegisterUseCaseTest {
 
         // given
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Failure(
-            Failure.ServerError)
+            Failure.DuplicatedUserName)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -76,7 +76,7 @@ class UserRegisterUseCaseTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+        result shouldBeEqualTo Either.Failure(Failure.DuplicatedUserName)
     }
 
 }

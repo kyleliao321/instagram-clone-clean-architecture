@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="module_name">feature_login</string>
+    <string name="register_error_message">user name already exists</string>
+    <string name="login_error_message">user name or password is incorrect</string>
 </resources>

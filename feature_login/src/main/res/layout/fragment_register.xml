@@ -72,5 +72,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
+        <Button
+            android:id="@+id/to_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Already have accout?"
+            android:textAllCaps="false"
+            android:onClick="@{() -> viewModel.navigateToLoginFragment()}"
+            app:layout_constraintTop_toBottomOf="@id/register_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            style="@style/Widget.MaterialComponents.Button.TextButton" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

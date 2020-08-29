@@ -14,6 +14,7 @@ val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
         KotlinViewModelProvider.of(context) {
             LoginViewModel(
                 instance(),
+                instance(),
                 instance()
             )
         }

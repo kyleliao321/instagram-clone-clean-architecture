@@ -64,7 +64,7 @@ class UserLoginUseCaseTest {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -74,7 +74,7 @@ class UserLoginUseCaseTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+        result shouldBeEqualTo Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
     }
 
 }

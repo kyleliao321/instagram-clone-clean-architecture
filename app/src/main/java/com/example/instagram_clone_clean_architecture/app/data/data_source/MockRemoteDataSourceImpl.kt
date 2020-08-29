@@ -61,7 +61,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             }
         }
 
-        return Either.Failure(Failure.ServerError)
+        return Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
     }
 
     override suspend fun userRegister(
@@ -71,7 +71,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         // check if the user name already exist
         for (userProfile in userProfileList) {
             if (userProfile.userName == userName) {
-                return Either.Failure(Failure.ServerError)
+                return Either.Failure(Failure.DuplicatedUserName)
             }
         }
 
