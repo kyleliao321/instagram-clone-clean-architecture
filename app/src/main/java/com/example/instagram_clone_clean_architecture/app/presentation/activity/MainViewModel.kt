@@ -1,6 +1,5 @@
-package com.example.instagram_clone_clean_architecture.app.presentation
+package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
@@ -18,11 +17,17 @@ class MainViewModel(
     private val navManager: NavigationManager,
     private val getLocalLoginUserIdUseCase: GetLocalLoginUserIdUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(ViewState()) {
+) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(
+    ViewState()
+) {
 
     fun onNavigateToProfile() {
-        val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
-        navManager.onNavEvent(navDir)
+        if (state.localUserId == null) {
+            throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
+        } else {
+            val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
+            navManager.onNavEvent(navDir)
+        }
     }
 
     fun onNavigateToSearch() {
@@ -34,10 +39,18 @@ class MainViewModel(
         getLocalLoginUserIdUseCase(Unit) {
             it.fold(
                 onSucceed = { id ->
-                    sendAction(Action.LocalUserIdLoaded(id))
+                    sendAction(
+                        Action.LocalUserIdLoaded(
+                            id
+                        )
+                    )
                 },
                 onFail = { failure ->
-                    sendAction(Action.LocalUserIdLoaded(null))
+                    sendAction(
+                        Action.LocalUserIdLoaded(
+                            null
+                        )
+                    )
                     onFailure(failure)
                 }
             )

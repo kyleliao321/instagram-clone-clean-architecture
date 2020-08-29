@@ -1,20 +1,14 @@
-package com.example.instagram_clone_clean_architecture.app.presentation
+package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
 import android.os.Bundle
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupWithNavController
 import com.example.instagram_clone_clean_architecture.R
 import com.example.library_base.domain.extension.setupNavControllerWithNavCallback
 import com.example.library_base.presentation.activity.InjectionActivity
 import com.example.library_base.presentation.navigation.NavigationManager
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.instance
 import timber.log.Timber
-import java.lang.ref.WeakReference
 
 class MainActivity: InjectionActivity(R.layout.activity_main) {
 
