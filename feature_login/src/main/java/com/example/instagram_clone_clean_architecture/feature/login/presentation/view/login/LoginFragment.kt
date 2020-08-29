@@ -22,7 +22,7 @@ class LoginFragment : InjectionFragment() {
         }
 
         it.loginUserProfile?.let { userProfile ->
-            (requireActivity() as MainActivity).loadData()
+            (requireActivity() as MainActivity).loginSucceed()
             viewModel.onNavigationToUserProfile(userProfile.id)
         }
     }

@@ -12,6 +12,7 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class MainViewModel(
     private val navManager: NavigationManager,
@@ -21,16 +22,27 @@ class MainViewModel(
     ViewState()
 ) {
 
+    enum class NavGraphDestinations {
+        Login, Profile, Search
+    }
+
+    fun onLoginSucceed() {
+        loadData()
+        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
+    }
+
     fun onNavigateToProfile() {
         if (state.localUserId == null) {
             throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
         } else {
+            sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
             val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
             navManager.onNavEvent(navDir)
         }
     }
 
     fun onNavigateToSearch() {
+        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Search))
         val navDir = FeatureProfileNavGraphDirections.featureSearchNavGraph()
         navManager.onNavEvent(navDir)
     }
@@ -58,16 +70,24 @@ class MainViewModel(
     }
 
     override fun onLoadData() {
+        sendAction(Action.ReloadData)
         loadLocalUserId()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
+        is Action.NavigateToNewDestination -> state.copy(
+            navDestination = action.destination
+        )
         is Action.LocalUserIdLoaded -> state.copy(
             isLocalLoginUserIdLoading = false,
             localUserId = action.id
         )
         is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
+        )
+        is Action.ReloadData -> state.copy(
+            isLocalLoginUserIdLoading = true,
+            isLocalAccountError = false
         )
     }
 
@@ -79,12 +99,15 @@ class MainViewModel(
     data class ViewState(
         val isLocalLoginUserIdLoading: Boolean = true,
         val isLocalAccountError: Boolean = false,
-        val localUserId: Int? = null
+        val localUserId: Int? = null,
+        val navDestination: NavGraphDestinations = NavGraphDestinations.Login
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class LocalUserIdLoaded(val id: Int?) : Action()
+        class NavigateToNewDestination(val destination: NavGraphDestinations) : Action()
         object FailOnLocalAccountError : Action()
+        object ReloadData : Action()
     }
 
 }

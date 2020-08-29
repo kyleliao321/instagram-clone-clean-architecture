@@ -83,6 +83,12 @@ class MainViewModelTest {
 
         // expect
         verify(exactly = 1) { navManager.onNavEvent(any()) }
+        testViewModel.stateLiveData.value shouldBeEqualTo MainViewModel.ViewState(
+            isLocalLoginUserIdLoading = false,
+            isLocalAccountError = false,
+            localUserId = mockId,
+            navDestination = MainViewModel.NavGraphDestinations.Profile
+        )
     }
 
     @Test
@@ -93,7 +99,6 @@ class MainViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
         invoking { testViewModel.onNavigateToProfile() } shouldThrow(IllegalStateException()::class)
-
     }
 
     /**
@@ -104,7 +109,8 @@ class MainViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo MainViewModel.ViewState(
             isLocalAccountError = false,
             isLocalLoginUserIdLoading = true,
-            localUserId = null
+            localUserId = null,
+            navDestination = MainViewModel.NavGraphDestinations.Login
         )
     }
 

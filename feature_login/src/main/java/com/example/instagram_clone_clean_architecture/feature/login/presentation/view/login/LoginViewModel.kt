@@ -80,7 +80,8 @@ class LoginViewModel(
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.StartLogin -> state.copy(
-            isLoginRunning = true
+            isLoginRunning = true,
+            isLoginFail = false
         )
         is Action.FinishLogin -> state.copy(
             isLoginRunning = false,

@@ -1,8 +1,12 @@
 package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.instagram_clone_clean_architecture.R
+import com.example.instagram_clone_clean_architecture.databinding.ActivityMainBinding
 import com.example.library_base.domain.extension.setupNavControllerWithNavCallback
 import com.example.library_base.presentation.activity.InjectionActivity
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -10,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.instance
 import timber.log.Timber
 
-class MainActivity: InjectionActivity(R.layout.activity_main) {
+class MainActivity: InjectionActivity() {
 
     private val navController get() = appNavGraph.findNavController()
 
@@ -18,13 +22,23 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
 
     private val viewModel: MainViewModel by instance()
 
-    fun loadData() {
-        viewModel.loadData()
+    private val observer = Observer<MainViewModel.ViewState>() {
+        Timber.d(it.toString())
+    }
+
+    private lateinit var binding: ActivityMainBinding
+
+    fun loginSucceed() {
+        viewModel.onLoginSucceed()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.i("Main Activity is created!")
+
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
 
         setNavEventListener()
         setBottomNavigationController()
@@ -32,7 +46,8 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
 
     override fun onStart() {
         super.onStart()
-        loadData()
+        viewModel.stateLiveData.observe(this, observer)
+        viewModel.loadData()
     }
 
     private fun setNavEventListener() {
@@ -54,7 +69,6 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
         }
     }
 
-    // TODO: Hide bottom navigation when user is in login feature
     private fun setBottomNavigationController() {
         bottomNav.selectedItemId = R.id.featureSearchNavGraph
 

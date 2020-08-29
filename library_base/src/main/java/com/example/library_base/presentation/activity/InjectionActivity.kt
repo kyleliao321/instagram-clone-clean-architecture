@@ -15,7 +15,7 @@ import org.kodein.di.diContext
  * Allowing all activity classes to use DI module inside its scope.
  * (i.e: val navManager: ExampleNavManager by instance() )
  */
-abstract class InjectionActivity(@LayoutRes contentLayoutId: Int): AppCompatActivity(contentLayoutId), DIAware {
+abstract class InjectionActivity(): AppCompatActivity(), DIAware {
 
     private val parentDI by closestDI()
 

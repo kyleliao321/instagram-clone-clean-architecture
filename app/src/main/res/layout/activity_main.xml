@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".app.presentation.activity.MainActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <fragment
-        android:id="@+id/appNavGraph"
-        android:name="androidx.navigation.dynamicfeatures.fragment.DynamicNavHostFragment"
+    <data>
+        <import type="com.example.instagram_clone_clean_architecture.app.presentation.activity.MainViewModel.NavGraphDestinations" />
+        <import type="android.view.View" />
+        <variable
+            name="viewModel"
+            type="com.example.instagram_clone_clean_architecture.app.presentation.activity.MainViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/app_nav_graph">
-    </fragment>
+        android:layout_height="match_parent"
+        tools:context=".app.presentation.activity.MainActivity">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:labelVisibilityMode="unlabeled"
-        app:layout_constraintTop_toBottomOf="@id/appNavGraph"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        <fragment
+            android:id="@+id/appNavGraph"
+            android:name="androidx.navigation.dynamicfeatures.fragment.DynamicNavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottomNav"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/app_nav_graph"></fragment>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:visibility="@{viewModel.stateLiveData.navDestination == NavGraphDestinations.Login ? View.GONE : View.VISIBLE}"
+            android:clickable="@{!viewModel.stateLiveData.localLoginUserIdLoading}"
+            android:id="@+id/bottomNav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:labelVisibilityMode="unlabeled"
+            app:layout_constraintTop_toBottomOf="@id/appNavGraph"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/bottom_nav_menu" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
