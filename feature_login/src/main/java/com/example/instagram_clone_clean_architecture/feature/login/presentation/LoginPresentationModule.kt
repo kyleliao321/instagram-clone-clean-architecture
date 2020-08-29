@@ -21,6 +21,7 @@ val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
     bind<RegisterViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) {
             RegisterViewModel(
+                instance(),
                 instance()
             )
         }

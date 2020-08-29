@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserRegisterUseCase
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
@@ -12,9 +13,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
+    private val navManager: NavigationManager,
     private val userRegisterUseCase: UserRegisterUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<RegisterViewModel.ViewState, RegisterViewModel.Action>(ViewState()) {
+
+    private fun navigateToLoginFragment() {
+        val navDir = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+        navManager.onNavEvent(navDir)
+    }
 
     fun userRegister() = viewModelScope.launch(defaultDispatcher) {
         if (state.userName != null && state.userPassword != null) {
@@ -26,6 +33,7 @@ class RegisterViewModel(
                     it.fold(
                         onSucceed = { userProfile ->
                             sendAction(Action.FinishRegister(userProfile))
+                            navigateToLoginFragment()
                         },
                         onFail = { failure ->
                             sendAction(Action.FinishRegister(null))

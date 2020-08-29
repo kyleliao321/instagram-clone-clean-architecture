@@ -15,16 +15,8 @@ class RegisterFragment : InjectionFragment() {
 
     private val viewModel: RegisterViewModel by instance()
 
-    private val navManager: NavigationManager by instance()
-
     private val observer = Observer<RegisterViewModel.ViewState>() {
-        if (it.userName != null && it.userPassword != null) {
-            if (it.userName!!.isNotBlank() && it.userPassword!!.isNotBlank()) {
-                Timber.d("Register with\n user name: ${it.userName}\n password: ${it.userPassword}")
-                val navDir = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
-                navManager.onNavEvent(navDir)
-            }
-        }
+        Timber.d(it.toString())
     }
 
     private lateinit var binding: FragmentRegisterBinding
