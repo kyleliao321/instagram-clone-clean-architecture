@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val userLoginUseCase: UserLoginUseCase,
+    private val updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.Action>(ViewState()) {
 
@@ -20,18 +22,33 @@ class LoginViewModel(
         if (state.userName != null && state.userPassword != null) {
             if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
                 sendAction(Action.StartLogin)
-                val param = UserLoginUseCase.Param(state.userName!!, state.userPassword!!)
+                var loginUserProfile: UserDomainModel? = null
 
-                userLoginUseCase(param) {
+                val loginParam = UserLoginUseCase.Param(state.userName!!, state.userPassword!!)
+
+                userLoginUseCase(loginParam) {
                     it.fold(
                         onSucceed = { userProfile ->
-                            sendAction(Action.FinishLogin(userProfile))
+                            loginUserProfile = userProfile
                         },
                         onFail = { failure ->
                             sendAction(Action.FinishLogin(null))
                             onFailure(failure)
                         }
                     )
+                }
+
+                loginUserProfile?.let { userProfile ->
+                    val localLoginParam = UpdateLocalLoginUserIdUseCase.Param(userProfile.id)
+                    updateLocalLoginUserIdUseCase(localLoginParam) {
+                        it.fold(
+                            onSucceed = { sendAction(Action.FinishLogin(userProfile)) },
+                            onFail = { failure ->
+                                sendAction(Action.FinishLogin(null))
+                                onFailure(failure)
+                            }
+                        )
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
+import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -41,6 +42,8 @@ class LoginViewModelTest {
 
     private lateinit var userLoginUseCase: UserLoginUseCase
 
+    private lateinit var updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase
+
     private lateinit var testViewModel: LoginViewModel
 
     @Before
@@ -48,8 +51,9 @@ class LoginViewModelTest {
         MockKAnnotations.init(this)
 
         userLoginUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
+        updateLocalLoginUserIdUseCase = UpdateLocalLoginUserIdUseCase(loginRepository, mainCoroutineRule.testDispatcher)
 
-        testViewModel = LoginViewModel(userLoginUseCase, mainCoroutineRule.testDispatcher)
+        testViewModel = LoginViewModel(userLoginUseCase, updateLocalLoginUserIdUseCase, mainCoroutineRule.testDispatcher)
 
         testViewModel.stateLiveData.observeForever(observer)
     }
@@ -83,6 +87,7 @@ class LoginViewModelTest {
         // given
         testViewModel.stateLiveData.value!!.userName = mockUserName
         testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
+        every { runBlocking { loginRepository.updateLocalLoginUserId(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginUserProfile)
 
         // when
@@ -108,6 +113,7 @@ class LoginViewModelTest {
         // given
         testViewModel.stateLiveData.value!!.userName = mockUserName
         testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
+        every { runBlocking { loginRepository.updateLocalLoginUserId(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when

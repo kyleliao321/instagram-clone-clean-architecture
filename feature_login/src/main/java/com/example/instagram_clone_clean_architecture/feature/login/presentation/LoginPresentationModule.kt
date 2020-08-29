@@ -13,6 +13,7 @@ val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
     bind<LoginViewModel>() with scoped<Fragment>(AndroidLifecycleScope).singleton {
         KotlinViewModelProvider.of(context) {
             LoginViewModel(
+                instance(),
                 instance()
             )
         }
