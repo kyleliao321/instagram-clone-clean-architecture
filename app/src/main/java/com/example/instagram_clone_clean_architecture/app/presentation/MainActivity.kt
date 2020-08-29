@@ -30,19 +30,22 @@ class MainActivity: InjectionActivity(R.layout.activity_main) {
         setNavEventListener()
     }
 
-    fun navigateToProfile(userId: Int) {
-        // TODO: safe-args cannot resolve navigation direction when it is in separate module.
-        val args = Bundle()
-        args.putInt("userId", userId)
-        navController.navigate(
-            R.id.featureProfileNavGraph,
-            args
-        )
-    }
-
     private fun setNavEventListener() {
         navigationManager.setNavEventCallbackListener {
-            navController.navigate(it)
+            try {
+                navController.navigate(it)
+            } catch (exception: Exception) {
+                // Safe-Args cannot resolve navigation between features.
+                // Thus, we must catch the exception when it cannot find destination,
+                // and use the traditional way to do navigation.
+                // By assigning destination id as action id, we can extract required information
+                // from safe-args-generated navDir.
+                if (exception is java.lang.IllegalArgumentException) {
+                    navController.navigate(it.actionId, it.arguments)
+                } else {
+                    throw exception
+                }
+            }
         }
     }
 

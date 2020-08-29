@@ -47,7 +47,7 @@ class SearchFragment : InjectionFragment() {
     private fun setupRecyclerViewAdapter() {
         binding.searchResultContainer.adapter = SearchUserProfileListAdapter(
             SearchUserProfileListAdapter.OnClickListener {
-                (requireActivity() as MainActivity).navigateToProfile(it.id)
+                viewModel.onNavigateToProfileFeature(it.id)
             }
         )
     }

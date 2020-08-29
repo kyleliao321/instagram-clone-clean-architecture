@@ -39,6 +39,9 @@ class SearchViewModelTest {
     internal lateinit var searchRepository: SearchRepository
 
     @MockK(relaxed = true)
+    internal lateinit var navManager: NavigationManager
+
+    @MockK(relaxed = true)
     internal lateinit var observer: Observer<SearchViewModel.ViewState>
 
 
@@ -53,6 +56,7 @@ class SearchViewModelTest {
         getUserProfileListUseCase = GetUserProfileListUseCase(searchRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel = SearchViewModel(
+            navManager,
             getUserProfileListUseCase
         )
 

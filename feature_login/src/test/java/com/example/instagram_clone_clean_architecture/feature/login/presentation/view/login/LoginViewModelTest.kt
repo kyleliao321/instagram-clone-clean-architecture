@@ -10,6 +10,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -40,6 +41,9 @@ class LoginViewModelTest {
     @MockK(relaxed = true)
     internal lateinit var loginRepository: LoginRepository
 
+    @MockK(relaxed = true)
+    internal lateinit var navManager: NavigationManager
+
     private lateinit var userLoginUseCase: UserLoginUseCase
 
     private lateinit var updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase
@@ -53,7 +57,7 @@ class LoginViewModelTest {
         userLoginUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
         updateLocalLoginUserIdUseCase = UpdateLocalLoginUserIdUseCase(loginRepository, mainCoroutineRule.testDispatcher)
 
-        testViewModel = LoginViewModel(userLoginUseCase, updateLocalLoginUserIdUseCase, mainCoroutineRule.testDispatcher)
+        testViewModel = LoginViewModel(navManager, userLoginUseCase, updateLocalLoginUserIdUseCase, mainCoroutineRule.testDispatcher)
 
         testViewModel.stateLiveData.observeForever(observer)
     }

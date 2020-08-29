@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login
 
 import androidx.lifecycle.viewModelScope
+import com.example.instagram_clone_clean_architecture.FeatureLoginNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
@@ -22,6 +23,11 @@ class LoginViewModel(
 
     fun onNavigateToRegisterFragment() {
         val navDir = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
+        navManager.onNavEvent(navDir)
+    }
+
+    fun onNavigationToUserProfile(userId: Int) {
+        val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userId)
         navManager.onNavEvent(navDir)
     }
 
@@ -49,7 +55,10 @@ class LoginViewModel(
                     val localLoginParam = UpdateLocalLoginUserIdUseCase.Param(userProfile.id)
                     updateLocalLoginUserIdUseCase(localLoginParam) {
                         it.fold(
-                            onSucceed = { sendAction(Action.FinishLogin(userProfile)) },
+                            onSucceed = {
+                                sendAction(Action.FinishLogin(userProfile))
+                                onNavigationToUserProfile(userProfile.id)
+                            },
                             onFail = { failure ->
                                 sendAction(Action.FinishLogin(null))
                                 onFailure(failure)

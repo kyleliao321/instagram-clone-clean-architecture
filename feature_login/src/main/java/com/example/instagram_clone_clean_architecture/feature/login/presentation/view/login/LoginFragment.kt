@@ -18,10 +18,6 @@ class LoginFragment : InjectionFragment() {
     private val viewModel: LoginViewModel by instance()
 
     private val observer = Observer<LoginViewModel.ViewState> {
-        if (it.loginUserProfile != null) {
-            (requireActivity() as MainActivity).navigateToProfile(it.loginUserProfile!!.id)
-        }
-
         if (it.isLoginFail) {
             onLoginFail()
         }
