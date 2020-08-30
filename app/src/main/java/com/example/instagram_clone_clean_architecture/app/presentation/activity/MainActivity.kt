@@ -29,7 +29,7 @@ class MainActivity: InjectionActivity() {
     private lateinit var binding: ActivityMainBinding
 
     fun loginSucceed() {
-        viewModel.onLoginSucceed()
+        viewModel.loadData()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

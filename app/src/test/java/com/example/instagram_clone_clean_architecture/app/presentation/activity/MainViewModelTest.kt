@@ -78,7 +78,6 @@ class MainViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest {
             testViewModel.loadData()
-            testViewModel.onNavigateToProfile()
         }
 
         // expect

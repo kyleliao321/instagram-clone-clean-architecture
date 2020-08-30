@@ -26,11 +26,6 @@ class MainViewModel(
         Login, Profile, Search
     }
 
-    fun onLoginSucceed() {
-        loadData()
-        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
-    }
-
     fun onNavigateToProfile() {
         if (state.localUserId == null) {
             throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
@@ -51,18 +46,12 @@ class MainViewModel(
         getLocalLoginUserIdUseCase(Unit) {
             it.fold(
                 onSucceed = { id ->
-                    sendAction(
-                        Action.LocalUserIdLoaded(
-                            id
-                        )
-                    )
+                    sendAction(Action.LocalUserIdLoaded(id))
+                    onNavigateToProfile()
+                    sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
                 },
                 onFail = { failure ->
-                    sendAction(
-                        Action.LocalUserIdLoaded(
-                            null
-                        )
-                    )
+                    sendAction(Action.LocalUserIdLoaded(null))
                     onFailure(failure)
                 }
             )

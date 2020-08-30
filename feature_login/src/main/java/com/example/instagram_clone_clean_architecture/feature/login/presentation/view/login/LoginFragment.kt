@@ -21,9 +21,8 @@ class LoginFragment : InjectionFragment() {
             onLoginFail()
         }
 
-        it.loginUserProfile?.let { userProfile ->
+        it.loginUserProfile?.let { _ ->
             (requireActivity() as MainActivity).loginSucceed()
-            viewModel.onNavigationToUserProfile(userProfile.id)
         }
     }
 

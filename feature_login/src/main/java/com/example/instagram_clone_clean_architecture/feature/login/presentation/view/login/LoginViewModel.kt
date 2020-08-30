@@ -26,11 +26,6 @@ class LoginViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    fun onNavigationToUserProfile(userId: Int) {
-        val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userId)
-        navManager.onNavEvent(navDir)
-    }
-
     fun userLogin() = viewModelScope.launch(defaultDispatcher) {
         if (state.userName != null && state.userPassword != null) {
             if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
