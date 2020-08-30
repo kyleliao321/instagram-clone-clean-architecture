@@ -9,6 +9,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.withFirstArg
@@ -38,7 +39,7 @@ class UpdateUserProfileUseCaseTest {
 
     @Test
     fun `should invoke without failure`() {
-        var userProfile = UserDomainModel(id = 1, name = "Kyle", userName = "kyle", postNum = 0, followingNum = 0, followerNum = 0)
+        var userProfile = mockk<UserDomainModel>(relaxed = true)
         val updatedUserProfile = userProfile.copy(userName = "kyle0321")
         var result: Either<UserDomainModel, Failure>? = null
 

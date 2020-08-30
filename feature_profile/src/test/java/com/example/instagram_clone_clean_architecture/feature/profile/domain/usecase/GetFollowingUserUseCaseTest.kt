@@ -9,6 +9,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
@@ -38,10 +39,7 @@ class GetFollowingUserUseCaseTest {
 
     @Test
     fun `should return correct type when invoke`() {
-        val userProfiles = listOf(
-            UserDomainModel(id = 1, name = "a", userName = "a", postNum = 1, followingNum = 1, followerNum = 1),
-            UserDomainModel(id = 2, name = "B", userName = "b",  postNum = 1, followingNum = 1, followerNum = 1)
-        )
+        val userProfiles = mockk<List<UserDomainModel>>()
         val param = GetFollowingUserUseCase.Param(1)
         var result: Either<List<UserDomainModel>, Failure>? = null
 

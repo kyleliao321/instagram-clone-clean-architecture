@@ -11,6 +11,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Assert.*
 import org.junit.Before
@@ -38,12 +39,11 @@ class NavigationUseCaseTest {
     }
 
     @Test
-    fun `should return correct result when navigate to profileEditFragment from profileMainFragment`() {
+    fun `should return correct result when navigate`() {
         var result: Either<Unit, Failure>? = null
 
         // when
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileEditFragment(1)
-        val params = NavigationUseCase.Param(navDir)
+        val params = mockk<NavigationUseCase.Param>(relaxed = true)
 
         mainCoroutineRule.runBlockingTest {
             navigationUseCase(params) {
@@ -53,90 +53,4 @@ class NavigationUseCaseTest {
 
         result shouldBeEqualTo Either.Success(Unit)
     }
-
-    @Test
-    fun `should return correct result when navigate to profileFollowerFragment from profileMainFragment`() {
-        var result: Either<Unit, Failure>? = null
-
-        // when
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowerFragment(1)
-        val params = NavigationUseCase.Param(navDir)
-
-        mainCoroutineRule.runBlockingTest {
-            navigationUseCase(params) {
-                result = it
-            }
-        }
-
-        result shouldBeEqualTo Either.Success(Unit)
-    }
-
-    @Test
-    fun `should return correct result when navigate to profileFollowingFragment from profileMainFragment`() {
-        var result: Either<Unit, Failure>? = null
-
-        // when
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfileFollowingFragment(1)
-        val params = NavigationUseCase.Param(navDir)
-
-        mainCoroutineRule.runBlockingTest {
-            navigationUseCase(params) {
-                result = it
-            }
-        }
-
-        result shouldBeEqualTo Either.Success(Unit)
-    }
-
-    @Test
-    fun `should return correct result when navigate to profileMainFragment from profileFollowerFragment`() {
-        var result: Either<Unit, Failure>? = null
-
-        // when
-        val navDir = ProfileFollowerFragmentDirections.actionProfileFollowerFragmentToProfileMainFragment(1)
-        val params = NavigationUseCase.Param(navDir)
-
-        mainCoroutineRule.runBlockingTest {
-            navigationUseCase(params) {
-                result = it
-            }
-        }
-
-        result shouldBeEqualTo Either.Success(Unit)
-    }
-
-    @Test
-    fun `should return correct result when navigate to profileMainFragment from profileFollowingFragment`() {
-        var result: Either<Unit, Failure>? = null
-
-        // when
-        val navDir = ProfileFollowingFragmentDirections.actionProfileFollowingFragmentToProfileMainFragment(1)
-        val params = NavigationUseCase.Param(navDir)
-
-        mainCoroutineRule.runBlockingTest {
-            navigationUseCase(params) {
-                result = it
-            }
-        }
-
-        result shouldBeEqualTo Either.Success(Unit)
-    }
-
-    @Test
-    fun `should return correct result when navigate to profileMainFragment from profileEditFragment`() {
-        var result: Either<Unit, Failure>? = null
-
-        // when
-        val navDir = ProfileEditFragmentDirections.actionProfileEditFragmentToProfileMainFragment(1)
-        val params = NavigationUseCase.Param(navDir)
-
-        mainCoroutineRule.runBlockingTest {
-            navigationUseCase(params) {
-                result = it
-            }
-        }
-
-        result shouldBeEqualTo Either.Success(Unit)
-    }
-
 }

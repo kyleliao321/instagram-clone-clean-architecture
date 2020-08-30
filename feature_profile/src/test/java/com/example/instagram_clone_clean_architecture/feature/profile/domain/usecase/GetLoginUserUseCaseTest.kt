@@ -9,6 +9,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Assert.*
@@ -33,7 +34,7 @@ class GetLoginUserUseCaseTest {
     /**
      * Mock data
      */
-    private val correctUserProfile = UserDomainModel(id = 1, name = "Kyle", userName = "kyle", postNum = 0, followerNum = 1, followingNum = 1)
+    private val correctUserProfile = mockk<UserDomainModel>(relaxed = true)
 
     @Before
     fun setup() {

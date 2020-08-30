@@ -14,6 +14,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
@@ -59,15 +60,11 @@ class ProfilePostViewModelTest {
     /**
      * Mock data
      */
-    private val correctUserProfile = UserDomainModel(
-        id = 1, name = "Kyle", userName = "kyle", postNum = 0, followerNum = 1, followingNum = 2
-    )
+    private val correctUserProfile = mockk<UserDomainModel>(relaxed = true)
 
-    private val correctPost = PostDomainModel(
-        id = 1, imageSrc = "ss", date = Date(), belongUserId = 1
-    )
+    private val correctPost = mockk<PostDomainModel>(relaxed = true)
 
-    private val correctLikedUsers = listOf(correctUserProfile)
+    private val correctLikedUsers = mockk<List<UserDomainModel>>(relaxed = true)
 
     @Before
     fun setup() {

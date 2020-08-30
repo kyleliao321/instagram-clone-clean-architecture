@@ -9,6 +9,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Before
@@ -39,9 +40,7 @@ class GetPostUseCaseTest {
 
     @Test
     fun `should return Success when repository return non-null value`() {
-        val post = PostDomainModel(
-            id = 1, imageSrc = "ss", description = null, location = null, date = Date(), belongUserId = 1
-        )
+        val post = mockk<PostDomainModel>(relaxed = true)
         val param = GetPostUseCase.Param(1)
         var result: Either<PostDomainModel, Failure>? = null
 

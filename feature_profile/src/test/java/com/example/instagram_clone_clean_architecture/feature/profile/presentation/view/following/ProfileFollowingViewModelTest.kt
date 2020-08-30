@@ -15,6 +15,7 @@ import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -61,17 +62,11 @@ class ProfileFollowingViewModelTest {
     /**
      * Mock data
      */
-    private val correctUserProfile = UserDomainModel(
-        id = 1, name = "Kyle", userName = "kyle", postNum = 0, followerNum = 1, followingNum = 2
-    )
+    private val correctUserProfile = mockk<UserDomainModel>(relaxed = true)
 
-    private val targetUserProfile = UserDomainModel(
-        id = 2, name = "Kyle", userName = "kyle", followerNum = 1, followingNum = 1, postNum = 1
-    )
+    private val targetUserProfile = mockk<UserDomainModel>(relaxed = true)
 
-    private val correctFollowingList = listOf(
-        UserDomainModel(id = 1, name = "anna", userName = "Anna", followingNum = 1, followerNum = 2, postNum = 1)
-    )
+    private val correctFollowingList = mockk<List<UserDomainModel>>(relaxed = true)
 
     @Before
     fun setup() {

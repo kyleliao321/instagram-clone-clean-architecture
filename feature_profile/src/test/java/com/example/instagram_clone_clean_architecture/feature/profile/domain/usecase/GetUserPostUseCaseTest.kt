@@ -8,6 +8,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
@@ -37,9 +38,7 @@ class GetUserPostUseCaseTest {
 
     @Test
     fun `should return correct type when invoke`() {
-        val postList = listOf<PostDomainModel>(
-            PostDomainModel(id = 1, imageSrc = "ss", description = null, location = null, date = Date(), belongUserId = 1)
-        )
+        val postList = mockk<List<PostDomainModel>>()
 
         val param = GetUserPostUseCase.Param(1)
         var result: Either<List<PostDomainModel>, com.example.library_base.domain.exception.Failure>? = null

@@ -67,19 +67,11 @@ class ProfileMainViewModelTest {
      */
     private val correctUserId = 1
 
-    private val correctUserProfile = UserDomainModel(
-        id = correctUserId, name = "Kyle", userName = "kyle", postNum = 0, followerNum = 1, followingNum = 2
-    )
+    private val correctUserProfile = mockk<UserDomainModel>(relaxed = true)
 
-    private val correctFollowingList = listOf(
-        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 0, followingNum = 1, followerNum = 1)
-    )
+    private val correctFollowingList = mockk<List<UserDomainModel>>(relaxed = true)
 
-    private val correctUserPost = listOf(
-        PostDomainModel(
-            id = correctUserId, imageSrc = "ss", date = Date(), belongUserId = 1
-        )
-    )
+    private val correctUserPost = mockk<List<PostDomainModel>>(relaxed = true)
 
     @Before
     fun setup() {
@@ -147,7 +139,7 @@ class ProfileMainViewModelTest {
     @Test
     fun `should invoke onNavEvent inside navigationManager when navigate to post fragment`() {
         // given
-        val post = correctUserPost[0]!!
+        val post = mockk<PostDomainModel>(relaxed = true)
         mainCoroutineRule.runBlockingTest { testViewModel.onNavigateToPostDetail(post) }
 
         // expect
