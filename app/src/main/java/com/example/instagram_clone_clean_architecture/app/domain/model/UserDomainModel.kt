@@ -23,7 +23,11 @@ data class UserDomainModel(
      * @param followingList List of userProfiles to determining is given profile followable or
      *                      removable.
      */
-    inline fun getType(userProfile: UserDomainModel, followingList: List<UserDomainModel>) : Type {
+    inline fun getType(userProfile: UserDomainModel?, followingList: List<UserDomainModel>) : Type {
+
+        if (userProfile == null) {
+            return Type.SAME
+        }
 
         if (userProfile == this) {
             return Type.SAME

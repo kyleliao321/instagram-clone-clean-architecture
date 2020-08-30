@@ -5,10 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLikedUsersUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -53,6 +50,10 @@ class ProfilePostViewModelTest {
 
     private lateinit var getLikedUsersUseCase: GetLikedUsersUseCase
 
+    private lateinit var userLikedUsersUseCase: UserLikePostUseCase
+
+    private lateinit var userUnlikePostUseCase: UserUnlikePostUseCase
+
     private lateinit var testViewModel: ProfilePostViewModel
 
     /**
@@ -76,6 +77,8 @@ class ProfilePostViewModelTest {
         getPostUseCase = GetPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getLikedUsersUseCase = GetLikedUsersUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        userLikedUsersUseCase = UserLikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        userUnlikePostUseCase = UserUnlikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel =
             ProfilePostViewModel(
@@ -84,6 +87,8 @@ class ProfilePostViewModelTest {
                 getPostUseCase,
                 getUserProfileUseCase,
                 getLikedUsersUseCase,
+                userLikedUsersUseCase,
+                userUnlikePostUseCase,
                 mainCoroutineRule.testDispatcher
             )
 

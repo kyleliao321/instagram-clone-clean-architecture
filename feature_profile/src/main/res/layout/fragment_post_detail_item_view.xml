@@ -104,6 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:src="@{viewModel.isLoginUserLikedPost() ? @drawable/post_like_button_liked  : @drawable/post_like_button_default}"
+                android:onClick="@{() -> viewModel.onLikeButtonClicked()}"
                 app:layout_constraintTop_toTopOf="@+id/post_action_container"
                 app:layout_constraintBottom_toTopOf="@+id/post_action_post_like_number_divider"
                 app:layout_constraintStart_toStartOf="@+id/post_action_container" />

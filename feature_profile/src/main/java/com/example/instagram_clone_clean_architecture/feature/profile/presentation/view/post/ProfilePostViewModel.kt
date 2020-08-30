@@ -4,10 +4,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLikedUsersUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -23,6 +20,8 @@ class ProfilePostViewModel(
     private val getPostUseCase: GetPostUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val getLikedUsersUseCase: GetLikedUsersUseCase,
+    private val userLikePostUseCase: UserLikePostUseCase,
+    private val userUnlikePostUseCase: UserUnlikePostUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfilePostViewModel.ViewState, ProfilePostViewModel.Action>(
     ViewState()
@@ -33,6 +32,37 @@ class ProfilePostViewModel(
             it.loginUserProfile in it.likedUsers
         } else {
             false
+        }
+    }
+
+    fun onLikeButtonClicked() = viewModelScope.launch(defaultDispatcher) {
+        val userId = state.loginUserProfile!!.id
+        val postId = state.post!!.id
+        when (isLoginUserLikedPost.value) {
+            true -> {
+                val params = UserUnlikePostUseCase.Param(userId, postId)
+                userUnlikePostUseCase(params) {
+                    it.fold(
+                        onSucceed = {
+                            sendAction(Action.Reload)
+                            loadData()
+                        },
+                        onFail = ::onFailure
+                    )
+                }
+            }
+            false -> {
+                val params = UserLikePostUseCase.Param(userId, postId)
+                userLikePostUseCase(params) {
+                    it.fold(
+                        onSucceed = {
+                            sendAction(Action.Reload)
+                            loadData()
+                        },
+                        onFail = ::onFailure
+                    )
+                }
+            }
         }
     }
 
@@ -139,6 +169,7 @@ class ProfilePostViewModel(
         is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
+        is Action.Reload -> ViewState()
     }
 
     data class ViewState(
@@ -163,5 +194,6 @@ class ProfilePostViewModel(
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnLocalAccountError: Action()
+        object Reload : Action()
     }
 }

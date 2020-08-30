@@ -253,5 +253,31 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
+    override suspend fun addUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+        for (liked in userLikedList) {
+            if (liked.first == userId && liked.second == postId) {
+                throw IllegalArgumentException("Cannot add relationship that is already exist")
+            }
+        }
+
+        userLikedList.add(Pair(userId, postId))
+        return Either.Success(Unit)
+    }
+
+    override suspend fun removeUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+        var targetIndex = -1
+        for ((index, liked) in userLikedList.withIndex()) {
+            if (liked.first == userId && liked.second == postId) {
+                targetIndex = index
+            }
+        }
+
+        if (targetIndex == -1) {
+            throw IllegalArgumentException("Cannot remove relationship that is not exist")
+        }
+
+        userLikedList.removeAt(targetIndex)
+        return Either.Success(Unit)
+    }
 
 }

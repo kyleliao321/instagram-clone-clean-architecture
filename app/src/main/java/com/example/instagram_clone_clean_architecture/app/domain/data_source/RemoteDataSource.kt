@@ -39,4 +39,8 @@ interface RemoteDataSource {
 
     suspend fun removeUserRelation(followerId: Int, followingId: Int) : Either<Unit, Failure>
 
+    suspend fun addUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
+
+    suspend fun removeUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
+
 }
