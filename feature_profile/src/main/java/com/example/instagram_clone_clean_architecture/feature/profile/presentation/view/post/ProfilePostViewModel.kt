@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLikedUsersUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetPostUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
@@ -20,6 +21,7 @@ class ProfilePostViewModel(
     private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getPostUseCase: GetPostUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getLikedUsersUseCase: GetLikedUsersUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfilePostViewModel.ViewState, ProfilePostViewModel.Action>(
     ViewState()
@@ -58,6 +60,21 @@ class ProfilePostViewModel(
         }
     }
 
+    private fun loadLikedUsers() = viewModelScope.launch(defaultDispatcher) {
+        val params = GetLikedUsersUseCase.Param(args.postId)
+        getLikedUsersUseCase(params) {
+            it.fold(
+                onSucceed = { userList ->
+                    sendAction(Action.LikedUsersLoaded(userList))
+                },
+                onFail = { failure ->
+                    sendAction(Action.LikedUsersLoaded(listOf()))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
     private fun loadUserProfile() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserProfileUseCase.Param(args.userId)
         getUserProfileUseCase(params) {
@@ -82,6 +99,7 @@ class ProfilePostViewModel(
 
     override fun onLoadData() {
         loadPost()
+        loadLikedUsers()
         loadUserProfile()
         loadLoginUserProfile()
     }
@@ -99,6 +117,10 @@ class ProfilePostViewModel(
             isPostLoading = false,
             post = action.post
         )
+        is Action.LikedUsersLoaded -> state.copy(
+            isLikedUsersLoading = false,
+            likedUsers = action.likedUsers
+        )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
         )
@@ -114,18 +136,21 @@ class ProfilePostViewModel(
         val isLoginUserProfileLoading: Boolean = true,
         val isProfileLoading: Boolean = true,
         val isPostLoading: Boolean = true,
+        val isLikedUsersLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isLocalAccountError: Boolean = false,
         val loginUserProfile: UserDomainModel? = null,
         val userProfile: UserDomainModel? = null,
-        val post: PostDomainModel? = null
+        val post: PostDomainModel? = null,
+        val likedUsers: List<UserDomainModel> = listOf()
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class LoginUserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class ProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class PostLoaded(val post: PostDomainModel?) : Action()
+        class LikedUsersLoaded(val likedUsers: List<UserDomainModel>) : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnLocalAccountError: Action()
