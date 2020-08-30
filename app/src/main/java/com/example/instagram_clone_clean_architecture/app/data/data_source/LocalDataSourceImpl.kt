@@ -19,10 +19,10 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun getLocalLoginUserId(): Either<Int, Failure> {
-        val activity = applicationContext.get()
+        val context = applicationContext.get()
             ?: throw IllegalStateException("$applicationContext cannot be resolved")
 
-        val sharePref = activity.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
         val localLoginUserId = sharePref.getInt(LOCAL_LOGIN_USER_KEY, -1)
 
         return when (localLoginUserId) {
@@ -32,10 +32,10 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun updateLocalLoginUserId(userId: Int?): Either<Unit, Failure> {
-        val activity = applicationContext.get()
+        val context = applicationContext.get()
             ?: throw IllegalStateException("$applicationContext cannot be resolved")
 
-        val sharePref = activity.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
         sharePref.edit().apply {
             putInt(LOCAL_LOGIN_USER_KEY, userId ?: -1)
             commit()
