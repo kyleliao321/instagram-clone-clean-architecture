@@ -53,6 +53,10 @@ internal class MockProfileRepositoryImpl(
         return remoteDataSource.getPostByPostId(id)
     }
 
+    override suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure> {
         return remoteDataSource.updateUserProfile(userProfile)
     }

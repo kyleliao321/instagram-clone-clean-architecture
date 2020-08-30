@@ -25,6 +25,8 @@ interface ProfileRepository {
 
     suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure>
 
+    suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure>
+
     /**
      * Data update operations
      */
