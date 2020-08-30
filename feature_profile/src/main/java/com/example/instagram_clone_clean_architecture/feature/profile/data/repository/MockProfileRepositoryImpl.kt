@@ -69,4 +69,12 @@ internal class MockProfileRepositoryImpl(
         return remoteDataSource.removeUserRelation(follower, following)
     }
 
+    override suspend fun addLikedPost(userId: Int, postId: Int): Either<Unit, Failure> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun removeLikedPost(userId: Int, postId: Int): Either<Unit, Failure> {
+        TODO("Not yet implemented")
+    }
+
 }

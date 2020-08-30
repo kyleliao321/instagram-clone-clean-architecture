@@ -35,4 +35,8 @@ interface ProfileRepository {
     suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure>
 
     suspend fun removeUserRelation(follower: Int, following: Int): Either<Unit, Failure>
+
+    suspend fun addLikedPost(userId: Int, postId: Int): Either<Unit, Failure>
+
+    suspend fun removeLikedPost(userId: Int, postId: Int): Either<Unit, Failure>
 }
