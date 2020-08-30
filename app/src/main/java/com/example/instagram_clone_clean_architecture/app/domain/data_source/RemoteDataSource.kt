@@ -31,6 +31,8 @@ interface RemoteDataSource {
 
     suspend fun getPostListByUserId(userId: Int) : Either<List<PostDomainModel>, Failure>
 
+    suspend fun getLikedUsersByPostId(postId: Int) : Either<List<UserDomainModel>, Failure>
+
     suspend fun updateUserProfile(userProfile: UserDomainModel) : Either<UserDomainModel, Failure>
 
     suspend fun addUserRelation(followerId: Int, followingId: Int) : Either<Unit, Failure>

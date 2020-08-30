@@ -24,6 +24,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         UserDomainModel(id = 3, name = "John", userName = "john", postNum = 0, followingNum = 0, followerNum = 0)
     )
 
+    // follower - following relationship
     private val userRelationList = mutableListOf(
         Pair(1, 2)
     )
@@ -44,7 +45,20 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         PostDomainModel(id = 5, belongUserId = 2, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
             imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
         )
+    )
 
+    // user - likedPost relationship
+    private val userLikedList = mutableListOf(
+        Pair(1, 1),
+        Pair(1, 2),
+        Pair(1, 3),
+        Pair(1, 4),
+        Pair(1, 5),
+        Pair(2, 1),
+        Pair(2, 2),
+        Pair(2, 3),
+        Pair(2, 4),
+        Pair(3, 2)
     )
 
     override suspend fun userLogin(
@@ -157,6 +171,22 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getPostListByUserId(userId: Int): Either<List<PostDomainModel>, Failure> {
         delay(1000)
         val result = userPostList.filter { it.belongUserId == userId }
+
+        return Either.Success(result)
+    }
+
+    override suspend fun getLikedUsersByPostId(postId: Int): Either<List<UserDomainModel>, Failure> {
+        var result = mutableListOf<UserDomainModel>()
+
+        userLikedList
+            .filter { it.second == postId }
+            .forEach { pair ->
+                userProfileList.forEach { userProfile ->
+                    if (userProfile.id == pair.first) {
+                        result.add(userProfile)
+                    }
+                }
+            }
 
         return Either.Success(result)
     }

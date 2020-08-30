@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load

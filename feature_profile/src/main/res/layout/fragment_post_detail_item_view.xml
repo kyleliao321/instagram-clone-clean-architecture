@@ -103,7 +103,7 @@
                 android:id="@+id/like_post_button"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:src="@drawable/post_like_button_default"
+                android:src="@{viewModel.isLoginUserLikedPost() ? @drawable/post_like_button_liked  : @drawable/post_like_button_default}"
                 app:layout_constraintTop_toTopOf="@+id/post_action_container"
                 app:layout_constraintBottom_toTopOf="@+id/post_action_post_like_number_divider"
                 app:layout_constraintStart_toStartOf="@+id/post_action_container" />
@@ -123,7 +123,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/post_action_post_like_number_divider"
                 app:layout_constraintBottom_toBottomOf="@+id/post_action_container"
                 app:layout_constraintStart_toStartOf="@+id/post_action_container"
-                android:text="1,000 liked" />
+                android:text="@{Integer.toString(viewModel.stateLiveData.likedUsers.size()) + ` liked`}" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

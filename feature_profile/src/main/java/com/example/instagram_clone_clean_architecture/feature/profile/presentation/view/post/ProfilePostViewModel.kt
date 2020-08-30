@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -26,6 +27,14 @@ class ProfilePostViewModel(
 ) : BaseViewModel<ProfilePostViewModel.ViewState, ProfilePostViewModel.Action>(
     ViewState()
 ) {
+
+    val isLoginUserLikedPost = Transformations.map(stateLiveData) {
+        if (it.loginUserProfile != null && !it.isLikedUsersLoading) {
+            it.loginUserProfile in it.likedUsers
+        } else {
+            false
+        }
+    }
 
     private fun loadLoginUserProfile() = viewModelScope.launch(defaultDispatcher) {
         getLoginUserUseCase(Unit) {
