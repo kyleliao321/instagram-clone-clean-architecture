@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.example.feature_profile.databinding.FragmentProfileEditBinding
+import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileEditBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 import timber.log.Timber

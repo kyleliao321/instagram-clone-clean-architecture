@@ -12,7 +12,6 @@ object FeatureManager {
 
     private const val featurePackagePrefix = "com.example.instagram_clone_clean_architecture.feature"
 
-    // TODO: Move names of feature modules into buildSrc
     private val featureModuleNames = BuildConfig.FEATURE_MODULE_NAMES
 
     val diModules = featureModuleNames

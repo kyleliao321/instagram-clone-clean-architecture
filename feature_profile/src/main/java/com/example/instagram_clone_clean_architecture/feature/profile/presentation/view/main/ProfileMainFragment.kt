@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.example.feature_profile.databinding.FragmentProfileMainBinding
+import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileMainBinding
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:moduleName="@string/module_name"
+    app:startDestination="@id/postFragment">
+
+    <fragment
+        android:id="@+id/postFragment"
+        android:label="FragmentPost"
+        android:name="com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post.PostFragment"
+        app:moduleName="@string/module_name" />
+
+</navigation>

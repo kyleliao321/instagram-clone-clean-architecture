@@ -7,6 +7,7 @@ object ModuleDependency {
     const val FEATURE_PROFILE = ":feature_profile"
     const val FEATURE_SEARCH = ":feature_search"
     const val FEATURE_LOGIN = ":feature_login"
+    const val FEATURE_POST = ":feature_post"
     const val LIBRARY_BASE = ":library_base"
 
     fun getAllModules() = ModuleDependency::class.memberProperties

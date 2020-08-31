@@ -7,7 +7,7 @@ import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import coil.transform.CircleCropTransformation
-import com.example.feature_profile.R
+import com.example.instagram_clone_clean_architecture.feature.profile.R
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter

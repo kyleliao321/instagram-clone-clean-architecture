@@ -1,14 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.example.instagram_clone_clean_architecture.feature.profile">
+    package="com.example.instagram_clone_clean_architecture.feature.post">
 
     <dist:module
         dist:instant="false"
-        dist:title="@string/title_feature_profile">
+        dist:title="@string/title_feature_post">
         <dist:delivery>
-            <dist:install-time>
-                <dist:removable value="false" />
-            </dist:install-time>
+            <dist:install-time />
         </dist:delivery>
         <dist:fusing dist:include="true" />
     </dist:module>

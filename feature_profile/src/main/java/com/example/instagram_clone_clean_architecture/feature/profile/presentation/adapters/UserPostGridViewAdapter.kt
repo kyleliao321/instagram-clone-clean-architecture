@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.feature_profile.databinding.FragmentProfileMainUserPostsGridViewItemBinding
+import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileMainUserPostsGridViewItemBinding
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 
 class UserPostGridViewAdapter(

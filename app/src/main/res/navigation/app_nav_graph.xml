@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/featureLoginNavGraph">
+    app:startDestination="@id/featurePostNavGraph">
 
     <include-dynamic
         android:id="@+id/featureProfileNavGraph"
@@ -32,4 +32,9 @@
             android:id="@id/featureProfileNavGraph"
             app:destination="@id/featureProfileNavGraph"/>
     </include-dynamic>
+
+    <include-dynamic
+        android:id="@+id/featurePostNavGraph"
+        app:moduleName="feature_post"
+        app:graphResName="feature_post_nav_graph" />
 </navigation>
