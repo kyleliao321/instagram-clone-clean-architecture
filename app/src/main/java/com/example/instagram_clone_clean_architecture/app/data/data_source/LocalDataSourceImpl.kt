@@ -14,8 +14,6 @@ class LocalDataSourceImpl : LocalDataSource {
 
     private lateinit var applicationContext: WeakReference<Context>
 
-    private lateinit var activityContext: WeakReference<AppCompatActivity>
-
     private var cacheImageFile: File? = null
 
     private val SHARE_PREFERENCE_KEY = "com.example.instagram_clone_clean_architecture.shared_preference"

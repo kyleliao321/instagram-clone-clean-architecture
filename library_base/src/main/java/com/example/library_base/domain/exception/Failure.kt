@@ -34,9 +34,8 @@ sealed class Failure {
      */
     object LoginUserNameOrPasswordNotMatched: Failure()
 
-    /**
-     * Indicate that the client-mobile-device doest not support camera usage
-     */
     object CameraServiceFail: Failure()
+
+    object PhotoGalleryServiceFail: Failure()
 
 }

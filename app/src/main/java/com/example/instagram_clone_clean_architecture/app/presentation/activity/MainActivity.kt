@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
+import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.databinding.ActivityMainBinding
 import com.example.library_base.domain.extension.setupNavControllerWithNavCallback
 import com.example.library_base.presentation.activity.InjectionActivity
@@ -20,6 +21,8 @@ class MainActivity: InjectionActivity() {
     private val navController get() = appNavGraph.findNavController()
 
     private val navigationManager: NavigationManager by instance()
+
+    private val intentService: IntentService by instance()
 
     private val viewModel: MainViewModel by instance()
 
@@ -41,6 +44,7 @@ class MainActivity: InjectionActivity() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        initIntentService()
         setNavEventListener()
         setBottomNavigationController()
     }
@@ -86,5 +90,9 @@ class MainActivity: InjectionActivity() {
                 else -> throw IllegalArgumentException("Unknown destination ${it.itemId}")
             }
         }
+    }
+
+    private fun initIntentService() {
+        intentService.init(this)
     }
 }
