@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.instagram_clone_clean_architecture.feature.post.databinding.FragmentPostBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
+import org.kodein.di.instance
 
 class PostFragment: InjectionFragment() {
+
+    private val viewModel: PostViewModel by instance()
 
     private lateinit var binding: FragmentPostBinding
 

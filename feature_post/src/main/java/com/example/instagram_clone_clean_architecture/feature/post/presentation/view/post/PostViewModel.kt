@@ -1,0 +1,149 @@
+package com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post
+
+import androidx.lifecycle.viewModelScope
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
+import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
+import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
+import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
+import com.example.library_base.domain.exception.Failure
+import com.example.library_base.presentation.viewmodel.BaseAction
+import com.example.library_base.presentation.viewmodel.BaseViewModel
+import com.example.library_base.presentation.viewmodel.BaseViewState
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+
+class PostViewModel(
+    private val intentService: IntentService,
+    private val getLoginUserUseCase: GetLoginUserUseCase,
+    private val getUserSelectedImageUseCase: GetUserSelectedImageUseCase,
+    private val uploadPostUseCase: UploadPostUseCase,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
+) : BaseViewModel<PostViewModel.ViewState, PostViewModel.Action>(ViewState()) {
+
+    fun promptToTakePhotoByCamera() = viewModelScope.launch(defaultDispatcher) {
+        intentService.openCamera()
+    }
+
+    fun promptToGetPhotoFromGallery() = viewModelScope.launch(defaultDispatcher) {
+        intentService.openPhotoGallery()
+    }
+
+    fun uploadPost() = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartUploading)
+        val param = UploadPostUseCase.Param(state.post)
+        uploadPostUseCase(param) {
+            it.fold(
+                onSucceed = { sendAction(Action.FinishUploading) },
+                onFail = { failure ->
+                    sendAction(Action.FinishUploading)
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun loadLoginUser() = viewModelScope.launch(defaultDispatcher) {
+        getLoginUserUseCase(Unit) {
+            it.fold(
+                onSucceed = { userProfile ->
+                    sendAction(Action.LoginUserLoaded(userProfile))
+                },
+                onFail = { failure ->
+                    sendAction(Action.LoginUserLoaded(null))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun loadUserSelectedImage() = viewModelScope.launch(defaultDispatcher) {
+        getUserSelectedImageUseCase(Unit) {
+            it.fold(
+                onSucceed = { image ->
+                    sendAction(Action.UserSelectedImageLoaded(image))
+                },
+                onFail = { failure ->
+                    sendAction(Action.UserSelectedImageLoaded(null))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun onFailure(failure: Failure) = when (failure) {
+        is Failure.PhotoGalleryServiceFail -> sendAction(Action.FailOnPhotoGalleryError)
+        is Failure.CameraServiceFail -> sendAction(Action.FailOnCameraError)
+        is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
+        is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
+        is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        else -> IllegalArgumentException("unknown failure $failure in ${this::class.java}")
+    }
+
+    override fun onLoadData() {
+        loadLoginUser()
+        loadUserSelectedImage()
+    }
+
+    override fun onReduceState(action: Action): ViewState = when (action) {
+        is Action.UserSelectedImageLoaded -> state.copy(
+            isUserSelectedImageLoading = false,
+            post = state.post.copy(imageFile = action.image)
+        )
+        is Action.LoginUserLoaded -> state.copy(
+            isLoginUserLoading = false,
+            loginUser = action.user,
+            post = state.post.copy(belongUserId = action.user?.id)
+        )
+        is Action.StartUploading -> state.copy(
+            isUploading = true
+        )
+        is Action.FinishUploading -> state.copy(
+            isUploading = false
+        )
+        is Action.FailOnLocalAccountError -> state.copy(
+            isLocalAccountError = true
+        )
+        is Action.FailOnCameraError -> state.copy(
+            isCameraError = true
+        )
+        is Action.FailOnPhotoGalleryError -> state.copy(
+            isPhotoGalleryError = true
+        )
+        is Action.FailOnNetworkConnection -> state.copy(
+            isNetworkError = true
+        )
+        is Action.FailOnServerError -> state.copy(
+            isServerError = true
+        )
+    }
+
+    data class ViewState(
+        val isUserSelectedImageLoading: Boolean = true,
+        val isLoginUserLoading: Boolean = true,
+        val isUploading: Boolean = false,
+        val isNetworkError: Boolean = false,
+        val isServerError: Boolean = false,
+        val isLocalAccountError: Boolean = false,
+        val isCameraError: Boolean = false,
+        val isPhotoGalleryError: Boolean = false,
+        val loginUser: UserDomainModel? = null,
+        val post: PostUploadDomainModel = PostUploadDomainModel()
+    ) : BaseViewState
+
+    sealed class Action : BaseAction {
+        class UserSelectedImageLoaded(val image: File?) : Action()
+        class LoginUserLoaded(val user: UserDomainModel?) : Action()
+        object StartUploading : Action()
+        object FinishUploading : Action()
+        object FailOnLocalAccountError : Action()
+        object FailOnCameraError : Action()
+        object FailOnPhotoGalleryError : Action()
+        object FailOnNetworkConnection : Action()
+        object FailOnServerError : Action()
+    }
+
+}

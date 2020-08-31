@@ -13,8 +13,15 @@ class UploadPostUseCase(
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<Unit, UploadPostUseCase.Param>(defaultDispatcher) {
 
-    override suspend fun run(params: Param): Either<Unit, Failure> =
-        postRepository.uploadPostUseCase(params.post)
+    override suspend fun run(params: Param): Either<Unit, Failure> {
+        val post = params.post
+
+        return if (post.isPostReady) {
+            postRepository.uploadPostUseCase(params.post)
+        } else {
+            Either.Failure(Failure.PostNotComplete)
+        }
+    }
 
     data class Param(val post: PostUploadDomainModel)
 

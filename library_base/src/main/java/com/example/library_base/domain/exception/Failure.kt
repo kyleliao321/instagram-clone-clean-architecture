@@ -38,4 +38,6 @@ sealed class Failure {
 
     object PhotoGalleryServiceFail: Failure()
 
+    object PostNotComplete: Failure()
+
 }
