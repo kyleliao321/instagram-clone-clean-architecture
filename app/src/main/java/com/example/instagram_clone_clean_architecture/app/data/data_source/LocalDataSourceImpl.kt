@@ -1,18 +1,28 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.content.Context
+import android.content.Intent
+import android.provider.MediaStore
+import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import java.io.File
 import java.lang.ref.WeakReference
 
 class LocalDataSourceImpl : LocalDataSource {
 
     private lateinit var applicationContext: WeakReference<Context>
 
+    private lateinit var activityContext: WeakReference<AppCompatActivity>
+
+    private var cacheImageFile: File? = null
+
     private val SHARE_PREFERENCE_KEY = "com.example.instagram_clone_clean_architecture.shared_preference"
 
     private val LOCAL_LOGIN_USER_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_id"
+
+    private val ERROR_KEY = -1
 
     override fun init(context: Context) {
         applicationContext = WeakReference(context)
@@ -23,10 +33,10 @@ class LocalDataSourceImpl : LocalDataSource {
             ?: throw IllegalStateException("$applicationContext cannot be resolved")
 
         val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
-        val localLoginUserId = sharePref.getInt(LOCAL_LOGIN_USER_KEY, -1)
+        val localLoginUserId = sharePref.getInt(LOCAL_LOGIN_USER_KEY, ERROR_KEY)
 
         return when (localLoginUserId) {
-            -1 -> Either.Failure(Failure.LocalAccountNotFound)
+            ERROR_KEY -> Either.Failure(Failure.LocalAccountNotFound)
             else -> Either.Success(localLoginUserId)
         }
     }
@@ -37,11 +47,22 @@ class LocalDataSourceImpl : LocalDataSource {
 
         val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
         sharePref.edit().apply {
-            putInt(LOCAL_LOGIN_USER_KEY, userId ?: -1)
+            putInt(LOCAL_LOGIN_USER_KEY, userId ?: ERROR_KEY)
             commit()
         }
 
         return Either.Success(Unit)
+    }
+
+    override suspend fun loadImage(image: File?): Either<Unit, Failure> {
+        cacheImageFile = image
+        return Either.Success(Unit)
+    }
+
+    override suspend fun consumeLoadedImage(): Either<File?, Failure> {
+        val tmp = cacheImageFile
+        cacheImageFile = null
+        return Either.Success(tmp)
     }
 
 }

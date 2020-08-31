@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.app.Application
 import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -10,6 +11,7 @@ import com.example.library_base.domain.utility.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Assert.*
 import org.junit.Before
@@ -17,6 +19,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import java.io.File
 
 @RunWith(JUnit4::class)
 class LocalDataSourceImplTest {
@@ -97,5 +100,24 @@ class LocalDataSourceImplTest {
         // expect
         result shouldBeEqualTo Either.Success(Unit)
     }
+
+    @Test
+    fun `should return correct value and clean up cache image when consumeLoadedImage invoke`() {
+        var firstResult: Either<File?, Failure>? = null
+        var secondResult: Either<File?, Failure>? = null
+        val mockFile = mockk<File>()
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            localDataSource.loadImage(mockFile)
+            firstResult = localDataSource.consumeLoadedImage()
+            secondResult = localDataSource.consumeLoadedImage()
+        }
+
+        // expect
+        firstResult shouldBeEqualTo Either.Success(mockFile)
+        secondResult shouldBeEqualTo Either.Success(null)
+    }
+
 
 }

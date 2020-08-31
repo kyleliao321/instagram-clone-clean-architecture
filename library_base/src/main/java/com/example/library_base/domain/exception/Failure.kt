@@ -33,4 +33,10 @@ sealed class Failure {
      * Indicate that the failure is caused by incorrect user name or password
      */
     object LoginUserNameOrPasswordNotMatched: Failure()
+
+    /**
+     * Indicate that the client-mobile-device doest not support camera usage
+     */
+    object CameraServiceFail: Failure()
+
 }
