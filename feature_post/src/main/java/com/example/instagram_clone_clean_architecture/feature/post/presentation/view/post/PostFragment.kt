@@ -4,13 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.feature.post.databinding.FragmentPostBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
+import timber.log.Timber
 
 class PostFragment: InjectionFragment() {
 
     private val viewModel: PostViewModel by instance()
+
+    private val observer = Observer<PostViewModel.ViewState>() {
+        Timber.d(it.toString())
+    }
 
     private lateinit var binding: FragmentPostBinding
 
@@ -22,8 +28,15 @@ class PostFragment: InjectionFragment() {
         binding = FragmentPostBinding.inflate(inflater, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
+        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewModel.loadData()
     }
 
 }
