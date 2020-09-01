@@ -7,7 +7,7 @@ import com.example.instagram_clone_clean_architecture.feature.login.domain.repos
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
-class MockLoginRepositoryImpl(
+class LoginRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
 ) : LoginRepository {

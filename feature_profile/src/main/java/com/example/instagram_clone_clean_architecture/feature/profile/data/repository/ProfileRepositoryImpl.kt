@@ -8,7 +8,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
-internal class MockProfileRepositoryImpl(
+internal class ProfileRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource
 ): ProfileRepository {

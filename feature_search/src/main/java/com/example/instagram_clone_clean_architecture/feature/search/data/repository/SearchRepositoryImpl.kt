@@ -7,7 +7,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
 
-class MockSearchRepositoryImpl(
+class SearchRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
 ) : SearchRepository {
 
