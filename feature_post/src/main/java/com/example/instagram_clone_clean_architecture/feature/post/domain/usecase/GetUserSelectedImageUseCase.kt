@@ -11,9 +11,9 @@ import java.io.File
 class GetUserSelectedImageUseCase(
     private val postRepository: PostRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : UseCase<File, Unit>(defaultDispatcher) {
+) : UseCase<File?, Unit>(defaultDispatcher) {
 
-    override suspend fun run(params: Unit): Either<File, Failure> =
+    override suspend fun run(params: Unit): Either<File?, Failure> =
         postRepository.getUserSelectedImage()
 
 }

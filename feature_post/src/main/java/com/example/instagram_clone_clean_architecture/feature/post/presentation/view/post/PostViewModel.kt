@@ -32,9 +32,9 @@ class PostViewModel(
         intentService.openPhotoGallery()
     }
 
-    fun uploadPost() = viewModelScope.launch(defaultDispatcher) {
+    fun uploadPost(post: PostUploadDomainModel) = viewModelScope.launch(defaultDispatcher) {
         sendAction(Action.StartUploading)
-        val param = UploadPostUseCase.Param(state.post)
+        val param = UploadPostUseCase.Param(post)
         uploadPostUseCase(param) {
             it.fold(
                 onSucceed = { sendAction(Action.FinishUploading) },
@@ -80,6 +80,7 @@ class PostViewModel(
         is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.PostNotComplete -> sendAction(Action.FailOnPostNotComplete)
         else -> IllegalArgumentException("unknown failure $failure in ${this::class.java}")
     }
 
@@ -119,6 +120,9 @@ class PostViewModel(
         is Action.FailOnServerError -> state.copy(
             isServerError = true
         )
+        is Action.FailOnPostNotComplete -> state.copy(
+            isPostNotComplete = true
+        )
     }
 
     data class ViewState(
@@ -130,6 +134,7 @@ class PostViewModel(
         val isLocalAccountError: Boolean = false,
         val isCameraError: Boolean = false,
         val isPhotoGalleryError: Boolean = false,
+        val isPostNotComplete: Boolean = false,
         val loginUser: UserDomainModel? = null,
         val post: PostUploadDomainModel = PostUploadDomainModel()
     ) : BaseViewState
@@ -144,6 +149,7 @@ class PostViewModel(
         object FailOnPhotoGalleryError : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
+        object FailOnPostNotComplete : Action()
     }
 
 }

@@ -39,7 +39,7 @@ class GetUserSelectedImageUseCaseTest {
 
     @Test
     fun `should return correct type when getUserSelectedImage of postRepository invoke successfully`() {
-        var result: Either<File, Failure>? = null
+        var result: Either<File?, Failure>? = null
         val mockFile = mockk<File>()
 
         // given

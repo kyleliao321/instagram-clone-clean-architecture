@@ -10,7 +10,7 @@ interface PostRepository {
 
     suspend fun getLoginUserProfile(): Either<UserDomainModel, Failure>
 
-    suspend fun getUserSelectedImage(): Either<File, Failure>
+    suspend fun getUserSelectedImage(): Either<File?, Failure>
 
     suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<Unit, Failure>
 

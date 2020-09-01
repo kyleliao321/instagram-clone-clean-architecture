@@ -16,7 +16,7 @@ class PostRepositoryImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserSelectedImage(): Either<File, Failure> {
+    override suspend fun getUserSelectedImage(): Either<File?, Failure> {
         TODO("Not yet implemented")
     }
 
