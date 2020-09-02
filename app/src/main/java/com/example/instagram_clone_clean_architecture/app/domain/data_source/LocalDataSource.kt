@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.domain.data_source
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.example.library_base.domain.exception.Failure
@@ -14,6 +15,8 @@ interface LocalDataSource {
     suspend fun getLocalLoginUserId(): Either<Int, Failure>
 
     suspend fun updateLocalLoginUserId(userId: Int?): Either<Unit, Failure>
+
+    suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
 
     // When prompt user to choose image either for avatar or post, the activity/fragment will
     // paused and await for result. So, in order to provide user a select-and-return-experience,

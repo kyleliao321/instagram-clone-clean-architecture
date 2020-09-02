@@ -2,7 +2,10 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
@@ -51,6 +54,24 @@ class LocalDataSourceImpl : LocalDataSource {
         }
 
         return Either.Success(Unit)
+    }
+
+    override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> {
+        val context = applicationContext.get()
+            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+
+        val bitmap = if (Build.VERSION.SDK_INT < 28) {
+            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+        } else {
+            val source = ImageDecoder.createSource(context.contentResolver, uri)
+            ImageDecoder.decodeBitmap(source)
+        }
+
+        return if (bitmap == null) {
+            Either.Failure(Failure.PhotoGalleryServiceFail)
+        } else {
+            Either.Success(bitmap)
+        }
     }
 
     override suspend fun cacheImage(imageUri: Uri?): Either<Unit, Failure> {

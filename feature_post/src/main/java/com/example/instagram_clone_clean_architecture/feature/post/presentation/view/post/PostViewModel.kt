@@ -1,10 +1,12 @@
 package com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetBitmapUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
@@ -22,6 +24,7 @@ class PostViewModel(
     private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getUserSelectedImageUseCase: GetUserSelectedImageUseCase,
     private val uploadPostUseCase: UploadPostUseCase,
+    private val getBitmapUseCase: GetBitmapUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<PostViewModel.ViewState, PostViewModel.Action>(ViewState()) {
 
@@ -66,9 +69,28 @@ class PostViewModel(
             it.fold(
                 onSucceed = { image ->
                     sendAction(Action.UserSelectedImageLoaded(image))
+                    image?.let { uri ->
+                        decodeBitmap(uri)
+                    }
                 },
                 onFail = { failure ->
                     sendAction(Action.UserSelectedImageLoaded(null))
+                    onFailure(failure)
+                }
+            )
+        }
+    }
+
+    private fun decodeBitmap(uri: Uri) = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartDecodeBitmap)
+        val param = GetBitmapUseCase.Param(uri)
+        getBitmapUseCase(param) {
+            it.fold(
+                onSucceed = { bitmap ->
+                    sendAction(Action.BitmapDecoded(bitmap))
+                },
+                onFail = { failure ->
+                    sendAction(Action.BitmapDecoded(null))
                     onFailure(failure)
                 }
             )
@@ -100,6 +122,13 @@ class PostViewModel(
             loginUser = action.user,
             post = state.post.copy(belongUserId = action.user?.id)
         )
+        is Action.BitmapDecoded -> state.copy(
+            isBitmapDecoding = false,
+            bitmap = action.bitmap
+        )
+        is Action.StartDecodeBitmap -> state.copy(
+            isBitmapDecoding = true
+        )
         is Action.StartUploading -> state.copy(
             isUploading = true
         )
@@ -129,6 +158,7 @@ class PostViewModel(
     data class ViewState(
         val isUserSelectedImageLoading: Boolean = true,
         val isLoginUserLoading: Boolean = true,
+        val isBitmapDecoding: Boolean = false,
         val isUploading: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
@@ -137,14 +167,17 @@ class PostViewModel(
         val isPhotoGalleryError: Boolean = false,
         val isPostNotComplete: Boolean = false,
         val loginUser: UserDomainModel? = null,
-        val post: PostUploadDomainModel = PostUploadDomainModel()
+        val post: PostUploadDomainModel = PostUploadDomainModel(),
+        val bitmap: Bitmap? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class UserSelectedImageLoaded(val image: Uri?) : Action()
         class LoginUserLoaded(val user: UserDomainModel?) : Action()
+        class BitmapDecoded(val bitmap: Bitmap?) : Action()
         object StartUploading : Action()
         object FinishUploading : Action()
+        object StartDecodeBitmap : Action()
         object FailOnLocalAccountError : Action()
         object FailOnCameraError : Action()
         object FailOnPhotoGalleryError : Action()

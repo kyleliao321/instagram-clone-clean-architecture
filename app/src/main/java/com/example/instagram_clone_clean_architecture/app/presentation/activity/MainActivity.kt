@@ -121,13 +121,4 @@ class MainActivity: InjectionActivity() {
     private fun initIntentService() {
         intentService.init(this)
     }
-
-    private fun getBitmapFromContentResolver(uri: Uri): Bitmap {
-        return if (Build.VERSION.SDK_INT < 28) {
-            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-        } else {
-            val source = ImageDecoder.createSource(this.contentResolver, uri)
-            ImageDecoder.decodeBitmap(source)
-        }
-    }
 }

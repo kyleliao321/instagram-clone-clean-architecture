@@ -1,6 +1,8 @@
 package com.example.instagram_clone_clean_architecture.feature.post.data.repository
 
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -46,5 +48,8 @@ class PostRepositoryImpl(
     override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<Unit, Failure> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> =
+        localDataSource.getBitmap(uri)
 
 }

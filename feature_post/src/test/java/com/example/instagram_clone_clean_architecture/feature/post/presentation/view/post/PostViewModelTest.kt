@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
@@ -7,6 +8,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
+import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetBitmapUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
@@ -55,6 +57,8 @@ class PostViewModelTest {
 
     private lateinit var uploadPostUseCase: UploadPostUseCase
 
+    private lateinit var getBitmapUseCase: GetBitmapUseCase
+
     private lateinit var viewModel: PostViewModel
 
     @Before
@@ -64,12 +68,14 @@ class PostViewModelTest {
         getLoginUserUseCase = GetLoginUserUseCase(postRepository, mainCoroutineRule.testDispatcher)
         getUserSelectedImageUseCase = GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher)
         uploadPostUseCase = UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)
+        getBitmapUseCase = GetBitmapUseCase(postRepository, mainCoroutineRule.testDispatcher)
 
         viewModel = PostViewModel(
             intentService,
             getLoginUserUseCase,
             getUserSelectedImageUseCase,
             uploadPostUseCase,
+            getBitmapUseCase,
             mainCoroutineRule.testDispatcher
         )
 
@@ -104,6 +110,7 @@ class PostViewModelTest {
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isLoginUserLoading = true,
             isUserSelectedImageLoading = true,
+            isBitmapDecoding = false,
             isUploading = false,
             isServerError = false,
             isNetworkError = false,
@@ -111,7 +118,8 @@ class PostViewModelTest {
             isCameraError = false,
             isPostNotComplete = false,
             loginUser = null,
-            post = PostUploadDomainModel()
+            post = PostUploadDomainModel(),
+            bitmap = null
         )
     }
 
@@ -119,10 +127,12 @@ class PostViewModelTest {
     fun `verify view state when all UseCases succeed after loadData`() {
         val mockLoginUser = mockk<UserDomainModel>()
         val mockImage = mockk<Uri>()
+        val mockBitmap = mockk<Bitmap>()
 
         // given
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
         every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockImage)
+        every { runBlocking { postRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         every { mockLoginUser.id } returns 1
 
         // when
@@ -133,6 +143,7 @@ class PostViewModelTest {
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
+            isBitmapDecoding = false,
             isUploading = false,
             isCameraError = false,
             isPhotoGalleryError = false,
@@ -141,17 +152,20 @@ class PostViewModelTest {
             isLocalAccountError = false,
             isPostNotComplete = false,
             loginUser = mockLoginUser,
-            post = expectPost
+            post = expectPost,
+            bitmap = mockBitmap
         )
     }
 
     @Test
     fun `verify view state when only getLoginUserUseCase fail during loadData`() {
         val mockImage = mockk<Uri>()
+        val mockBitmap = mockk<Bitmap>()
 
         // given
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockImage)
+        every { runBlocking { postRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
@@ -161,6 +175,7 @@ class PostViewModelTest {
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
+            isBitmapDecoding = false,
             isUploading = false,
             isCameraError = false,
             isPhotoGalleryError = false,
@@ -169,7 +184,8 @@ class PostViewModelTest {
             isLocalAccountError = true,
             isPostNotComplete = false,
             loginUser = null,
-            post = expectPost
+            post = expectPost,
+            bitmap = mockBitmap
         )
     }
 
@@ -190,6 +206,7 @@ class PostViewModelTest {
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
+            isBitmapDecoding = false,
             isUploading = false,
             isCameraError = false,
             isPhotoGalleryError = false,
@@ -198,7 +215,8 @@ class PostViewModelTest {
             isLocalAccountError = false,
             isPostNotComplete = false,
             loginUser = mockLoginUser,
-            post = expectPost
+            post = expectPost,
+            bitmap = null
         )
     }
 
@@ -216,6 +234,7 @@ class PostViewModelTest {
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
+            isBitmapDecoding = false,
             isUploading = false,
             isCameraError = false,
             isPhotoGalleryError = false,
@@ -224,7 +243,8 @@ class PostViewModelTest {
             isLocalAccountError = true,
             isPostNotComplete = false,
             loginUser = null,
-            post = expectPost
+            post = expectPost,
+            bitmap = null
         )
     }
 
