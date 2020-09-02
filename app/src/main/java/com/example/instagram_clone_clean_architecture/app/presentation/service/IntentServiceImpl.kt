@@ -10,10 +10,6 @@ import java.lang.ref.WeakReference
 
 class IntentServiceImpl: IntentService {
 
-    val CAMERA_SERVICE_CODE = 1
-
-    val PHOTO_GALLERY_SERVICE_CODE = 2
-
     private lateinit var activityContext: WeakReference<AppCompatActivity>
 
     override fun init(activity: AppCompatActivity) {
@@ -26,7 +22,7 @@ class IntentServiceImpl: IntentService {
 
         Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { intent ->
             try {
-                context.startActivityForResult(intent, CAMERA_SERVICE_CODE)
+                context.startActivityForResult(intent, IntentService.CAMERA_SERVICE_CODE)
             } catch (e: Exception) {
                 return Either.Failure(Failure.CameraServiceFail)
             }
@@ -41,7 +37,7 @@ class IntentServiceImpl: IntentService {
 
         Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).also { intent ->
             try {
-                context.startActivityForResult(intent, PHOTO_GALLERY_SERVICE_CODE)
+                context.startActivityForResult(intent, IntentService.PHOTO_GALLERY_SERVICE_CODE)
             } catch (e: Exception) {
                 return Either.Failure(Failure.PhotoGalleryServiceFail)
             }

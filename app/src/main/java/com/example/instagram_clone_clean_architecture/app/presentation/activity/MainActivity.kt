@@ -1,6 +1,14 @@
 package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -9,12 +17,14 @@ import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.databinding.ActivityMainBinding
+import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.extension.setupNavControllerWithNavCallback
 import com.example.library_base.presentation.activity.InjectionActivity
 import com.example.library_base.presentation.navigation.NavigationManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.instance
 import timber.log.Timber
+import java.io.*
 
 class MainActivity: InjectionActivity() {
 
@@ -53,6 +63,21 @@ class MainActivity: InjectionActivity() {
         super.onStart()
         viewModel.stateLiveData.observe(this, observer)
         viewModel.loadData()
+
+        intentService.openPhotoGallery()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            IntentService.PHOTO_GALLERY_SERVICE_CODE -> {
+                val uriString = data!!.dataString
+                val uri = Uri.parse(uriString)
+
+                val bitmap = getBitmapFromContentResolver(uri)
+                val byteArray = bitmap.getJpegByteArray()
+            }
+        }
     }
 
     private fun setNavEventListener() {
@@ -94,5 +119,14 @@ class MainActivity: InjectionActivity() {
 
     private fun initIntentService() {
         intentService.init(this)
+    }
+
+    private fun getBitmapFromContentResolver(uri: Uri): Bitmap {
+        return if (Build.VERSION.SDK_INT < 28) {
+            MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+        } else {
+            val source = ImageDecoder.createSource(this.contentResolver, uri)
+            ImageDecoder.decodeBitmap(source)
+        }
     }
 }

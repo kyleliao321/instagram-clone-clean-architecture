@@ -12,4 +12,10 @@ interface IntentService {
 
     fun openPhotoGallery(): Either<Unit, Failure>
 
+    companion object {
+        val CAMERA_SERVICE_CODE = 1
+
+        val PHOTO_GALLERY_SERVICE_CODE = 2
+    }
+
 }
