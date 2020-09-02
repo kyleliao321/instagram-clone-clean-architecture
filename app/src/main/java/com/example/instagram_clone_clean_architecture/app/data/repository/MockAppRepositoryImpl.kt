@@ -18,4 +18,10 @@ class MockAppRepositoryImpl(
     override suspend fun getLocalLoginUserId(): Either<Int, Failure> =
         localDataSource.getLocalLoginUserId()
 
+    override suspend fun getLocalLoginUserName(): Either<String, Failure> =
+        localDataSource.getLocalLoginUserName()
+
+    override suspend fun getLocalLoginUserPassword(): Either<String, Failure> =
+        localDataSource.getLocalLoginUserPassword()
+
 }

@@ -10,4 +10,8 @@ interface AppRepository {
 
     suspend fun getLocalLoginUserId() : Either<Int, Failure>
 
+    suspend fun getLocalLoginUserName() : Either<String, Failure>
+
+    suspend fun getLocalLoginUserPassword() : Either<String, Failure>
+
 }
