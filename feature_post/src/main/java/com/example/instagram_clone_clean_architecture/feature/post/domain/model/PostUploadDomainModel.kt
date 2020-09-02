@@ -4,11 +4,11 @@ import android.net.Uri
 import java.util.*
 
 data class PostUploadDomainModel(
-    val imageFile: Uri? = null,
-    val description: String? = null,
-    val location: String? = null,
-    val date: Date? = null,
-    val belongUserId: Int? = null
+    var imageFile: Uri? = null,
+    var description: String? = null,
+    var location: String? = null,
+    var date: Date? = null,
+    var belongUserId: Int? = null
 ) {
 
     val isPostReady get() =
