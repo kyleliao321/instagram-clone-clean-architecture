@@ -42,27 +42,27 @@ class PostUploadDomainModelTest {
     }
 
     @Test
-    fun `isPostReady should return false when description is missing`() {
+    fun `isPostReady should return true when description is missing`() {
         val post = PostUploadDomainModel(imageFile = mockFile, location = "1", date = Date(), belongUserId = 1)
 
         // expect
-        post.isPostReady shouldBeEqualTo false
+        post.isPostReady shouldBeEqualTo true
     }
 
     @Test
-    fun `isPostReady should return false when location is missing`() {
+    fun `isPostReady should return true when location is missing`() {
         val post = PostUploadDomainModel(imageFile = mockFile, description = "1", date = Date(), belongUserId = 1)
 
         // expect
-        post.isPostReady shouldBeEqualTo false
+        post.isPostReady shouldBeEqualTo true
     }
 
     @Test
-    fun `isPostReady should return false when date is missing`() {
+    fun `isPostReady should return true when date is missing`() {
         val post = PostUploadDomainModel(imageFile = mockFile, location = "1", description = "1", belongUserId = 1)
 
         // expect
-        post.isPostReady shouldBeEqualTo false
+        post.isPostReady shouldBeEqualTo true
     }
 
     @Test

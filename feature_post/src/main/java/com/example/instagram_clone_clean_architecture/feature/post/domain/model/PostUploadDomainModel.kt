@@ -12,6 +12,6 @@ data class PostUploadDomainModel(
 ) {
 
     val isPostReady get() =
-        imageFile != null && description != null && location != null && date != null && belongUserId != null
+        imageFile != null && belongUserId != null
 
 }
