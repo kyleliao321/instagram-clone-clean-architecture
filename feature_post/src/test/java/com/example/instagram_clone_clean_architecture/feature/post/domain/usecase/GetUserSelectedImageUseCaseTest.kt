@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.usecase
 
+import android.net.Uri
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -39,8 +40,8 @@ class GetUserSelectedImageUseCaseTest {
 
     @Test
     fun `should return correct type when getUserSelectedImage of postRepository invoke successfully`() {
-        var result: Either<File?, Failure>? = null
-        val mockFile = mockk<File>()
+        var result: Either<Uri?, Failure>? = null
+        val mockFile = mockk<Uri>()
 
         // given
         every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockFile)

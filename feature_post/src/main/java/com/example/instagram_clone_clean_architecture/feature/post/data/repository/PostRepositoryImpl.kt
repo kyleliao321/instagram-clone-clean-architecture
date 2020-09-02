@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.data.repository
 
+import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -39,7 +40,7 @@ class PostRepositoryImpl(
         return result!!
     }
 
-    override suspend fun getUserSelectedImage(): Either<File?, Failure> =
+    override suspend fun getUserSelectedImage(): Either<Uri?, Failure> =
         localDataSource.consumeLoadedImage()
 
     override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<Unit, Failure> {

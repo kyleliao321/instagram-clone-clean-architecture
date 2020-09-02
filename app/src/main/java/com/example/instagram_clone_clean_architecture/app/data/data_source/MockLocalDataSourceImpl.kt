@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.content.Context
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
@@ -25,11 +26,11 @@ class MockLocalDataSourceImpl: LocalDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun loadImage(image: File?): Either<Unit, Failure> {
+    override suspend fun loadImage(image: Uri?): Either<Unit, Failure> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun consumeLoadedImage(): Either<File, Failure> {
+    override suspend fun consumeLoadedImage(): Either<Uri, Failure> {
         TODO("Not yet implemented")
     }
 

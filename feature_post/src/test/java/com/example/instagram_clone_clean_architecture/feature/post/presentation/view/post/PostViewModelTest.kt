@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post
 
+import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -117,7 +118,7 @@ class PostViewModelTest {
     @Test
     fun `verify view state when all UseCases succeed after loadData`() {
         val mockLoginUser = mockk<UserDomainModel>()
-        val mockImage = mockk<File>()
+        val mockImage = mockk<Uri>()
 
         // given
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
@@ -146,7 +147,7 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when only getLoginUserUseCase fail during loadData`() {
-        val mockImage = mockk<File>()
+        val mockImage = mockk<Uri>()
 
         // given
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)

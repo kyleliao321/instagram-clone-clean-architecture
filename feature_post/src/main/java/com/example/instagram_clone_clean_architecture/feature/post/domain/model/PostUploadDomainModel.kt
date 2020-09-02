@@ -1,10 +1,10 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.model
 
-import java.io.File
+import android.net.Uri
 import java.util.*
 
 data class PostUploadDomainModel(
-    val imageFile: File? = null,
+    val imageFile: Uri? = null,
     val description: String? = null,
     val location: String? = null,
     val date: Date? = null,

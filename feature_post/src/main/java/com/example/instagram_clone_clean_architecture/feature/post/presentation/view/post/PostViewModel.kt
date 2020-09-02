@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
@@ -140,7 +141,7 @@ class PostViewModel(
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class UserSelectedImageLoaded(val image: File?) : Action()
+        class UserSelectedImageLoaded(val image: Uri?) : Action()
         class LoginUserLoaded(val user: UserDomainModel?) : Action()
         object StartUploading : Action()
         object FinishUploading : Action()

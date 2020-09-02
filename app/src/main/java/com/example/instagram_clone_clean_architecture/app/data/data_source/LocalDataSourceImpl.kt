@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.provider.MediaStore
 import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
@@ -14,7 +15,7 @@ class LocalDataSourceImpl : LocalDataSource {
 
     private lateinit var applicationContext: WeakReference<Context>
 
-    private var cacheImageFile: File? = null
+    private var cacheImageUri: Uri? = null
 
     private val SHARE_PREFERENCE_KEY = "com.example.instagram_clone_clean_architecture.shared_preference"
 
@@ -52,14 +53,14 @@ class LocalDataSourceImpl : LocalDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun loadImage(image: File?): Either<Unit, Failure> {
-        cacheImageFile = image
+    override suspend fun loadImage(imageUri: Uri?): Either<Unit, Failure> {
+        cacheImageUri = imageUri
         return Either.Success(Unit)
     }
 
-    override suspend fun consumeLoadedImage(): Either<File?, Failure> {
-        val tmp = cacheImageFile
-        cacheImageFile = null
+    override suspend fun consumeLoadedImage(): Either<Uri?, Failure> {
+        val tmp = cacheImageUri
+        cacheImageUri = null
         return Either.Success(tmp)
     }
 

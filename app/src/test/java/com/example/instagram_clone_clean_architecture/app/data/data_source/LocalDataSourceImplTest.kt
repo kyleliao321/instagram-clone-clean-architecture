@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
@@ -103,19 +104,19 @@ class LocalDataSourceImplTest {
 
     @Test
     fun `should return correct value and clean up cache image when consumeLoadedImage invoke`() {
-        var firstResult: Either<File?, Failure>? = null
-        var secondResult: Either<File?, Failure>? = null
-        val mockFile = mockk<File>()
+        var firstResult: Either<Uri?, Failure>? = null
+        var secondResult: Either<Uri?, Failure>? = null
+        val mockImageUri = mockk<Uri>()
 
         // when
         mainCoroutineRule.runBlockingTest {
-            localDataSource.loadImage(mockFile)
+            localDataSource.loadImage(mockImageUri)
             firstResult = localDataSource.consumeLoadedImage()
             secondResult = localDataSource.consumeLoadedImage()
         }
 
         // expect
-        firstResult shouldBeEqualTo Either.Success(mockFile)
+        firstResult shouldBeEqualTo Either.Success(mockImageUri)
         secondResult shouldBeEqualTo Either.Success(null)
     }
 

@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.model
 
+import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
@@ -17,7 +18,7 @@ import java.util.*
 class PostUploadDomainModelTest {
 
     @MockK(relaxed = true)
-    internal lateinit var mockFile: File
+    internal lateinit var mockFile: Uri
 
     @Before
     fun setup() {

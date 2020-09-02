@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.domain.data_source
 
 import android.content.Context
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
@@ -28,11 +29,11 @@ interface LocalDataSource {
     /**
      * Load image file into loaded-temporary-image.
      */
-    suspend fun loadImage(image: File?): Either<Unit, Failure>
+    suspend fun loadImage(image: Uri?): Either<Unit, Failure>
 
     /**
      * Consume previously loaded image.
      * The function should clean-up the loaded-temporary-image before return.
      */
-    suspend fun consumeLoadedImage(): Either<File?, Failure>
+    suspend fun consumeLoadedImage(): Either<Uri?, Failure>
 }
