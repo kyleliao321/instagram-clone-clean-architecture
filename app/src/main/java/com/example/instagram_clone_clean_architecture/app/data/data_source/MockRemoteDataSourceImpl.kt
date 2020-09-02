@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
+import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
@@ -7,6 +8,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
+import timber.log.Timber
 import java.util.*
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
@@ -283,8 +285,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
-        val mockNewPost = userPostList[0].copy(id = ++tmpPostCount, belongUserId = post.belongUserId!!)
+    override suspend fun uploadPost(post: PostUploadDataModel): Either<PostDomainModel, Failure> {
+        val mockNewPost = userPostList[0].copy(id = ++tmpPostCount, belongUserId = post.belongUser)
         userPostList.add(mockNewPost)
         return Either.Success(mockNewPost)
     }

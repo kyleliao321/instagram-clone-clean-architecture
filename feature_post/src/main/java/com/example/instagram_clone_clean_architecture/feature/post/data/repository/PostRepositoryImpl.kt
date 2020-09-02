@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.post.data.reposit
 
 import android.graphics.Bitmap
 import android.net.Uri
+import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -9,6 +10,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.utility.Either
 
 class PostRepositoryImpl(
@@ -44,8 +46,23 @@ class PostRepositoryImpl(
     override suspend fun getUserSelectedImage(): Either<Uri?, Failure> =
         localDataSource.consumeLoadedImage()
 
-    override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure> =
-        remoteDataSource.uploadPost(postUploadDomainModel)
+    override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure> {
+        val imageUri = postUploadDomainModel.imageFile!!
+        var bitmap: Bitmap? = null
+
+        getBitmap(imageUri).fold(
+            onSucceed = { bitmap = it },
+            onFail = {}
+        )
+
+        return if (bitmap == null) {
+            Either.Failure(Failure.PhotoGalleryServiceFail)
+        } else {
+            val imageByteArray = bitmap!!.getJpegByteArray()
+            val dataModel = PostUploadDataModel.from(postUploadDomainModel, imageByteArray)
+            remoteDataSource.uploadPost(dataModel)
+        }
+    }
 
     override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> =
         localDataSource.getBitmap(uri)
