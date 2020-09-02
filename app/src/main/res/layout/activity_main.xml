@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.example.instagram_clone_clean_architecture.app.presentation.activity.MainViewModel.NavGraphDestinations" />
         <import type="android.view.View" />
         <variable
             name="viewModel"
@@ -29,7 +28,6 @@
             app:navGraph="@navigation/app_nav_graph"></fragment>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:visibility="@{viewModel.stateLiveData.navDestination == NavGraphDestinations.Login ? View.GONE : View.VISIBLE}"
             android:clickable="@{!viewModel.stateLiveData.localUserDataLoading}"
             android:id="@+id/bottomNav"
             android:layout_width="match_parent"

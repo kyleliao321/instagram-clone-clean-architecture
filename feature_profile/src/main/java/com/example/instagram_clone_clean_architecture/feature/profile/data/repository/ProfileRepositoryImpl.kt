@@ -20,27 +20,11 @@ internal class ProfileRepositoryImpl(
 ): ProfileRepository {
     
     override suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure> {
-        var result: Either<UserDomainModel?, Failure>? = null
-
-        var userId: Int? = null
-
-        localDataSource.getLocalLoginUserId().fold(
-            onSucceed = { id -> userId = id},
-            onFail = { failure -> result = Either.Failure(failure) }
-        )
-
-        userId?.let {
-            remoteDataSource.getUserProfileById(it).fold(
-                onSucceed = { userProfile -> result = Either.Success(userProfile) },
-                onFail = { failure -> result = Either.Failure(failure) }
-            )
-        }
-
-        return result!!
+        return cacheDataSource.getLoginUser()
     }
 
     override suspend fun cleanupLocalLoginUser(): Either<Unit, Failure> =
-        localDataSource.updateLocalLoginUserId(null)
+        cacheDataSource.cacheLoginUserProfile(null)
 
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
         return remoteDataSource.getUserProfileById(id)

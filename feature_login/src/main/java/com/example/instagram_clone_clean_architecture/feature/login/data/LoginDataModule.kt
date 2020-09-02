@@ -10,6 +10,6 @@ import org.kodein.di.singleton
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind<LoginRepository>() with singleton {
-        LoginRepositoryImpl(instance(), instance())
+        LoginRepositoryImpl(instance(), instance(), instance())
     }
 }

@@ -3,7 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureLoginNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
+import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class LoginViewModel(
     private val navManager: NavigationManager,
     private val userLoginUseCase: UserLoginUseCase,
-    private val updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase,
+    private val getLocalLoginUserDataUseCase: GetLocalLoginUserDataUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<LoginViewModel.ViewState, LoginViewModel.Action>(ViewState()) {
 
@@ -26,41 +26,38 @@ class LoginViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    fun userLogin() = viewModelScope.launch(defaultDispatcher) {
-        if (state.userName != null && state.userPassword != null) {
-            if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
+    fun userLogin(userName: String?, userPassword: String?) = viewModelScope.launch(defaultDispatcher) {
+        if (userName != null && userPassword != null) {
+            if (userName!!.isNotBlank() && userPassword!!.isNotBlank()) {
                 sendAction(Action.StartLogin)
-                var loginUserProfile: UserDomainModel? = null
-
-                val loginParam = UserLoginUseCase.Param(state.userName!!, state.userPassword!!)
+                val loginParam = UserLoginUseCase.Param(userName!!, userPassword!!)
 
                 userLoginUseCase(loginParam) {
                     it.fold(
                         onSucceed = { userProfile ->
-                            loginUserProfile = userProfile
+                            val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userProfile.id)
+                            navManager.onNavEvent(navDir)
+                            sendAction(Action.FinishLogin)
                         },
                         onFail = { failure ->
-                            sendAction(Action.FinishLogin(null))
+                            sendAction(Action.FinishLogin)
                             onFailure(failure)
                         }
                     )
                 }
-
-                loginUserProfile?.let { userProfile ->
-                    val localLoginParam = UpdateLocalLoginUserIdUseCase.Param(userProfile.id)
-                    updateLocalLoginUserIdUseCase(localLoginParam) {
-                        it.fold(
-                            onSucceed = {
-                                sendAction(Action.FinishLogin(userProfile))
-                            },
-                            onFail = { failure ->
-                                sendAction(Action.FinishLogin(null))
-                                onFailure(failure)
-                            }
-                        )
-                    }
-                }
             }
+        }
+    }
+
+    private fun loadLocalUserData() = viewModelScope.launch(defaultDispatcher) {
+        getLocalLoginUserDataUseCase(Unit) {
+            it.fold(
+                onSucceed = { result ->
+                    userLogin(result.userName, result.userPassword)
+                    sendAction(Action.LocalUserDataLoaded)
+                },
+                onFail = { sendAction(Action.LocalUserDataLoaded) }
+            )
         }
     }
 
@@ -71,7 +68,9 @@ class LoginViewModel(
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
-    override fun onLoadData() { }
+    override fun onLoadData() {
+        loadLocalUserData()
+    }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.StartLogin -> state.copy(
@@ -81,8 +80,7 @@ class LoginViewModel(
         is Action.FinishLogin -> state.copy(
             isLoginRunning = false,
             userName = null,
-            userPassword = null,
-            loginUserProfile = action.userProfile
+            userPassword = null
         )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
@@ -93,24 +91,28 @@ class LoginViewModel(
         is Action.FailOnLoginData -> state.copy(
             isLoginFail = true
         )
+        is Action.LocalUserDataLoaded -> state.copy(
+            isLocalUserDataLoading = false
+        )
     }
 
     data class ViewState(
+        val isLocalUserDataLoading: Boolean = true,
         val isLoginRunning: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isLoginFail: Boolean = false,
         var userName: String? = null,
-        var userPassword: String? = null,
-        val loginUserProfile: UserDomainModel? = null
+        var userPassword: String? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         object StartLogin : Action()
-        class FinishLogin(val userProfile: UserDomainModel?) : Action()
+        object FinishLogin : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError: Action()
         object FailOnLoginData: Action()
+        object LocalUserDataLoaded: Action()
     }
 
 }

@@ -20,9 +20,5 @@ interface LocalDataSource {
 
     suspend fun updateLocalLoginUserPassword(password: String?): Either<Unit, Failure>
 
-    suspend fun getLocalLoginUserId(): Either<Int, Failure>
-
-    suspend fun updateLocalLoginUserId(userId: Int?): Either<Unit, Failure>
-
     suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
 }

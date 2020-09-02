@@ -42,10 +42,6 @@ class MainActivity: InjectionActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    fun loginSucceed() {
-        viewModel.loadData()
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.i("Main Activity is created!")
@@ -85,6 +81,7 @@ class MainActivity: InjectionActivity() {
         navigationManager.setNavEventCallbackListener {
             try {
                 navController.navigate(it)
+                viewModel.loadData()
             } catch (exception: Exception) {
                 // Safe-Args cannot resolve navigation between features.
                 // Thus, we must catch the exception when it cannot find destination,

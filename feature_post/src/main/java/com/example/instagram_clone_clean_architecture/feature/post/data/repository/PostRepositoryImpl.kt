@@ -21,28 +21,7 @@ class PostRepositoryImpl(
 ) : PostRepository {
 
     override suspend fun getLoginUserProfile(): Either<UserDomainModel, Failure> {
-        var result: Either<UserDomainModel, Failure>? = null
-
-        var userId: Int? = null
-
-        localDataSource.getLocalLoginUserId().fold(
-            onSucceed = { id -> userId = id},
-            onFail = { failure -> result = Either.Failure(failure) }
-        )
-
-        userId?.let {
-            remoteDataSource.getUserProfileById(it).fold(
-                onSucceed = { userProfile ->
-                    result = when (userProfile) {
-                        null -> Either.Failure(Failure.LocalAccountNotFound)
-                        else -> Either.Success(userProfile)
-                    }
-                },
-                onFail = { failure -> result = Either.Failure(failure) }
-            )
-        }
-
-        return result!!
+        return cacheDataSource.getLoginUser()
     }
 
     override suspend fun getUserSelectedImage(): Either<Uri?, Failure> =

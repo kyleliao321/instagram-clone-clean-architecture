@@ -10,6 +10,14 @@ interface LoginRepository {
 
     suspend fun userRegister(userName: String, password: String) : Either<UserDomainModel, Failure>
 
-    suspend fun updateLocalLoginUserId(userId: Int) : Either<Unit, Failure>
+    suspend fun getLocalLoginUserName() : Either<String, Failure>
+
+    suspend fun getLocalLoginUserPassword() : Either<String, Failure>
+
+    suspend fun updateLocalLoginUserName(userName: String) : Either<Unit, Failure>
+
+    suspend fun updateLocalLoginUserPassword(userPassword: String) : Either<Unit, Failure>
+
+    suspend fun cacheLoginUserProfile(userProfile: UserDomainModel) : Either<Unit, Failure>
 
 }

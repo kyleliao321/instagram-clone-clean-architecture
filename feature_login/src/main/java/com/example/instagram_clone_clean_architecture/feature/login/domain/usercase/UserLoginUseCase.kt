@@ -13,8 +13,22 @@ class UserLoginUseCase(
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<UserDomainModel, UserLoginUseCase.Param>(defaultDispatcher) {
 
-    override suspend fun run(params: Param): Either<UserDomainModel, Failure> =
-        loginRepository.userLogin(params.userName, params.password)
+    override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
+        var loginUserProfile: UserDomainModel? = null
+
+        loginRepository.userLogin(params.userName, params.password).fold(
+            onSucceed = { loginUserProfile = it }
+        )
+
+        return if (loginUserProfile == null) {
+            Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
+        } else {
+            loginRepository.updateLocalLoginUserName(params.userName)
+            loginRepository.updateLocalLoginUserPassword(params.password)
+            loginRepository.cacheLoginUserProfile(loginUserProfile!!)
+            Either.Success(loginUserProfile!!)
+        }
+    }
 
     data class Param(val userName: String, val password: String)
 }

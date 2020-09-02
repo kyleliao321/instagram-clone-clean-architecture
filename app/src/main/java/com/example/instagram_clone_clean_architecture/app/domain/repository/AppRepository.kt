@@ -9,12 +9,8 @@ interface AppRepository {
 
     suspend fun cacheUserSelectedImage(imageUri: Uri) : Either<Unit, Failure>
 
-    suspend fun getLocalLoginUserId() : Either<Int, Failure>
+    suspend fun cacheLoginUser(userProfile: UserDomainModel) : Either<Unit, Failure>
 
-    suspend fun getLocalLoginUserName() : Either<String, Failure>
-
-    suspend fun getLocalLoginUserPassword() : Either<String, Failure>
-
-    suspend fun login(userName: String, password: String) : Either<UserDomainModel, Failure>
+    suspend fun getLoginUser() : Either<UserDomainModel, Failure>
 
 }

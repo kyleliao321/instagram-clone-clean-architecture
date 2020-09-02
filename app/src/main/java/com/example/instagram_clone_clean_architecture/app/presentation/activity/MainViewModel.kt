@@ -18,28 +18,22 @@ import timber.log.Timber
 class MainViewModel(
     private val navManager: NavigationManager,
     private val cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase,
-    private val loginWithLocalDataUseCase: LoginWithLocalDataUseCase,
+    private val getCachedLoginUserUseCase: GetCachedLoginUserUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(
     ViewState()
 ) {
 
-    enum class NavGraphDestinations {
-        Login, Profile, Search, Post
-    }
-
     fun onNavigateToProfile() {
         if (state.localUserId == null) {
             throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
         } else {
-            sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
             val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
             navManager.onNavEvent(navDir)
         }
     }
 
     fun onNavigateToSearch() {
-        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Search))
         val navDir = FeatureProfileNavGraphDirections.featureSearchNavGraph()
         navManager.onNavEvent(navDir)
     }
@@ -51,10 +45,10 @@ class MainViewModel(
     }
 
     private fun loadLocalUserData() = viewModelScope.launch(defaultDispatcher) {
-        loginWithLocalDataUseCase(Unit) {
+        getCachedLoginUserUseCase(Unit) {
             it.fold(
-                onSucceed = { userDomainModel ->
-                    sendAction(Action.LocalUserDataLoaded(userDomainModel.id))
+                onSucceed = { userProfile ->
+                    sendAction(Action.LocalUserDataLoaded(userProfile.id))
                 },
                 onFail = { failure ->
                     sendAction(Action.LocalUserDataLoaded(null))
@@ -70,9 +64,6 @@ class MainViewModel(
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
-        is Action.NavigateToNewDestination -> state.copy(
-            navDestination = action.destination
-        )
         is Action.LocalUserDataLoaded -> state.copy(
             isLocalUserDataLoading = false,
             localUserId = action.userId
@@ -88,19 +79,18 @@ class MainViewModel(
 
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.LocalAccountNotFound -> sendAction(Action.FailOnLocalAccountError)
+        is Failure.CacheNotFound -> sendAction(Action.FailOnLocalAccountError)
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
     data class ViewState(
         val isLocalUserDataLoading: Boolean = true,
         val isLocalAccountError: Boolean = false,
-        val localUserId: Int? = null,
-        val navDestination: NavGraphDestinations = NavGraphDestinations.Login
+        val localUserId: Int? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class LocalUserDataLoaded(val userId: Int?): Action()
-        class NavigateToNewDestination(val destination: NavGraphDestinations) : Action()
         object FailOnLocalAccountError : Action()
         object ReloadData : Action()
     }

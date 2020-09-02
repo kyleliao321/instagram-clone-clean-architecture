@@ -18,12 +18,9 @@ class LoginFragment : InjectionFragment() {
     private val viewModel: LoginViewModel by instance()
 
     private val observer = Observer<LoginViewModel.ViewState> {
+        Timber.d(it.toString())
         if (it.isLoginFail) {
             onLoginFail()
-        }
-
-        it.loginUserProfile?.let { _ ->
-            (requireActivity() as MainActivity).loginSucceed()
         }
     }
 
@@ -46,6 +43,11 @@ class LoginFragment : InjectionFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.loadData()
     }
 
     private fun onLoginFail() {

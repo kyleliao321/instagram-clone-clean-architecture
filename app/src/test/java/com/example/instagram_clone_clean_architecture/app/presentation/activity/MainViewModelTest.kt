@@ -4,8 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
-import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetLocalLoginUserIdUseCase
-import com.example.instagram_clone_clean_architecture.app.domain.usecase.LoginWithLocalDataUseCase
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCachedLoginUserUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -48,11 +47,9 @@ class MainViewModelTest {
     @MockK(relaxed = true)
     internal lateinit var appRepository: AppRepository
 
-    private lateinit var getLocalLoginUserIdUseCase: GetLocalLoginUserIdUseCase
-
     private lateinit var cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase
 
-    private lateinit var loginWithLocalDataUseCase: LoginWithLocalDataUseCase
+    private lateinit var getCachedLoginUserUseCase: GetCachedLoginUserUseCase
 
     private lateinit var testViewModel: MainViewModel
 
@@ -60,14 +57,13 @@ class MainViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLocalLoginUserIdUseCase = GetLocalLoginUserIdUseCase(appRepository, mainCoroutineRule.testDispatcher)
         cacheUserSelectedImageUseCase = CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher)
-        loginWithLocalDataUseCase = LoginWithLocalDataUseCase(appRepository, mainCoroutineRule.testDispatcher)
+        getCachedLoginUserUseCase = GetCachedLoginUserUseCase(appRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel = MainViewModel(
             navManager,
             cacheUserSelectedImageUseCase,
-            loginWithLocalDataUseCase,
+            getCachedLoginUserUseCase,
             mainCoroutineRule.testDispatcher
         )
 
@@ -84,8 +80,7 @@ class MainViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo MainViewModel.ViewState(
             isLocalUserDataLoading = true,
             isLocalAccountError = false,
-            localUserId = null,
-            navDestination = MainViewModel.NavGraphDestinations.Login
+            localUserId = null
         )
     }
 

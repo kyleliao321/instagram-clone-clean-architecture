@@ -10,8 +10,10 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -24,43 +26,45 @@ class UserLoginUseCaseTest {
     @get:Rule
     val mainCoroutineRule = CoroutineTestRule()
 
-    @MockK
+    @MockK(relaxed = true)
     internal lateinit var loginRepository: LoginRepository
 
-    private lateinit var testUseLoginUseCase: UserLoginUseCase
+    private lateinit var testUseCase: UserLoginUseCase
 
     @Before
     fun setup() {
         MockKAnnotations.init(this)
 
-        testUseLoginUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
+        testUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
     }
 
     @Test
-    fun `should return correct type when login succeed`() {
-        val mockReturnData = mockk<UserDomainModel>()
+    fun `should return success and trigger caching, updating when login succeed`() {
+        val mockProfile = mockk<UserDomainModel>()
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
-
-        var result: Either<UserDomainModel, com.example.library_base.domain.exception.Failure>? = null
+        var result: Either<UserDomainModel, Failure>? = null
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockReturnData)
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
 
         // when
         mainCoroutineRule.runBlockingTest {
-            testUseLoginUseCase(mockParam) {
+            testUseCase(mockParam) {
                 result = it
             }
         }
 
         // expect
-        result shouldBeEqualTo Either.Success(mockReturnData)
+        verify(exactly = 1) { runBlocking { loginRepository.updateLocalLoginUserName(any()) } }
+        verify(exactly = 1) { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } }
+        verify(exactly = 1) { runBlocking { loginRepository.cacheLoginUserProfile(any()) } }
+        result shouldBeEqualTo Either.Success(mockProfile)
     }
 
     @Test
-    fun `should return correct type when login fail`() {
+    fun `should return failure when login failed`() {
+        val mockProfile = mockk<UserDomainModel>()
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
-
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
@@ -68,7 +72,7 @@ class UserLoginUseCaseTest {
 
         // when
         mainCoroutineRule.runBlockingTest {
-            testUseLoginUseCase(mockParam) {
+            testUseCase(mockParam) {
                 result = it
             }
         }
@@ -76,5 +80,6 @@ class UserLoginUseCaseTest {
         // expect
         result shouldBeEqualTo Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
     }
+
 
 }

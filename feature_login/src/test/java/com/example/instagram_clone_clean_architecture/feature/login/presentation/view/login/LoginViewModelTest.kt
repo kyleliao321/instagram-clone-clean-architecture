@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
-import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UpdateLocalLoginUserIdUseCase
+import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -39,14 +39,14 @@ class LoginViewModelTest {
     internal lateinit var observer: Observer<LoginViewModel.ViewState>
 
     @MockK(relaxed = true)
-    internal lateinit var loginRepository: LoginRepository
+    internal lateinit var navigationManager: NavigationManager
 
     @MockK(relaxed = true)
-    internal lateinit var navManager: NavigationManager
+    internal lateinit var loginRepository: LoginRepository
+
+    private lateinit var getLocalLoginUserDataUseCase: GetLocalLoginUserDataUseCase
 
     private lateinit var userLoginUseCase: UserLoginUseCase
-
-    private lateinit var updateLocalLoginUserIdUseCase: UpdateLocalLoginUserIdUseCase
 
     private lateinit var testViewModel: LoginViewModel
 
@@ -54,10 +54,15 @@ class LoginViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
+        getLocalLoginUserDataUseCase = GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher)
         userLoginUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
-        updateLocalLoginUserIdUseCase = UpdateLocalLoginUserIdUseCase(loginRepository, mainCoroutineRule.testDispatcher)
 
-        testViewModel = LoginViewModel(navManager, userLoginUseCase, updateLocalLoginUserIdUseCase, mainCoroutineRule.testDispatcher)
+        testViewModel = LoginViewModel(
+            navigationManager,
+            userLoginUseCase,
+            getLocalLoginUserDataUseCase,
+            mainCoroutineRule.testDispatcher
+        )
 
         testViewModel.stateLiveData.observeForever(observer)
     }
@@ -67,71 +72,104 @@ class LoginViewModelTest {
         testViewModel.stateLiveData.removeObserver(observer)
     }
 
-    /**
-     * ViewState typical test
-     */
     @Test
-    fun `loginUserViewModel should initialize with correct view state`() {
+    fun `should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
-            isLoginRunning = false,
+            isLocalUserDataLoading = true,
             isServerError = false,
             isNetworkError = false,
-            userPassword = null,
+            isLoginFail = false,
+            isLoginRunning = false,
             userName = null,
-            loginUserProfile = null
+            userPassword = null
         )
     }
 
     @Test
-    fun `verify view state when login successfully`() {
-        val mockUserName = "userName"
-        val mockUserPassword = "userPassword"
-        val mockLoginUserProfile = mockk<UserDomainModel>(relaxed = true)
+    fun `verify view state when login succeed`() {
+        val mockUserName = "1"
+        val mockUserPassword = "2"
+        val mockProfile = mockk<UserDomainModel>(relaxed = true)
 
         // given
-        testViewModel.stateLiveData.value!!.userName = mockUserName
-        testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
-        every { runBlocking { loginRepository.updateLocalLoginUserId(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginUserProfile)
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
+        every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
+        every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
+        every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin() }
+        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
 
         // expect
-        verify(exactly = 3) { observer.onChanged(any()) } // init, startLogin, finishLogin
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
+        verify(exactly = 3) { observer.onChanged(any()) } // init, start, finish
+        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState()
+    }
+
+    @Test
+    fun `verify view state when login failed`() {
+        val mockUserName = "1"
+        val mockUserPassword = "2"
+
+        // given
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
+
+        // expect
+        verify(exactly = 4) { observer.onChanged(any()) } // init, start, finish, fail
         testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
-            isLoginRunning = false,
-            isNetworkError = false,
-            isServerError = false,
-            userName = null,
-            userPassword = null,
-            loginUserProfile = mockLoginUserProfile
+            isLoginFail = true
         )
     }
 
     @Test
-    fun `verify view state when login fail`() {
-        val mockUserName = "userName"
-        val mockUserPassword = "userPassword"
+    fun `verify view state if local user data exist and login succeed`() {
+        val mockUserName = "1"
+        val mockUserPassword = "2"
+        val mockProfile = mockk<UserDomainModel>(relaxed = true)
 
         // given
-        testViewModel.stateLiveData.value!!.userName = mockUserName
-        testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
-        every { runBlocking { loginRepository.updateLocalLoginUserId(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
+        every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
+        every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
+        every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)
+        every { runBlocking { loginRepository.getLocalLoginUserName() } } returns Either.Success(mockUserName)
+        every { runBlocking { loginRepository.getLocalLoginUserPassword() } } returns Either.Success(mockUserPassword)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin() }
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // expect
-        verify(exactly = 4) { observer.onChanged(any()) } // init, startLogin, finishLogin, fail
+        verify(exactly = 1) { navigationManager.onNavEvent(any()) }
+        verify(exactly = 4) { observer.onChanged(any()) } // init, start, finish, loaded
         testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
+            isLoginFail = false,
             isLoginRunning = false,
-            isNetworkError = true,
+            isNetworkError = false,
             isServerError = false,
-            userName = null,
-            userPassword = null,
-            loginUserProfile = null
+            isLocalUserDataLoading = false
+        )
+    }
+
+    @Test
+    fun `verify view state if local user data not exist`() {
+        // given
+        every { runBlocking { loginRepository.getLocalLoginUserName() } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { loginRepository.getLocalLoginUserPassword() } } returns Either.Failure(Failure.LocalAccountNotFound)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        verify(exactly = 2) { observer.onChanged(any()) } // init, loaded
+        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
+            isLoginFail = false,
+            isLoginRunning = false,
+            isNetworkError = false,
+            isServerError = false,
+            isLocalUserDataLoading = false
         )
     }
 

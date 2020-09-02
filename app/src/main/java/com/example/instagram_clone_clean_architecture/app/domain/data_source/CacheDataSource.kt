@@ -7,6 +7,10 @@ import com.example.library_base.domain.utility.Either
 
 interface CacheDataSource {
 
+    suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?) : Either<Unit, Failure>
+
+    suspend fun getLoginUser() : Either<UserDomainModel, Failure>
+
     // When prompt user to choose image either for avatar or post, the activity/fragment will
     // paused and await for result. So, in order to provide user a select-and-return-experience,
     // the application divides the process into three steps:

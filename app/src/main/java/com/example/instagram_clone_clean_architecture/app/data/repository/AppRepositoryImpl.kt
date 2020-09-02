@@ -9,7 +9,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.repository.AppR
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
-class MockAppRepositoryImpl(
+class AppRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val cacheDataSource: CacheDataSource
@@ -18,16 +18,12 @@ class MockAppRepositoryImpl(
     override suspend fun cacheUserSelectedImage(imageUri: Uri): Either<Unit, Failure> =
         cacheDataSource.cacheUserSelectedImageUri(imageUri)
 
-    override suspend fun getLocalLoginUserId(): Either<Int, Failure> =
-        localDataSource.getLocalLoginUserId()
+    override suspend fun cacheLoginUser(userProfile: UserDomainModel): Either<Unit, Failure> {
+        return cacheDataSource.cacheLoginUserProfile(userProfile)
+    }
 
-    override suspend fun getLocalLoginUserName(): Either<String, Failure> =
-        localDataSource.getLocalLoginUserName()
-
-    override suspend fun getLocalLoginUserPassword(): Either<String, Failure> =
-        localDataSource.getLocalLoginUserPassword()
-
-    override suspend fun login(userName: String, password: String): Either<UserDomainModel, Failure> =
-        remoteDataSource.userLogin(userName, password)
+    override suspend fun getLoginUser(): Either<UserDomainModel, Failure> {
+        return cacheDataSource.getLoginUser()
+    }
 
 }

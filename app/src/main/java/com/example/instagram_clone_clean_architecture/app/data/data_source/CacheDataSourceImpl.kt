@@ -2,12 +2,28 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
 class CacheDataSourceImpl : CacheDataSource {
 
     private var userSelectedImageUri: Uri? = null
+
+    private var loginUser: UserDomainModel? = null
+
+    override suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?): Either<Unit, Failure> {
+        loginUser = userProfile
+        return Either.Success(Unit)
+    }
+
+    override suspend fun getLoginUser(): Either<UserDomainModel, Failure> {
+        return if (loginUser == null) {
+            Either.Failure(Failure.CacheNotFound)
+        } else {
+            Either.Success(loginUser!!)
+        }
+    }
 
     override suspend fun cacheUserSelectedImageUri(uri: Uri): Either<Unit, Failure> {
         userSelectedImageUri =  uri
