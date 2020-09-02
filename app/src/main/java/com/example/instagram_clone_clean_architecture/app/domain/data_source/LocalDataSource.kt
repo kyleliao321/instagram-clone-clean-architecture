@@ -12,6 +12,14 @@ interface LocalDataSource {
 
     fun init(context: Context)
 
+    suspend fun getLocalLoginUserName(): Either<String, Failure>
+
+    suspend fun getLocalLoginUserPassword(): Either<String, Failure>
+
+    suspend fun updateLocalLoginUserName(userName: String?): Either<Unit, Failure>
+
+    suspend fun updateLocalLoginUserPassword(password: String?): Either<Unit, Failure>
+
     suspend fun getLocalLoginUserId(): Either<Int, Failure>
 
     suspend fun updateLocalLoginUserId(userId: Int?): Either<Unit, Failure>

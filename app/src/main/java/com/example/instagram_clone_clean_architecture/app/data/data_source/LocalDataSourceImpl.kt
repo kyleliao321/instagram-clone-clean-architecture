@@ -23,10 +23,70 @@ class LocalDataSourceImpl : LocalDataSource {
 
     private val LOCAL_LOGIN_USER_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_id"
 
+    private val LOCAL_LOGIN_USER_NAME_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_name"
+
+    private val LOCAL_LOGIN_USER_PASSWORD_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_password"
+
     private val ERROR_KEY = -1
+
+    private val ERROR_STRING = ""
 
     override fun init(context: Context) {
         applicationContext = WeakReference(context)
+    }
+
+    override suspend fun getLocalLoginUserName(): Either<String, Failure> {
+        val context = applicationContext.get()
+            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+
+        val sharePrefs = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        val localLoginUserName = sharePrefs.getString(LOCAL_LOGIN_USER_NAME_KEY, ERROR_STRING)
+
+        return if (localLoginUserName == ERROR_STRING) {
+            Either.Failure(Failure.LocalAccountNotFound)
+        } else {
+            Either.Success(localLoginUserName!!)
+        }
+    }
+
+    override suspend fun getLocalLoginUserPassword(): Either<String, Failure> {
+        val context = applicationContext.get()
+            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+
+        val sharePrefs = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        val localLoginUserPassword = sharePrefs.getString(LOCAL_LOGIN_USER_PASSWORD_KEY, ERROR_STRING)
+
+        return if (localLoginUserPassword == ERROR_STRING) {
+            Either.Failure(Failure.LocalAccountNotFound)
+        } else {
+            Either.Success(localLoginUserPassword!!)
+        }
+    }
+
+    override suspend fun updateLocalLoginUserName(userName: String?): Either<Unit, Failure> {
+        val context = applicationContext.get()
+            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+
+        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        sharePref.edit().apply {
+            putString(LOCAL_LOGIN_USER_NAME_KEY, userName ?: ERROR_STRING)
+            commit()
+        }
+
+        return Either.Success(Unit)
+    }
+
+    override suspend fun updateLocalLoginUserPassword(password: String?): Either<Unit, Failure> {
+        val context = applicationContext.get()
+            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+
+        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
+        sharePref.edit().apply {
+            putString(LOCAL_LOGIN_USER_PASSWORD_KEY, password ?: ERROR_STRING)
+            commit()
+        }
+
+        return Either.Success(Unit)
     }
 
     override suspend fun getLocalLoginUserId(): Either<Int, Failure> {

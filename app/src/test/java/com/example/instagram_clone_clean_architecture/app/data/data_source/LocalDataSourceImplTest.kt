@@ -45,6 +45,80 @@ class LocalDataSourceImplTest {
     }
 
     @Test
+    fun `should return failure when local login user name not found in share prefenrece`() {
+        var result: Either<String, Failure>? = null
+
+        // given
+        every { application.getSharedPreferences(any(), any()) } returns sharePref
+        every { sharePref.getInt(any(), any()) } returns -1
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = localDataSource.getLocalLoginUserName()
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.LocalAccountNotFound)
+    }
+
+    @Test
+    fun `should return failure when local login user password not found in share prefenrece`() {
+        var result: Either<String, Failure>? = null
+
+        // given
+        every { application.getSharedPreferences(any(), any()) } returns sharePref
+        every { sharePref.getInt(any(), any()) } returns -1
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = localDataSource.getLocalLoginUserPassword()
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.LocalAccountNotFound)
+    }
+
+    @Test
+    fun `should return correct type when update local user name in share preference`() {
+        var result: Either<Unit, Failure>? = null
+        val mockLocalUserName = "1"
+
+        // given
+        every { application.getSharedPreferences(any(), any()) } returns sharePref
+        every { sharePref.edit() } returns sharePrefEditor
+        every { sharePrefEditor.putString(any(), any()) } returns sharePrefEditor
+        every { sharePrefEditor.commit() } returns true
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = localDataSource.updateLocalLoginUserName(mockLocalUserName)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
+    fun `should return correct type when update local user password in share preference`() {
+        var result: Either<Unit, Failure>? = null
+        val mockLocalUserPassword = "1"
+
+        // given
+        every { application.getSharedPreferences(any(), any()) } returns sharePref
+        every { sharePref.edit() } returns sharePrefEditor
+        every { sharePrefEditor.putString(any(), any()) } returns sharePrefEditor
+        every { sharePrefEditor.commit() } returns true
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = localDataSource.updateLocalLoginUserPassword(mockLocalUserPassword)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
     fun `should return failure when local login user not found in share preference`() {
         var result: Either<Int, Failure>? = null
 
