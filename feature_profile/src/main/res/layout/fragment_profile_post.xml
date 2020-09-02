@@ -46,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/user_post_detail_height"
+            android:layout_height="wrap_content"
             android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
 
             <include
@@ -62,7 +62,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             layout="@layout/fragment_post_detail_item_view"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/user_post_detail_height"
+            android:layout_height="wrap_content"
             android:visibility="@{viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.postLoading ? View.GONE : View.VISIBLE}"
             bind:viewModel="@{viewModel}"/>
 
