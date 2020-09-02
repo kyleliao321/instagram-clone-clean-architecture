@@ -7,6 +7,7 @@
 
     <data>
         <import type="android.view.View" />
+        <import type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel.Type" />
 
         <variable
             name="viewModel"
@@ -93,6 +94,19 @@
             app:spanCount="3"
             app:userPostData="@{viewModel.stateLiveData.userPosts}"
             tools:listitem="@layout/fragment_profile_main_user_posts_grid_view_item"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/add_post_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="?attr/colorPrimary"
+            android:src="@drawable/add_post_button_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:visibleCondition="@{viewModel.stateLiveData.userProfile != null &amp; viewModel.stateLiveData.userProfile.getType(viewModel.stateLiveData.loginUserProfile,viewModel.stateLiveData.loginUserFollowingList) == Type.SAME}"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
+            android:onClick="@{() -> viewModel.onNavigateToPostFeature()}" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

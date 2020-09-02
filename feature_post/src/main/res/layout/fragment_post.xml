@@ -42,7 +42,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/post_app_bar_content"
                     app:layout_constraintEnd_toEndOf="@+id/post_app_bar_content"
                     android:onClick="@{() -> viewModel.uploadPost(viewModel.stateLiveData.post)}"
-                    android:enabled="@{viewModel.stateLiveData.post.imageFile != null}"
+                    android:enabled="@{viewModel.stateLiveData.post.postReady}"
                     style="@style/Widget.MaterialComponents.Button.TextButton"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>

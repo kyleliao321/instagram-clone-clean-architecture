@@ -26,7 +26,7 @@ class MainViewModel(
 ) {
 
     enum class NavGraphDestinations {
-        Login, Profile, Search
+        Login, Profile, Search, Post
     }
 
     fun onNavigateToProfile() {
