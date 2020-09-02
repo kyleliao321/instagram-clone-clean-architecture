@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentArgs
@@ -52,7 +53,8 @@ class ProfileEditViewModel(
             // Start updating animation
             sendAction(Action.StartUpdatingUserProfile)
             // forward update action to UseCase
-            val params = UpdateUserProfileUseCase.Param(updatedUserProfile)
+            val uploadProfile = UserProfileUploadDomainModel.from(updatedUserProfile, state!!.cacheImageUri)
+            val params = UpdateUserProfileUseCase.Param(uploadProfile)
             updateUserProfileUseCase(params) { result ->
                 result.fold(
                     onSucceed = { userProfile ->
@@ -97,7 +99,7 @@ class ProfileEditViewModel(
                     decodeBitmap(uri)
                 },
                 onFail = { _ ->
-                    sendAction(Action.CachedImageLoaded(null))
+                    sendAction(Action.CachedImageLoaded(null, null))
                 }
             )
         }
@@ -108,10 +110,10 @@ class ProfileEditViewModel(
         getBitmapUseCase(param) {
             it.fold(
                 onSucceed = { bitmap ->
-                    sendAction(Action.CachedImageLoaded(bitmap))
+                    sendAction(Action.CachedImageLoaded(uri, bitmap))
                 },
                 onFail = { _ ->
-                    sendAction(Action.CachedImageLoaded(null))
+                    sendAction(Action.CachedImageLoaded(null,null))
                 }
             )
         }
@@ -137,6 +139,7 @@ class ProfileEditViewModel(
         )
         is Action.CachedImageLoaded -> state.copy(
             isCachedImageLoading = false,
+            cacheImageUri = action.uri,
             cacheImage = action.bitmap
         )
         is Action.FailOnNetworkConnection -> state.copy(
@@ -163,13 +166,14 @@ class ProfileEditViewModel(
         val isServerError: Boolean = false,
         val originalUserProfile: UserDomainModel? = null,
         val bindingUserProfile: UserDomainModel? = null,
+        val cacheImageUri: Uri? = null,
         val cacheImage: Bitmap? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class FinishUpdatingUserProfile(val userProfile: UserDomainModel) : Action()
-        class CachedImageLoaded(val bitmap: Bitmap?) : Action()
+        class CachedImageLoaded(val uri: Uri?, val bitmap: Bitmap?) : Action()
         object StartUpdatingUserProfile : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()

@@ -137,7 +137,8 @@ class ProfileEditViewModelTest {
             isServerError = false,
             originalUserProfile = null,
             bindingUserProfile = null,
-            cacheImage = null
+            cacheImage = null,
+            cacheImageUri = null
         )
     }
 
@@ -160,7 +161,8 @@ class ProfileEditViewModelTest {
             isNetworkError = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,
-            cacheImage = mockBitmap
+            cacheImage = mockBitmap,
+            cacheImageUri = mockUri
         )
     }
 
@@ -183,7 +185,8 @@ class ProfileEditViewModelTest {
             isNetworkError = true,
             originalUserProfile = null,
             bindingUserProfile = null,
-            cacheImage = mockBitmap
+            cacheImage = mockBitmap,
+            cacheImageUri = mockUri
         )
     }
 
@@ -206,7 +209,8 @@ class ProfileEditViewModelTest {
             isNetworkError = false,
             originalUserProfile = null,
             bindingUserProfile = null,
-            cacheImage = mockBitmap
+            cacheImage = mockBitmap,
+            cacheImageUri = mockUri
         )
     }
 
@@ -228,7 +232,8 @@ class ProfileEditViewModelTest {
             isNetworkError = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,
-            cacheImage = null
+            cacheImage = null,
+            cacheImageUri = null
         )
     }
 
@@ -257,7 +262,8 @@ class ProfileEditViewModelTest {
             isServerError = false,
             originalUserProfile = editedUserProfile,
             bindingUserProfile = editedUserProfile,
-            cacheImage = mockBitmap
+            cacheImage = mockBitmap,
+            cacheImageUri = mockUri
         )
     }
 
@@ -286,7 +292,8 @@ class ProfileEditViewModelTest {
             isServerError = false,
             cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
-            bindingUserProfile = correctUserProfile
+            bindingUserProfile = correctUserProfile,
+            cacheImageUri = mockUri
         )
     }
 
@@ -315,7 +322,8 @@ class ProfileEditViewModelTest {
             isServerError = true,
             cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
-            bindingUserProfile = correctUserProfile
+            bindingUserProfile = correctUserProfile,
+            cacheImageUri = mockUri
         )
     }
 }

@@ -96,7 +96,7 @@ fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
  * Load user profile image for EditFragment.
  */
 @BindingAdapter("app:oldUserImage", "app:newUserImage")
-fun loadUserImage(imageView: ImageView, original: String?, new: Bitmap?) {
+fun loadEditingImage(imageView: ImageView, original: String?, new: Bitmap?) {
     if (new == null) {
         when (original) {
             null -> imageView.load(R.drawable.user_profile_default_image)

@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
+import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
@@ -196,17 +197,37 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(result)
     }
 
-    override suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure> {
+    override suspend fun updateUserProfile(userProfile: UserProfileUploadDataModel): Either<UserDomainModel, Failure> {
         delay(1000)
-        for (currentUser in userProfileList) {
-            if (currentUser.id == userProfile.id) {
-                userProfileList.remove(currentUser)
-                userProfileList.add(userProfile)
-                return Either.Success(userProfile)
+
+        val id = userProfile.id
+
+        var targetIndex = -1
+        var originalUserProfile: UserDomainModel? = null
+        for ((index, value) in userProfileList.withIndex()) {
+            if (value.id == id) {
+                targetIndex = index
+                originalUserProfile = value
             }
         }
 
-        return Either.Failure(Failure.ServerError)
+        return if (originalUserProfile == null) {
+            Either.Failure(Failure.ServerError)
+        } else {
+            val newUserProfile = UserDomainModel(
+                id = id,
+                name = userProfile.name,
+                userName = userProfile.userName,
+                description = userProfile.description,
+                imageSrc = originalUserProfile!!.imageSrc,
+                postNum = originalUserProfile!!.postNum,
+                followerNum = originalUserProfile!!.followerNum,
+                followingNum = originalUserProfile!!.followerNum
+            )
+            userProfileList.removeAt(targetIndex)
+            userProfileList.add(newUserProfile)
+            Either.Success(newUserProfile)
+        }
     }
 
     override suspend fun addUserRelation(followerId: Int, followingId: Int): Either<Unit, Failure> {

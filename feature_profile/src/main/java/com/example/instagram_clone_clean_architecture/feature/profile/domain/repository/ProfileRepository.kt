@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
@@ -36,7 +37,7 @@ interface ProfileRepository {
     /**
      * Data update operations
      */
-    suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure>
+    suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure>
 
     suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure>
 

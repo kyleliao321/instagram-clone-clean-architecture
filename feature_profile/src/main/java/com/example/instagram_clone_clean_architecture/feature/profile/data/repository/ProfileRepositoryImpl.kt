@@ -2,11 +2,13 @@ package com.example.instagram_clone_clean_architecture.feature.profile.data.repo
 
 import android.graphics.Bitmap
 import android.net.Uri
+import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
@@ -69,8 +71,21 @@ internal class ProfileRepositoryImpl(
         return localDataSource.getBitmap(uri)
     }
 
-    override suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure> {
-        return remoteDataSource.updateUserProfile(userProfile)
+    override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
+        val uri = userProfile.image
+
+        val newProfile = if (uri == null) {
+            UserProfileUploadDataModel.from(userProfile, null)
+        } else {
+            var bitmap: Bitmap? = null
+            localDataSource.getBitmap(uri).fold(
+                onSucceed = { bitmap = it },
+                onFail = { bitmap = null }
+            )
+            UserProfileUploadDataModel.from(userProfile, bitmap)
+        }
+
+        return remoteDataSource.updateUserProfile(newProfile)
     }
 
     override suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
