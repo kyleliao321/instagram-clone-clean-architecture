@@ -1,6 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.usecase
 
-import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase

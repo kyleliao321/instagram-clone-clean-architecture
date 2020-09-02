@@ -6,7 +6,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
-import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetBitmapUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
@@ -22,16 +22,13 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
-import org.amshove.kluent.shouldBe
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.File
 
 @RunWith(JUnit4::class)
 class PostViewModelTest {
@@ -139,7 +136,11 @@ class PostViewModelTest {
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
 
         // expect
-        val expectPost = PostUploadDomainModel(imageFile = mockImage, belongUserId = mockLoginUser.id)
+        val expectPost =
+            PostUploadDomainModel(
+                imageFile = mockImage,
+                belongUserId = mockLoginUser.id
+            )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
@@ -171,7 +172,10 @@ class PostViewModelTest {
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
 
         // expect
-        val expectPost = PostUploadDomainModel(imageFile = mockImage)
+        val expectPost =
+            PostUploadDomainModel(
+                imageFile = mockImage
+            )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
@@ -202,7 +206,11 @@ class PostViewModelTest {
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
 
         // expect
-        val expectPost = PostUploadDomainModel(imageFile = null, belongUserId = mockLoginUser.id)
+        val expectPost =
+            PostUploadDomainModel(
+                imageFile = null,
+                belongUserId = mockLoginUser.id
+            )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,
@@ -230,7 +238,10 @@ class PostViewModelTest {
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
 
         // expect
-        val expectPost = PostUploadDomainModel(imageFile = null)
+        val expectPost =
+            PostUploadDomainModel(
+                imageFile = null
+            )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
             isLoginUserLoading = false,

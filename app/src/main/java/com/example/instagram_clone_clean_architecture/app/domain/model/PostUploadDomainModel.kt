@@ -1,4 +1,4 @@
-package com.example.instagram_clone_clean_architecture.feature.post.domain.model
+package com.example.instagram_clone_clean_architecture.app.domain.model
 
 import android.net.Uri
 import java.util.*

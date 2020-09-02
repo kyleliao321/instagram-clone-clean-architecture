@@ -5,7 +5,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
-import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetBitmapUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
@@ -17,7 +17,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 
 class PostViewModel(
     private val intentService: IntentService,

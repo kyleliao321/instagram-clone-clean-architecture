@@ -2,15 +2,13 @@ package com.example.instagram_clone_clean_architecture.feature.post.data.reposit
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import java.io.File
 
 class PostRepositoryImpl(
     private val localDataSource: LocalDataSource,

@@ -1,6 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.usecase
 
-import com.example.instagram_clone_clean_architecture.feature.post.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -12,7 +12,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
