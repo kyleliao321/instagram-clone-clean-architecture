@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
@@ -43,9 +44,8 @@ class PostRepositoryImpl(
     override suspend fun getUserSelectedImage(): Either<Uri?, Failure> =
         localDataSource.consumeLoadedImage()
 
-    override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<Unit, Failure> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure> =
+        remoteDataSource.uploadPost(postUploadDomainModel)
 
     override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> =
         localDataSource.getBitmap(uri)

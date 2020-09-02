@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.domain.usecase
 
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
@@ -38,12 +39,13 @@ class UploadPostUseCaseTest {
 
     @Test
     fun `should return correct type when post complete and upload success`() {
-        var result: Either<Unit, Failure>? = null
-        val mockPost = mockk<PostUploadDomainModel>()
+        var result: Either<PostDomainModel, Failure>? = null
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
+        val mockReturnPost = mockk<PostDomainModel>()
 
         // given
         every { mockPost.isPostReady } returns true
-        every { runBlocking {  postRepository.uploadPostUseCase(any()) } } returns Either.Success(Unit)
+        every { runBlocking {  postRepository.uploadPostUseCase(any()) } } returns Either.Success(mockReturnPost)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -54,12 +56,12 @@ class UploadPostUseCaseTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Success(Unit)
+        result shouldBeEqualTo Either.Success(mockReturnPost)
     }
 
     @Test
     fun `should return failure type when post is not complete`() {
-        var result: Either<Unit, Failure>? = null
+        var result: Either<PostDomainModel, Failure>? = null
         val mockPost = mockk<PostUploadDomainModel>()
 
         // given
@@ -79,8 +81,8 @@ class UploadPostUseCaseTest {
 
     @Test
     fun `should return failure type when post complete but upload fail`() {
-        var result: Either<Unit, Failure>? = null
-        val mockPost = mockk<PostUploadDomainModel>()
+        var result: Either<PostDomainModel, Failure>? = null
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
 
         // given
         every { mockPost.isPostReady } returns true

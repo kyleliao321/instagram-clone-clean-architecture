@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
@@ -261,11 +262,12 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost succeed`() {
-        val mockPost = mockk<PostUploadDomainModel>()
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
+        val mockReturnPost = mockk<PostDomainModel>()
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
-        every { runBlocking { postRepository.uploadPostUseCase(any()) } } returns Either.Success(Unit)
+        every { runBlocking { postRepository.uploadPostUseCase(any()) } } returns Either.Success(mockReturnPost)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -278,7 +280,7 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost fail on network connection`() {
-        val mockPost = mockk<PostUploadDomainModel>()
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
@@ -298,7 +300,7 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost fail on server error`() {
-        val mockPost = mockk<PostUploadDomainModel>()
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
@@ -318,7 +320,7 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost fail on post incomplete`() {
-        val mockPost = mockk<PostUploadDomainModel>()
+        val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns false

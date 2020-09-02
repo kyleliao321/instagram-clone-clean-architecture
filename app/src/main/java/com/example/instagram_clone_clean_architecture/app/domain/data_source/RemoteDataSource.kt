@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.domain.data_source
 
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
@@ -42,5 +43,7 @@ interface RemoteDataSource {
     suspend fun addUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
 
     suspend fun removeUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
+
+    suspend fun uploadPost(post: PostUploadDomainModel) : Either<PostDomainModel, Failure>
 
 }
