@@ -28,14 +28,18 @@ class PostFragment: InjectionFragment() {
         binding = FragmentPostBinding.inflate(inflater, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+        binding.viewModel = viewModel
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
 
+    override fun onStart() {
+        super.onStart()
         viewModel.loadData()
     }
 
