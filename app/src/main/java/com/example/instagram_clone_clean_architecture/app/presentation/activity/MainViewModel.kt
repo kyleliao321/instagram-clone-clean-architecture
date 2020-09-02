@@ -56,8 +56,11 @@ class MainViewModel(
             it.fold(
                 onSucceed = { id ->
                     sendAction(Action.LocalUserIdLoaded(id))
-                    onNavigateToProfile()
-                    sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
+                    if (state.navDestination == NavGraphDestinations.Login) {
+                        // auto-redirection should only happen when user in login screen.
+                        onNavigateToProfile()
+                        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
+                    }
                 },
                 onFail = { failure ->
                     sendAction(Action.LocalUserIdLoaded(null))

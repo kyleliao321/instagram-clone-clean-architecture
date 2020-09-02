@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import timber.log.Timber
 import java.io.File
 import java.lang.ref.WeakReference
 
