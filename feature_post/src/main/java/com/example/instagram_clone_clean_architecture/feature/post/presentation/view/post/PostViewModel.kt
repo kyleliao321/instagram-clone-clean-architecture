@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.post.presentation
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.example.instagram_clone_clean_architecture.FeaturePostNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
@@ -11,6 +12,7 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.usecas
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
@@ -20,6 +22,7 @@ import kotlinx.coroutines.launch
 
 class PostViewModel(
     private val intentService: IntentService,
+    private val navManager: NavigationManager,
     private val getLoginUserUseCase: GetLoginUserUseCase,
     private val getUserSelectedImageUseCase: GetUserSelectedImageUseCase,
     private val uploadPostUseCase: UploadPostUseCase,
@@ -35,12 +38,16 @@ class PostViewModel(
         intentService.openPhotoGallery()
     }
 
-    fun uploadPost(post: PostUploadDomainModel) = viewModelScope.launch(defaultDispatcher) {
+    fun uploadPost(post: PostUploadDomainModel, belongUser: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
         sendAction(Action.StartUploading)
         val param = UploadPostUseCase.Param(post)
         uploadPostUseCase(param) {
             it.fold(
-                onSucceed = { sendAction(Action.FinishUploading) },
+                onSucceed = {
+                    sendAction(Action.FinishUploading)
+                    val navDir = FeaturePostNavGraphDirections.featureProfileNavGraph(belongUser.id)
+                    navManager.onNavEvent(navDir)
+                },
                 onFail = { failure ->
                     sendAction(Action.FinishUploading)
                     onFailure(failure)

@@ -13,6 +13,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private var tmpIdCount = 5
 
+    private var tmpPostCount = 5
+
     private val userLoginDataList = mutableListOf(
         Pair(1, "12345"),
         Pair(2, "23456"),
@@ -282,7 +284,9 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
-        return Either.Success(userPostList[0])
+        val mockNewPost = userPostList[0].copy(id = ++tmpPostCount, belongUserId = post.belongUserId!!)
+        userPostList.add(mockNewPost)
+        return Either.Success(mockNewPost)
     }
 
 }

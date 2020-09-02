@@ -16,6 +16,7 @@ val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
                 instance(),
                 instance(),
                 instance(),
+                instance(),
                 instance()
             )
         }

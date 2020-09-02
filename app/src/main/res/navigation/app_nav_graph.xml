@@ -39,5 +39,9 @@
     <include-dynamic
         android:id="@+id/featurePostNavGraph"
         app:moduleName="feature_post"
-        app:graphResName="feature_post_nav_graph" />
+        app:graphResName="feature_post_nav_graph" >
+        <action
+            android:id="@id/featureProfileNavGraph"
+            app:destination="@id/featureProfileNavGraph" />
+    </include-dynamic>
 </navigation>

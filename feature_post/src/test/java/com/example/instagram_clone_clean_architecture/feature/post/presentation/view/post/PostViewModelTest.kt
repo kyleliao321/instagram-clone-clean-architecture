@@ -17,6 +17,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -49,6 +50,9 @@ class PostViewModelTest {
     @MockK(relaxed = true)
     internal lateinit var postRepository: PostRepository
 
+    @MockK(relaxed = true)
+    internal lateinit var navManager: NavigationManager
+
     private lateinit var getLoginUserUseCase: GetLoginUserUseCase
 
     private lateinit var getUserSelectedImageUseCase: GetUserSelectedImageUseCase
@@ -70,6 +74,7 @@ class PostViewModelTest {
 
         viewModel = PostViewModel(
             intentService,
+            navManager,
             getLoginUserUseCase,
             getUserSelectedImageUseCase,
             uploadPostUseCase,
@@ -264,6 +269,7 @@ class PostViewModelTest {
     fun `verify view state when uploadPost succeed`() {
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
         val mockReturnPost = mockk<PostDomainModel>()
+        val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
@@ -271,16 +277,18 @@ class PostViewModelTest {
 
         // when
         mainCoroutineRule.runBlockingTest {
-            viewModel.uploadPost(mockPost)
+            viewModel.uploadPost(mockPost, mockUser)
         }
 
         // expect
         verify(exactly = 3) { observer.onChanged(any()) } // init, startUploading, finishUploading
+        verify(exactly = 1) { navManager.onNavEvent(any()) }
     }
 
     @Test
     fun `verify view state when uploadPost fail on network connection`() {
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
+        val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
@@ -288,7 +296,7 @@ class PostViewModelTest {
 
         // when
         mainCoroutineRule.runBlockingTest {
-            viewModel.uploadPost(mockPost)
+            viewModel.uploadPost(mockPost, mockUser)
         }
 
         // expect
@@ -301,6 +309,7 @@ class PostViewModelTest {
     @Test
     fun `verify view state when uploadPost fail on server error`() {
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
+        val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns true
@@ -308,7 +317,7 @@ class PostViewModelTest {
 
         // when
         mainCoroutineRule.runBlockingTest {
-            viewModel.uploadPost(mockPost)
+            viewModel.uploadPost(mockPost, mockUser)
         }
 
         // expect
@@ -321,13 +330,14 @@ class PostViewModelTest {
     @Test
     fun `verify view state when uploadPost fail on post incomplete`() {
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
+        val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
         every { runBlocking { mockPost.isPostReady } } returns false
 
         // when
         mainCoroutineRule.runBlockingTest {
-            viewModel.uploadPost(mockPost)
+            viewModel.uploadPost(mockPost, mockUser)
         }
 
         // expect
