@@ -29,7 +29,7 @@ interface LocalDataSource {
     /**
      * Load image file into loaded-temporary-image.
      */
-    suspend fun loadImage(image: Uri?): Either<Unit, Failure>
+    suspend fun cacheImage(image: Uri?): Either<Unit, Failure>
 
     /**
      * Consume previously loaded image.

@@ -26,7 +26,7 @@ class MockLocalDataSourceImpl: LocalDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun loadImage(image: Uri?): Either<Unit, Failure> {
+    override suspend fun cacheImage(image: Uri?): Either<Unit, Failure> {
         TODO("Not yet implemented")
     }
 

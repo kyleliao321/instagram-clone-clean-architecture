@@ -63,8 +63,6 @@ class MainActivity: InjectionActivity() {
         super.onStart()
         viewModel.stateLiveData.observe(this, observer)
         viewModel.loadData()
-
-        intentService.openPhotoGallery()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -73,9 +71,12 @@ class MainActivity: InjectionActivity() {
             IntentService.PHOTO_GALLERY_SERVICE_CODE -> {
                 val uriString = data!!.dataString
                 val uri = Uri.parse(uriString)
-
-                val bitmap = getBitmapFromContentResolver(uri)
-                val byteArray = bitmap.getJpegByteArray()
+                viewModel.cacheUserSelectedImage(uri)
+            }
+            IntentService.CAMERA_SERVICE_CODE -> {
+                val uriString = data!!.dataString
+                val uri = Uri.parse(uriString)
+                viewModel.cacheUserSelectedImage(uri)
             }
         }
     }

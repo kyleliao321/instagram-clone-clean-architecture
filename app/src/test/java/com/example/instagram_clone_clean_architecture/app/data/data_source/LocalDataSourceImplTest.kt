@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 import android.app.Application
 import android.content.SharedPreferences
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -14,13 +13,11 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.File
 
 @RunWith(JUnit4::class)
 class LocalDataSourceImplTest {
@@ -110,7 +107,7 @@ class LocalDataSourceImplTest {
 
         // when
         mainCoroutineRule.runBlockingTest {
-            localDataSource.loadImage(mockImageUri)
+            localDataSource.cacheImage(mockImageUri)
             firstResult = localDataSource.consumeLoadedImage()
             secondResult = localDataSource.consumeLoadedImage()
         }

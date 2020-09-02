@@ -53,7 +53,7 @@ class LocalDataSourceImpl : LocalDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun loadImage(imageUri: Uri?): Either<Unit, Failure> {
+    override suspend fun cacheImage(imageUri: Uri?): Either<Unit, Failure> {
         cacheImageUri = imageUri
         return Either.Success(Unit)
     }

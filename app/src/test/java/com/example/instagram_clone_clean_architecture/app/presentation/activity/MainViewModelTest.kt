@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.app.presentation.activity
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetLocalLoginUserIdUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
@@ -16,6 +17,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
+import okhttp3.Cache
 import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldThrow
@@ -47,6 +49,8 @@ class MainViewModelTest {
 
     private lateinit var getLocalLoginUserIdUseCase: GetLocalLoginUserIdUseCase
 
+    private lateinit var cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase
+
     private lateinit var testViewModel: MainViewModel
 
     @Before
@@ -54,8 +58,14 @@ class MainViewModelTest {
         MockKAnnotations.init(this)
 
         getLocalLoginUserIdUseCase = GetLocalLoginUserIdUseCase(appRepository, mainCoroutineRule.testDispatcher)
+        cacheUserSelectedImageUseCase = CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher)
 
-        testViewModel = MainViewModel(navManager, getLocalLoginUserIdUseCase, mainCoroutineRule.testDispatcher)
+        testViewModel = MainViewModel(
+            navManager,
+            getLocalLoginUserIdUseCase,
+            cacheUserSelectedImageUseCase,
+            mainCoroutineRule.testDispatcher
+        )
 
         testViewModel.stateLiveData.observeForever(observer)
     }

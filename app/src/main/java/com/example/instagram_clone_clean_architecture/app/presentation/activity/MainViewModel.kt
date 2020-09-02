@@ -1,8 +1,10 @@
 package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetLocalLoginUserIdUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -17,6 +19,7 @@ import timber.log.Timber
 class MainViewModel(
     private val navManager: NavigationManager,
     private val getLocalLoginUserIdUseCase: GetLocalLoginUserIdUseCase,
+    private val cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(
     ViewState()
@@ -40,6 +43,12 @@ class MainViewModel(
         sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Search))
         val navDir = FeatureProfileNavGraphDirections.featureSearchNavGraph()
         navManager.onNavEvent(navDir)
+    }
+
+    fun cacheUserSelectedImage(imageUri: Uri) = viewModelScope.launch(defaultDispatcher) {
+        val param = CacheUserSelectedImageUseCase.Param(imageUri)
+
+        cacheUserSelectedImageUseCase(param)
     }
 
     private fun loadLocalUserId() = viewModelScope.launch(defaultDispatcher) {
