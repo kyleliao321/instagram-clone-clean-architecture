@@ -35,9 +35,11 @@ class ProfileEditFragment: InjectionFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
 
+    override fun onStart() {
+        super.onStart()
         viewModel.loadData()
     }
 }

@@ -34,4 +34,8 @@ internal val domainModule = DI.Module("${MODULE_NAME}DomainModule") {
     bind() from singleton { UserUnlikePostUseCase(instance()) }
 
     bind() from singleton { NavigationUseCase(instance()) }
+
+    bind() from singleton { ConsumeUserSelectedImageUseCase(instance()) }
+
+    bind() from singleton { GetBitmapUseCase(instance()) }
 }

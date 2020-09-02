@@ -1,14 +1,13 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentDirections
 import com.example.library_base.domain.exception.Failure
@@ -57,6 +56,10 @@ class ProfileEditViewModelTest {
 
     private lateinit var getUserProfileUseCase: GetUserProfileUseCase
 
+    private lateinit var consumeUserSelectedImageUseCase: ConsumeUserSelectedImageUseCase
+
+    private lateinit var getBitmapUseCase: GetBitmapUseCase
+
     private lateinit var navigationUseCase: NavigationUseCase
 
     private lateinit var testViewModel: ProfileEditViewModel
@@ -72,6 +75,12 @@ class ProfileEditViewModelTest {
 
     private val editedUserProfile = correctUserProfile.copy(userName = "kyle0321")
 
+    @MockK(relaxed = true)
+    internal lateinit var mockUri: Uri
+
+    @MockK(relaxed = true)
+    internal lateinit var mockBitmap: Bitmap
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -79,6 +88,8 @@ class ProfileEditViewModelTest {
         updateUserProfileUseCase = UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
+        consumeUserSelectedImageUseCase = ConsumeUserSelectedImageUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getBitmapUseCase = GetBitmapUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel =
             ProfileEditViewModel(
@@ -86,6 +97,8 @@ class ProfileEditViewModelTest {
                 intentService,
                 getUserProfileUseCase,
                 updateUserProfileUseCase,
+                consumeUserSelectedImageUseCase,
+                getBitmapUseCase,
                 navigationUseCase,
                 mainCoroutineRule.testDispatcher
             )
@@ -119,17 +132,21 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = true,
             isUserProfileUpdating = false,
+            isCachedImageLoading = true,
             isNetworkError = false,
             isServerError = false,
             originalUserProfile = null,
-            bindingUserProfile = null
+            bindingUserProfile = null,
+            cacheImage = null
         )
     }
 
     @Test
-    fun `verify view state when getUserProfile succeed`() {
+    fun `verify view state when all UseCase succeed`() {
         // given
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -138,17 +155,21 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isServerError = false,
             isNetworkError = false,
             originalUserProfile = correctUserProfile,
-            bindingUserProfile = correctUserProfile
+            bindingUserProfile = correctUserProfile,
+            cacheImage = mockBitmap
         )
     }
 
     @Test
-    fun `verify view state when getUserProfileUseCase fail on network connection`() {
+    fun `verify view state when only getUserProfileUseCase fail on network connection`() {
         // given
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -157,17 +178,21 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isServerError = false,
             isNetworkError = true,
             originalUserProfile = null,
-            bindingUserProfile = null
+            bindingUserProfile = null,
+            cacheImage = mockBitmap
         )
     }
 
     @Test
-    fun `verify view state when getUserProfileUseCase fail on server error`() {
+    fun `verify view state when only getUserProfileUseCase fail on server error`() {
         // given
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(null) // this should be interpreted as server error
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -176,10 +201,34 @@ class ProfileEditViewModelTest {
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isServerError = true,
             isNetworkError = false,
             originalUserProfile = null,
-            bindingUserProfile = null
+            bindingUserProfile = null,
+            cacheImage = mockBitmap
+        )
+    }
+
+    @Test
+    fun `verify view state when only consumeUserSelectedImageUseCase fail`() {
+        // given
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Failure(Failure.CacheNotFound)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        // expect
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
+            isUserProfileLoading = false,
+            isUserProfileUpdating = false,
+            isCachedImageLoading = false,
+            isServerError = false,
+            isNetworkError = false,
+            originalUserProfile = correctUserProfile,
+            bindingUserProfile = correctUserProfile,
+            cacheImage = null
         )
     }
 
@@ -188,6 +237,8 @@ class ProfileEditViewModelTest {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Success(editedUserProfile)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // edit profile
@@ -196,15 +247,17 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, load, updating, updated
-        verify(exactly = 4) { observer.onChanged(any()) }
+        // expect liveData updated four times: init, loadProfile, loadImage, updating, updated
+        verify(exactly = 5) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isNetworkError = false,
             isServerError = false,
             originalUserProfile = editedUserProfile,
-            bindingUserProfile = editedUserProfile
+            bindingUserProfile = editedUserProfile,
+            cacheImage = mockBitmap
         )
     }
 
@@ -213,6 +266,8 @@ class ProfileEditViewModelTest {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // edit profile
@@ -221,13 +276,15 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, load, updating, updated, failOnNetwork
-        verify(exactly = 5) { observer.onChanged(any()) }
+        // expect liveData updated four times: init, loadProfile,  , updating, updated, failOnNetwork
+        verify(exactly = 6) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isNetworkError = true,
             isServerError = false,
+            cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile
         )
@@ -238,6 +295,8 @@ class ProfileEditViewModelTest {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
         every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
+        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         // edit profile
@@ -246,13 +305,15 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, load, updating, updated, failOnServerError
-        verify(exactly = 5) { observer.onChanged(any()) }
+        // expect liveData updated four times: init, loadProfile, loadImage, updating, updated, failOnServerError
+        verify(exactly = 6) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
             isUserProfileUpdating = false,
+            isCachedImageLoading = false,
             isNetworkError = false,
             isServerError = true,
+            cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile
         )

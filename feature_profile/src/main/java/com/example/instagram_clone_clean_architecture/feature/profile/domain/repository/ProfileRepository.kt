@@ -1,5 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.domain.repository
 
+import android.graphics.Bitmap
+import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
@@ -26,6 +28,10 @@ interface ProfileRepository {
     suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure>
 
     suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure>
+
+    suspend fun consumeUserSelectedImageUri(): Either<Uri, Failure>
+
+    suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure>
 
     /**
      * Data update operations

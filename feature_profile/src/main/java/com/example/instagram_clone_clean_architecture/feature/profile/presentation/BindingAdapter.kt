@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
+import android.graphics.Bitmap
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -81,13 +82,33 @@ fun loadPostImage(imageView: ImageView, data: String?) {
 /**
  * Fetch user profile image from remote using Coil.
  *
- * @param data Url source or local drawable asset for image.
+ * @param original Url source or local drawable asset for original image.
  */
 @BindingAdapter("app:userImage")
 fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
     null -> imageView.load(R.drawable.user_profile_default_image)
     else -> imageView.load(data) {
         transformations(CircleCropTransformation())
+    }
+}
+
+/**
+ * Load user profile image for EditFragment.
+ */
+@BindingAdapter("app:oldUserImage", "app:newUserImage")
+fun loadUserImage(imageView: ImageView, original: String?, new: Bitmap?) {
+    if (new == null) {
+        when (original) {
+            null -> imageView.load(R.drawable.user_profile_default_image)
+            else -> imageView.load(original) {
+                transformations(CircleCropTransformation())
+            }
+        }
+    } else {
+        // TODO: Fail to load bitmap
+        imageView.load(new) {
+            transformations(CircleCropTransformation())
+        }
     }
 }
 

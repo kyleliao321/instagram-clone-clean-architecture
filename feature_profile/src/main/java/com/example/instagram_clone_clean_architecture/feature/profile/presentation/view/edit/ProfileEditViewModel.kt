@@ -1,12 +1,11 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit
 
+import android.graphics.Bitmap
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
-import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.UpdateUserProfileUseCase
+import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditFragmentDirections
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerViewModel
@@ -26,6 +25,8 @@ class ProfileEditViewModel(
     private val intentService: IntentService,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
+    private val consumeUserSelectedImageUseCase: ConsumeUserSelectedImageUseCase,
+    private val getBitmapUseCase: GetBitmapUseCase,
     private val navigationUseCase: NavigationUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<ProfileEditViewModel.ViewState, ProfileEditViewModel.Action>(
@@ -89,6 +90,33 @@ class ProfileEditViewModel(
         }
     }
 
+    private fun loadCachedUserSelectedImage() = viewModelScope.launch(defaultDispatcher) {
+        consumeUserSelectedImageUseCase(Unit) {
+            it.fold(
+                onSucceed = { uri ->
+                    decodeBitmap(uri)
+                },
+                onFail = { _ ->
+                    sendAction(Action.CachedImageLoaded(null))
+                }
+            )
+        }
+    }
+
+    private fun decodeBitmap(uri: Uri) = viewModelScope.launch(defaultDispatcher) {
+        val param = GetBitmapUseCase.Param(uri)
+        getBitmapUseCase(param) {
+            it.fold(
+                onSucceed = { bitmap ->
+                    sendAction(Action.CachedImageLoaded(bitmap))
+                },
+                onFail = { _ ->
+                    sendAction(Action.CachedImageLoaded(null))
+                }
+            )
+        }
+    }
+
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
@@ -98,6 +126,7 @@ class ProfileEditViewModel(
 
     override fun onLoadData() {
         loadUserProfile()
+        loadCachedUserSelectedImage()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
@@ -105,6 +134,10 @@ class ProfileEditViewModel(
             isUserProfileLoading = false,
             originalUserProfile = action.userProfile,
             bindingUserProfile = if (action.userProfile == null) null else action.userProfile.copy()
+        )
+        is Action.CachedImageLoaded -> state.copy(
+            isCachedImageLoading = false,
+            cacheImage = action.bitmap
         )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
@@ -125,15 +158,18 @@ class ProfileEditViewModel(
     data class ViewState(
         val isUserProfileLoading: Boolean = true,
         val isUserProfileUpdating: Boolean = false,
+        val isCachedImageLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val originalUserProfile: UserDomainModel? = null,
-        val bindingUserProfile: UserDomainModel? = null
+        val bindingUserProfile: UserDomainModel? = null,
+        val cacheImage: Bitmap? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
         class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class FinishUpdatingUserProfile(val userProfile: UserDomainModel) : Action()
+        class CachedImageLoaded(val bitmap: Bitmap?) : Action()
         object StartUpdatingUserProfile : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()

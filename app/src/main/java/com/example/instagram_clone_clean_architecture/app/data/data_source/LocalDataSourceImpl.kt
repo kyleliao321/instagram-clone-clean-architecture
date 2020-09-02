@@ -67,7 +67,7 @@ class LocalDataSourceImpl : LocalDataSource {
         }
 
         return if (bitmap == null) {
-            Either.Failure(Failure.PhotoGalleryServiceFail)
+            Either.Failure(Failure.ExternalImageDecodeFail)
         } else {
             Either.Success(bitmap)
         }

@@ -1,5 +1,8 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.data.repository
 
+import android.graphics.Bitmap
+import android.net.Uri
+import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -10,7 +13,8 @@ import com.example.library_base.domain.utility.Either
 
 internal class ProfileRepositoryImpl(
     private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val cacheDataSource: CacheDataSource
 ): ProfileRepository {
     
     override suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure> {
@@ -55,6 +59,14 @@ internal class ProfileRepositoryImpl(
 
     override suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure> {
         return remoteDataSource.getLikedUsersByPostId(id)
+    }
+
+    override suspend fun consumeUserSelectedImageUri(): Either<Uri, Failure> {
+        return cacheDataSource.consumeCachedSelectedImageUri()
+    }
+
+    override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> {
+        return localDataSource.getBitmap(uri)
     }
 
     override suspend fun updateUserProfile(userProfile: UserDomainModel): Either<UserDomainModel, Failure> {

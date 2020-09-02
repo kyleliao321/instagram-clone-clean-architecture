@@ -42,4 +42,6 @@ sealed class Failure {
 
     object CacheNotFound: Failure()
 
+    object ExternalImageDecodeFail: Failure()
+
 }

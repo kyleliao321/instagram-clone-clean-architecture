@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="@{viewModel.stateLiveData.userProfileUpdating ? View.VISIBLE : View.GONE}"
+            app:visibleCondition="@{viewModel.stateLiveData.userProfileUpdating}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,8 +67,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="@{viewModel.stateLiveData.userProfileLoading ? View.VISIBLE : View.GONE}">
-
+            app:visibleCondition="@{viewModel.stateLiveData.userProfileLoading || viewModel.stateLiveData.cachedImageLoading}" >
             <include
                 layout="@layout/fragment_profile_edit_shimmer"
                 android:layout_width="match_parent"
@@ -81,7 +80,7 @@
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="@{viewModel.stateLiveData.userProfileLoading ? View.GONE : View.VISIBLE}">
+            app:visibleCondition="@{(!viewModel.stateLiveData.userProfileLoading &amp; !viewModel.stateLiveData.cachedImageLoading)}">
 
             <ImageView
                 android:id="@+id/user_profile_image"
@@ -93,7 +92,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/user_image_name_divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:userImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}" />
+                app:oldUserImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}"
+                app:newUserImage="@{viewModel.stateLiveData.cacheImage}"/>
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/user_image_name_divider"
