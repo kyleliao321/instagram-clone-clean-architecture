@@ -22,10 +22,20 @@ class ProfileMainViewModel(
     private val addUserRelationUseCase: AddUserRelationUseCase,
     private val removeUserRelationUseCase: RemoveUserRelationUseCase,
     private val navigationUseCase: NavigationUseCase,
+    private val logoutUseCase: LogoutUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(
     ViewState()
 ) {
+
+    fun logout() = viewModelScope.launch(defaultDispatcher) {
+        logoutUseCase(Unit)
+
+        val navDir = FeatureProfileNavGraphDirections.featureLoginNavGraph()
+        val params = NavigationUseCase.Param(navDir)
+
+        navigationUseCase(params)
+    }
 
     fun onNavigateToPostFeature() = viewModelScope.launch(defaultDispatcher) {
         val navDir = FeatureProfileNavGraphDirections.featurePostNavGraph()

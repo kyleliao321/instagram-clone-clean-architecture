@@ -39,6 +39,9 @@ internal class ProfileRepositoryImpl(
         return result!!
     }
 
+    override suspend fun cleanupLocalLoginUser(): Either<Unit, Failure> =
+        localDataSource.updateLocalLoginUserId(null)
+
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
         return remoteDataSource.getUserProfileById(id)
     }

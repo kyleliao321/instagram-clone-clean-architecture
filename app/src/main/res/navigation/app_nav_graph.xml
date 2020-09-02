@@ -16,6 +16,9 @@
         <action
             android:id="@id/featurePostNavGraph"
             app:destination="@id/featurePostNavGraph" />
+        <action
+            android:id="@id/featureLoginNavGraph"
+            app:destination="@id/featureLoginNavGraph" />
     </include-dynamic>
 
     <include-dynamic

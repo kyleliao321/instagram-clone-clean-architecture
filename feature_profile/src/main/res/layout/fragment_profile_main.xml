@@ -40,6 +40,17 @@
                     app:layout_constraintBottom_toBottomOf="@id/main_profile_app_bar_content"
                     android:text="@{viewModel.stateLiveData.loginUserProfile.userName}" />
 
+                <Button
+                    android:id="@+id/logout_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@id/main_profile_app_bar_content"
+                    app:layout_constraintTop_toTopOf="@id/main_profile_app_bar_content"
+                    app:layout_constraintBottom_toBottomOf="@id/main_profile_app_bar_content"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:text="logout"
+                    android:onClick="@{() -> viewModel.logout()}"/>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 

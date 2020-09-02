@@ -11,6 +11,7 @@ import com.example.instagram_clone_clean_architecture.feature.login.databinding.
 import com.example.library_base.presentation.fragment.InjectionFragment
 import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
+import timber.log.Timber
 
 class LoginFragment : InjectionFragment() {
 

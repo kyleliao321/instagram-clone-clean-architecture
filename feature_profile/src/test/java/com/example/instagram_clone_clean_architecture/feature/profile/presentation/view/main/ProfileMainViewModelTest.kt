@@ -60,6 +60,8 @@ class ProfileMainViewModelTest {
 
     private lateinit var navigationUseCase: NavigationUseCase
 
+    private lateinit var logoutUseCase: LogoutUseCase
+
     private lateinit var testViewModel: ProfileMainViewModel
 
     /**
@@ -84,6 +86,7 @@ class ProfileMainViewModelTest {
         addUserRelationUseCase = AddUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         removeUserRelationUseCase = RemoveUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
+        logoutUseCase = LogoutUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel =
             ProfileMainViewModel(
@@ -95,6 +98,7 @@ class ProfileMainViewModelTest {
                 addUserRelationUseCase,
                 removeUserRelationUseCase,
                 navigationUseCase,
+                logoutUseCase,
                 mainCoroutineRule.testDispatcher
             )
 

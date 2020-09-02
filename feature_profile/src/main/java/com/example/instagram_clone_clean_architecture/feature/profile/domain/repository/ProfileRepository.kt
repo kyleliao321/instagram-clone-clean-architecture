@@ -11,9 +11,11 @@ import com.example.library_base.domain.utility.Either
 interface ProfileRepository {
 
     /**
-     * getter for local account data
+     * operation for local account
      */
     suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure>
+
+    suspend fun cleanupLocalLoginUser(): Either<Unit, Failure>
 
     /**
      * getter for view information
