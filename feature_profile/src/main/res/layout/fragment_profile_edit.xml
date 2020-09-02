@@ -88,6 +88,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_margin="@dimen/user_edit_image_margin"
+                android:onClick="@{() -> viewModel.promptToTakePhotoFromGallery()}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/user_image_name_divider"
                 app:layout_constraintStart_toStartOf="parent"

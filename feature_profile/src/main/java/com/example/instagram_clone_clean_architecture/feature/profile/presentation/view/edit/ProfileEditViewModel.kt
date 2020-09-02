@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.NavigationUseCase
@@ -22,6 +23,7 @@ import java.util.*
 
 class ProfileEditViewModel(
     private val args: ProfileEditFragmentArgs,
+    private val intentService: IntentService,
     private val getUserProfileUseCase: GetUserProfileUseCase,
     private val updateUserProfileUseCase: UpdateUserProfileUseCase,
     private val navigationUseCase: NavigationUseCase,
@@ -29,6 +31,10 @@ class ProfileEditViewModel(
 ) : BaseViewModel<ProfileEditViewModel.ViewState, ProfileEditViewModel.Action>(
     ViewState()
 ) {
+
+    fun promptToTakePhotoFromGallery() {
+        intentService.openPhotoGallery()
+    }
 
     fun onNavigateToMainProfile() = viewModelScope.launch(defaultDispatcher) {
         val navDir =

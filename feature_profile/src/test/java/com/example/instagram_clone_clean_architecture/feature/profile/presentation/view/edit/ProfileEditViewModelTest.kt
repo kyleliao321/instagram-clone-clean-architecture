@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetLoginUserUseCase
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.GetUserProfileUseCase
@@ -47,6 +48,9 @@ class ProfileEditViewModelTest {
     internal lateinit var navigationManager: NavigationManager
 
     @MockK(relaxed = true)
+    internal lateinit var intentService: IntentService
+
+    @MockK(relaxed = true)
     internal lateinit var observer: Observer<ProfileEditViewModel.ViewState>
     
     private lateinit var updateUserProfileUseCase: UpdateUserProfileUseCase
@@ -79,6 +83,7 @@ class ProfileEditViewModelTest {
         testViewModel =
             ProfileEditViewModel(
                 profileEditFragmentArgs,
+                intentService,
                 getUserProfileUseCase,
                 updateUserProfileUseCase,
                 navigationUseCase,
