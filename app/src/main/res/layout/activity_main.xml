@@ -30,7 +30,7 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:visibility="@{viewModel.stateLiveData.navDestination == NavGraphDestinations.Login ? View.GONE : View.VISIBLE}"
-            android:clickable="@{!viewModel.stateLiveData.localLoginUserIdLoading}"
+            android:clickable="@{!viewModel.stateLiveData.localUserDataLoading}"
             android:id="@+id/bottomNav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetLocalLoginUserIdUseCase
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.LoginWithLocalDataUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
@@ -51,6 +52,8 @@ class MainViewModelTest {
 
     private lateinit var cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase
 
+    private lateinit var loginWithLocalDataUseCase: LoginWithLocalDataUseCase
+
     private lateinit var testViewModel: MainViewModel
 
     @Before
@@ -59,11 +62,12 @@ class MainViewModelTest {
 
         getLocalLoginUserIdUseCase = GetLocalLoginUserIdUseCase(appRepository, mainCoroutineRule.testDispatcher)
         cacheUserSelectedImageUseCase = CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher)
+        loginWithLocalDataUseCase = LoginWithLocalDataUseCase(appRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel = MainViewModel(
             navManager,
-            getLocalLoginUserIdUseCase,
             cacheUserSelectedImageUseCase,
+            loginWithLocalDataUseCase,
             mainCoroutineRule.testDispatcher
         )
 
@@ -75,49 +79,11 @@ class MainViewModelTest {
         testViewModel.stateLiveData.removeObserver(observer)
     }
 
-    /**
-     * Navigation Test
-     */
     @Test
-    fun `navigate to user profile should succeed when user id in view state is not null`() {
-        val mockId = 1
-
-        // given
-        every { runBlocking { appRepository.getLocalLoginUserId() } } returns Either.Success(mockId)
-
-        // when
-        mainCoroutineRule.runBlockingTest {
-            testViewModel.loadData()
-        }
-
-        // expect
-        verify(exactly = 1) { navManager.onNavEvent(any()) }
+    fun `should initialize with correct view state`() {
         testViewModel.stateLiveData.value shouldBeEqualTo MainViewModel.ViewState(
-            isLocalLoginUserIdLoading = false,
+            isLocalUserDataLoading = true,
             isLocalAccountError = false,
-            localUserId = mockId,
-            navDestination = MainViewModel.NavGraphDestinations.Profile
-        )
-    }
-
-    @Test
-    fun `navigate to user profile should throw exception when user id in view state is null`() {
-        // given
-        every { runBlocking { appRepository.getLocalLoginUserId() } } returns Either.Failure(Failure.LocalAccountNotFound)
-
-        // when
-        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
-        invoking { testViewModel.onNavigateToProfile() } shouldThrow(IllegalStateException()::class)
-    }
-
-    /**
-     * ViewState typical test
-     */
-    @Test
-    fun `viewModel should initialize with correct view state`() {
-        testViewModel.stateLiveData.value shouldBeEqualTo MainViewModel.ViewState(
-            isLocalAccountError = false,
-            isLocalLoginUserIdLoading = true,
             localUserId = null,
             navDestination = MainViewModel.NavGraphDestinations.Login
         )

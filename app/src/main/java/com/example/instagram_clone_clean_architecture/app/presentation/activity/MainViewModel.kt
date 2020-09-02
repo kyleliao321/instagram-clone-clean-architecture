@@ -4,8 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
-import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
-import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetLocalLoginUserIdUseCase
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -18,8 +17,8 @@ import timber.log.Timber
 
 class MainViewModel(
     private val navManager: NavigationManager,
-    private val getLocalLoginUserIdUseCase: GetLocalLoginUserIdUseCase,
     private val cacheUserSelectedImageUseCase: CacheUserSelectedImageUseCase,
+    private val loginWithLocalDataUseCase: LoginWithLocalDataUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(
     ViewState()
@@ -51,19 +50,14 @@ class MainViewModel(
         cacheUserSelectedImageUseCase(param)
     }
 
-    private fun loadLocalUserId() = viewModelScope.launch(defaultDispatcher) {
-        getLocalLoginUserIdUseCase(Unit) {
+    private fun loadLocalUserData() = viewModelScope.launch(defaultDispatcher) {
+        loginWithLocalDataUseCase(Unit) {
             it.fold(
-                onSucceed = { id ->
-                    sendAction(Action.LocalUserIdLoaded(id))
-                    if (state.navDestination == NavGraphDestinations.Login) {
-                        // auto-redirection should only happen when user in login screen.
-                        onNavigateToProfile()
-                        sendAction(Action.NavigateToNewDestination(NavGraphDestinations.Profile))
-                    }
+                onSucceed = { userDomainModel ->
+                    sendAction(Action.LocalUserDataLoaded(userDomainModel.id))
                 },
                 onFail = { failure ->
-                    sendAction(Action.LocalUserIdLoaded(null))
+                    sendAction(Action.LocalUserDataLoaded(null))
                     onFailure(failure)
                 }
             )
@@ -72,22 +66,22 @@ class MainViewModel(
 
     override fun onLoadData() {
         sendAction(Action.ReloadData)
-        loadLocalUserId()
+        loadLocalUserData()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.NavigateToNewDestination -> state.copy(
             navDestination = action.destination
         )
-        is Action.LocalUserIdLoaded -> state.copy(
-            isLocalLoginUserIdLoading = false,
-            localUserId = action.id
+        is Action.LocalUserDataLoaded -> state.copy(
+            isLocalUserDataLoading = false,
+            localUserId = action.userId
         )
         is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
         is Action.ReloadData -> state.copy(
-            isLocalLoginUserIdLoading = true,
+            isLocalUserDataLoading = true,
             isLocalAccountError = false
         )
     }
@@ -98,14 +92,14 @@ class MainViewModel(
     }
 
     data class ViewState(
-        val isLocalLoginUserIdLoading: Boolean = true,
+        val isLocalUserDataLoading: Boolean = true,
         val isLocalAccountError: Boolean = false,
         val localUserId: Int? = null,
         val navDestination: NavGraphDestinations = NavGraphDestinations.Login
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class LocalUserIdLoaded(val id: Int?) : Action()
+        class LocalUserDataLoaded(val userId: Int?): Action()
         class NavigateToNewDestination(val destination: NavGraphDestinations) : Action()
         object FailOnLocalAccountError : Action()
         object ReloadData : Action()

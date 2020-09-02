@@ -15,7 +15,7 @@ import org.kodein.di.android.x.AndroidLifecycleScope
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {
 
-    bind<AppRepository>() with singleton { MockAppRepositoryImpl(instance(), instance()) }
+    bind<AppRepository>() with singleton { MockAppRepositoryImpl(instance(), instance(), instance()) }
 
     bind<RemoteDataSource>() with singleton { MockRemoteDataSourceImpl() }
 
