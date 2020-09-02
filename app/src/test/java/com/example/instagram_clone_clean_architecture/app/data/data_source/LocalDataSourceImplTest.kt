@@ -99,23 +99,4 @@ class LocalDataSourceImplTest {
         result shouldBeEqualTo Either.Success(Unit)
     }
 
-    @Test
-    fun `should return correct value and clean up cache image when consumeLoadedImage invoke`() {
-        var firstResult: Either<Uri?, Failure>? = null
-        var secondResult: Either<Uri?, Failure>? = null
-        val mockImageUri = mockk<Uri>()
-
-        // when
-        mainCoroutineRule.runBlockingTest {
-            localDataSource.cacheImage(mockImageUri)
-            firstResult = localDataSource.consumeLoadedImage()
-            secondResult = localDataSource.consumeLoadedImage()
-        }
-
-        // expect
-        firstResult shouldBeEqualTo Either.Success(mockImageUri)
-        secondResult shouldBeEqualTo Either.Success(null)
-    }
-
-
 }

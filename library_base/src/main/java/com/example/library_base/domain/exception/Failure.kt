@@ -40,4 +40,6 @@ sealed class Failure {
 
     object PostNotComplete: Failure()
 
+    object CacheNotFound: Failure()
+
 }

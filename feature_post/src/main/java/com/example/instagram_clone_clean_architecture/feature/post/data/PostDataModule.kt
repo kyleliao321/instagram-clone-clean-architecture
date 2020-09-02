@@ -10,6 +10,6 @@ import org.kodein.di.singleton
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {
 
-    bind<PostRepository>() with singleton { PostRepositoryImpl(instance(), instance()) }
+    bind<PostRepository>() with singleton { PostRepositoryImpl(instance(), instance(), instance()) }
 
 }

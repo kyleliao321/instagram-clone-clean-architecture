@@ -19,8 +19,6 @@ class LocalDataSourceImpl : LocalDataSource {
 
     private lateinit var applicationContext: WeakReference<Context>
 
-    private var cacheImageUri: Uri? = null
-
     private val SHARE_PREFERENCE_KEY = "com.example.instagram_clone_clean_architecture.shared_preference"
 
     private val LOCAL_LOGIN_USER_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_id"
@@ -73,17 +71,6 @@ class LocalDataSourceImpl : LocalDataSource {
         } else {
             Either.Success(bitmap)
         }
-    }
-
-    override suspend fun cacheImage(imageUri: Uri?): Either<Unit, Failure> {
-        cacheImageUri = imageUri
-        return Either.Success(Unit)
-    }
-
-    override suspend fun consumeLoadedImage(): Either<Uri?, Failure> {
-        val tmp = cacheImageUri
-        cacheImageUri = null
-        return Either.Success(tmp)
     }
 
 }
