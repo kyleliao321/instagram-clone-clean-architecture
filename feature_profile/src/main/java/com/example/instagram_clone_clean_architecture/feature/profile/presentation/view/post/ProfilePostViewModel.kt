@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -29,10 +30,21 @@ class ProfilePostViewModel(
 
     val isLoginUserLikedPost = Transformations.map(stateLiveData) {
         if (it.loginUserProfile != null && !it.isLikedUsersLoading) {
-            it.loginUserProfile in it.likedUsers
+            return@map it.loginUserProfile in it.likedUsers
         } else {
-            false
+            return@map false
         }
+    }
+
+    val isDataLoading = Transformations.map(stateLiveData) {
+        it.isLikedUsersLoading || it.isLoginUserProfileLoading || it.isPostLoading || it.isProfileLoading
+    }
+
+    val errorMessage: LiveData<String?> = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection Fail"
+        }
+        return@map null
     }
 
     fun onLikeButtonClicked() = viewModelScope.launch(defaultDispatcher) {
@@ -44,7 +56,6 @@ class ProfilePostViewModel(
                 userUnlikePostUseCase(params) {
                     it.fold(
                         onSucceed = {
-                            sendAction(Action.Reload)
                             loadData()
                         },
                         onFail = ::onFailure
@@ -56,7 +67,6 @@ class ProfilePostViewModel(
                 userLikePostUseCase(params) {
                     it.fold(
                         onSucceed = {
-                            sendAction(Action.Reload)
                             loadData()
                         },
                         onFail = ::onFailure
@@ -137,6 +147,7 @@ class ProfilePostViewModel(
     }
 
     override fun onLoadData() {
+        sendAction(Action.Reload)
         loadPost()
         loadLikedUsers()
         loadUserProfile()

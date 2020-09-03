@@ -60,6 +60,20 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
 
+            <TextView
+                android:id="@+id/network_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.errorMessage}"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="?attr/colorError"
+                android:textColor="?attr/colorOnError"
+                android:translationZ="10dp"
+                app:visibleCondition="@{viewModel.errorMessage != null}"
+                app:layout_constraintTop_toBottomOf="@id/main_profile_app_bar" />
+
+
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/user_profile_container_shimmer"
                 android:layout_width="match_parent"
@@ -68,7 +82,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:visibleCondition="@{viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading}">
+                app:visibleCondition="@{viewModel.isDataLoading()}">
 
                 <include
                     layout="@layout/fragment_profile_main_user_profile_shimmer"
@@ -79,7 +93,7 @@
 
             <include
                 layout="@layout/fragment_profile_main_user_profile"
-                app:visibleCondition="@{!(viewModel.stateLiveData.networkError || viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading)}"
+                app:visibleCondition="@{!(viewModel.stateLiveData.networkError || viewModel.isDataLoading())}"
                 android:id="@+id/user_profile_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -89,17 +103,6 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 bind:viewModel="@{viewModel}"/>
 
-            <include
-                layout="@layout/fragment_profile_main_user_profile_shimmer"
-                android:id="@+id/user_profile_container_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:visibleCondition="@{viewModel.stateLiveData.networkError}"
-                app:layout_constraintTop_toBottomOf="@id/main_profile_app_bar"
-                app:layout_constraintBottom_toTopOf="@id/user_profile_post_list_divider"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
-
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/user_profile_post_list_divider"
                 android:layout_width="match_parent"
@@ -108,7 +111,7 @@
                 app:layout_constraintGuide_percent="@integer/user_profile_and_post_guide_line_percent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                app:visibleCondition="@{!(viewModel.stateLiveData.networkError || viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.loginUserLoading || viewModel.stateLiveData.loginFollowingListLoading)}"
+                app:visibleCondition="@{!(viewModel.stateLiveData.networkError || viewModel.isDataLoading())}"
                 android:id="@+id/user_post_container"
                 android:clipToPadding="false"
                 android:scrollbars="vertical"

@@ -75,6 +75,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         password: String
     ): Either<UserDomainModel, Failure> {
 
+        delay(1000)
+
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
         }
@@ -96,6 +98,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         userName: String,
         password: String
     ): Either<UserDomainModel, Failure> {
+
+        delay(1000)
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)

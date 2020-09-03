@@ -12,59 +12,81 @@
             type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:onRefreshListener="@{() -> viewModel.loadData()}"
+        app:refreshing="@{viewModel.isDataLoading()}">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/post_profile_app_bar"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/post_profile_app_bar_content"
+            android:layout_height="match_parent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/post_profile_app_bar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/post_profile_app_bar_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_constraintStart_toStartOf="@id/post_profile_app_bar_content"
-                    app:layout_constraintEnd_toEndOf="@id/post_profile_app_bar_content"
-                    app:layout_constraintTop_toTopOf="@id/post_profile_app_bar_content"
-                    app:layout_constraintBottom_toBottomOf="@id/post_profile_app_bar_content"
-                    app:visibleCondition="@{!viewModel.stateLiveData.profileLoading}"
-                    android:text="@{viewModel.stateLiveData.userProfile.userName + `'s post`}" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintStart_toStartOf="@id/post_profile_app_bar_content"
+                        app:layout_constraintEnd_toEndOf="@id/post_profile_app_bar_content"
+                        app:layout_constraintTop_toTopOf="@id/post_profile_app_bar_content"
+                        app:layout_constraintBottom_toBottomOf="@id/post_profile_app_bar_content"
+                        app:visibleCondition="@{viewModel.stateLiveData.userProfile.userName != null}"
+                        android:text="@{viewModel.stateLiveData.userProfile.userName + `'s post`}" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.appcompat.widget.Toolbar>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            app:layout_constraintTop_toBottomOf="@+id/post_profile_app_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading ? View.VISIBLE : View.GONE}">
+            <TextView
+                android:id="@+id/network_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.errorMessage}"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="?attr/colorError"
+                android:textColor="?attr/colorOnError"
+                android:translationZ="10dp"
+                app:visibleCondition="@{viewModel.errorMessage != null}"
+                app:layout_constraintTop_toBottomOf="@id/post_profile_app_bar" />
+
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                app:layout_constraintTop_toBottomOf="@+id/post_profile_app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:visibleCondition="@{viewModel.isDataLoading()}">
+
+                <include
+                    layout="@layout/fragment_profile_post_shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
             <include
-                layout="@layout/fragment_profile_post_shimmer"
+                app:layout_constraintTop_toBottomOf="@id/post_profile_app_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                layout="@layout/fragment_post_detail_item_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content"
+                app:visibleCondition="@{!viewModel.isDataLoading}"
+                bind:viewModel="@{viewModel}"/>
 
-        </com.facebook.shimmer.ShimmerFrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <include
-            app:layout_constraintTop_toBottomOf="@+id/post_profile_app_bar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            layout="@layout/fragment_post_detail_item_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="@{viewModel.stateLiveData.profileLoading || viewModel.stateLiveData.postLoading ? View.GONE : View.VISIBLE}"
-            bind:viewModel="@{viewModel}"/>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>

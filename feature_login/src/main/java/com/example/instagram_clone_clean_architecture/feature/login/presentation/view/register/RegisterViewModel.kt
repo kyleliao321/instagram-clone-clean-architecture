@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.login.presentation.view.register
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserRegisterUseCase
@@ -17,6 +18,14 @@ class RegisterViewModel(
     private val userRegisterUseCase: UserRegisterUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<RegisterViewModel.ViewState, RegisterViewModel.Action>(ViewState()) {
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection failed"
+        }
+
+        return@map null
+    }
 
     fun navigateToLoginFragment() {
         val navDir = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()

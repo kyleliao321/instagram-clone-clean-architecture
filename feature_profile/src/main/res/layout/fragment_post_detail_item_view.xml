@@ -13,8 +13,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="@{viewModel.stateLiveData.postLoading || viewModel.stateLiveData.profileLoading ? View.GONE : View.VISIBLE}">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/post_info_container"
@@ -32,7 +31,7 @@
                 app:layout_constraintBottom_toBottomOf="@id/post_info_container"
                 app:layout_constraintStart_toStartOf="@id/post_info_container"
                 app:layout_constraintEnd_toStartOf="@id/post_user_name"
-                app:userImage="@{viewModel.stateLiveData.loginUserProfile.imageSrc}" />
+                app:userImage="@{viewModel.stateLiveData.userProfile.imageSrc}" />
 
             <TextView
                 android:id="@+id/post_user_name"

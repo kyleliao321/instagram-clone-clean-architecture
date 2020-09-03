@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfilePostBinding
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.library_base.presentation.fragment.InjectionFragment
+import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
 import timber.log.Timber
 
@@ -16,10 +18,6 @@ class ProfilePostFragment: InjectionFragment() {
     private val viewModel: ProfilePostViewModel by instance()
 
     private lateinit var binding: FragmentProfilePostBinding
-
-    private val observer = Observer<ProfilePostViewModel.ViewState> {
-        Timber.d(it.toString())
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,8 +35,6 @@ class ProfilePostFragment: InjectionFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setSupportActionBar(binding.postProfileAppBar)
-
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 
         viewModel.loadData()
     }

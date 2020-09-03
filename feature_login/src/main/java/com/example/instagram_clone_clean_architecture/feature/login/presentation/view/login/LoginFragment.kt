@@ -22,10 +22,6 @@ class LoginFragment : InjectionFragment() {
         if (it.isLoginFail) {
             showSnackBar(resources.getString(R.string.login_error_message))
         }
-
-        if (it.isNetworkError) {
-            showSnackBar(resources.getString(com.example.instagram_clone_clean_architecture.R.string.network_error_message))
-        }
     }
 
     private lateinit var binding: FragmentLoginBinding

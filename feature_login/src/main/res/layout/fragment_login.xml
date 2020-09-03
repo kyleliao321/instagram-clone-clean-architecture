@@ -3,6 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login.LoginViewModel" />
@@ -10,8 +12,58 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingHorizontal="50dp">
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/login_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_constraintTop_toTopOf="parent">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/login_app_bar_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:text="Login" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/user_login_running_animation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{viewModel.stateLiveData.loginRunning ? View.VISIBLE : View.GONE}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:SpinKit_Color="?attr/colorPrimary"
+            style="@style/SpinKitView.Large.Circle"/>
+
+        <TextView
+            android:id="@+id/network_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.errorMessage}"
+            android:gravity="center"
+            android:padding="10dp"
+            android:background="?attr/colorError"
+            android:textColor="?attr/colorOnError"
+            android:visibility="@{viewModel.errorMessage == null ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/login_app_bar" />
+
 
         <TextView
             android:id="@+id/login_info_text"
@@ -19,6 +71,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_marginBottom="10dp"
+            android:layout_marginHorizontal="50dp"
             app:layout_constraintBottom_toTopOf="@id/login_context_top_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,6 +89,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="User Name"
+            android:layout_marginHorizontal="50dp"
             app:layout_constraintTop_toBottomOf="@id/login_context_top_guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,6 +97,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="@{!viewModel.isDataLoading()}"
                 android:text="@={viewModel.stateLiveData.userName}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -51,6 +106,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Password"
+            android:layout_marginHorizontal="50dp"
             app:layout_constraintTop_toBottomOf="@id/user_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -59,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
+                android:enabled="@{!viewModel.isDataLoading()}"
                 android:text="@={viewModel.stateLiveData.userPassword}"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -67,6 +124,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="login"
+            android:layout_marginHorizontal="50dp"
+            android:clickable="@{!viewModel.isDataLoading()}"
             android:onClick="@{() -> viewModel.userLogin(viewModel.stateLiveData.userName, viewModel.stateLiveData.userPassword)}"
             app:layout_constraintTop_toBottomOf="@id/user_password"
             app:layout_constraintEnd_toEndOf="parent"
@@ -77,8 +136,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:layout_marginHorizontal="50dp"
             android:text="Don't have account yet?"
             android:textAllCaps="false"
+            android:clickable="@{!viewModel.isDataLoading()}"
             android:onClick="@{() -> viewModel.onNavigateToRegisterFragment()}"
             app:layout_constraintTop_toBottomOf="@id/login_button"
             app:layout_constraintStart_toStartOf="parent"

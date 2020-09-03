@@ -21,12 +21,6 @@ class ProfileMainFragment: InjectionFragment() {
 
     private lateinit var binding: FragmentProfileMainBinding
 
-    private val observer = Observer<ProfileMainViewModel.ViewState> {
-        if (it.isNetworkError) {
-            showSnackBar(resources.getString(R.string.network_error_message))
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,8 +39,6 @@ class ProfileMainFragment: InjectionFragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setSupportActionBar(binding.mainProfileAppBar)
 
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
-
         viewModel.loadData()
     }
 
@@ -56,10 +48,5 @@ class ProfileMainFragment: InjectionFragment() {
                 UserPostGridViewAdapter.OnClickListener {
                     viewModel.onNavigateToPostDetail(it)
                 })
-    }
-
-    private fun showSnackBar(message: String) {
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-            .show()
     }
 }

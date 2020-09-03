@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -27,6 +28,17 @@ class ProfileMainViewModel(
 ): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(
     ViewState()
 ) {
+
+    val isDataLoading = Transformations.map(stateLiveData) {
+        return@map it.isLoginFollowingListLoading || it.isLoginUserLoading || it.isPostLoading || it.isProfileLoading
+    }
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection Fail"
+        }
+        return@map null
+    }
 
     fun logout() = viewModelScope.launch(defaultDispatcher) {
         logoutUseCase(Unit)
