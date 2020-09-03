@@ -13,7 +13,7 @@ import org.kodein.di.*
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {
 
-    bind<AppRepository>() with singleton { AppRepositoryImpl(instance(), instance(), instance()) }
+    bind<AppRepository>() with singleton { AppRepositoryImpl(instance()) }
 
     bind<RemoteDataSource>() with singleton { MockRemoteDataSourceImpl() }
 

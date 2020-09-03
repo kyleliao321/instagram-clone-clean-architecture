@@ -1,6 +1,8 @@
 package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
 import android.net.Uri
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
@@ -23,6 +25,10 @@ class MainViewModel(
 ) : BaseViewModel<MainViewModel.ViewState, MainViewModel.Action>(
     ViewState()
 ) {
+
+    val isLogin: LiveData<Boolean> = Transformations.map(stateLiveData) {
+        it.localUserId != null
+    }
 
     fun onNavigateToProfile() {
         if (state.localUserId == null) {

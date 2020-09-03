@@ -10,8 +10,6 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
 class AppRepositoryImpl(
-    private val localDataSource: LocalDataSource,
-    private val remoteDataSource: RemoteDataSource,
     private val cacheDataSource: CacheDataSource
 ) : AppRepository {
 
