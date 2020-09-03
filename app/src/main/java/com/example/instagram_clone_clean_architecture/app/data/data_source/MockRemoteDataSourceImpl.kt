@@ -28,8 +28,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     )
 
     private val userProfileList = mutableListOf(
-        UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
-        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"),
+        UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"),
+        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"),
         UserDomainModel(id = 3, name = "John", userName = "john", postNum = 0, followingNum = 0, followerNum = 0)
     )
 
@@ -39,20 +39,20 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     )
 
     private val userPostList = mutableListOf(
-        PostDomainModel(id = 1, belongUserId = 1, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
-            imageSrc = "https://is4-ssl.mzstatic.com/image/thumb/Purple123/v4/9a/c1/5d/9ac15dd5-0614-52b5-6fe8-19df1b6dfad6/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png"
+        PostDomainModel(id = 1, belongUserId = 1, date = Date(), location = null, description = "village",
+            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
         ),
-        PostDomainModel(id = 2, belongUserId = 1, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
-            imageSrc = "https://is4-ssl.mzstatic.com/image/thumb/Purple123/v4/9a/c1/5d/9ac15dd5-0614-52b5-6fe8-19df1b6dfad6/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.png"
+        PostDomainModel(id = 2, belongUserId = 1, date = Date(), location = null, description = "village",
+            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
         ),
-        PostDomainModel(id = 3, belongUserId = 1, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
-            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        PostDomainModel(id = 3, belongUserId = 1, date = Date(), location = null, description = "village",
+            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
         ),
-        PostDomainModel(id = 4, belongUserId = 2, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
-            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        PostDomainModel(id = 4, belongUserId = 2, date = Date(), location = null, description = "village",
+            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
         ),
-        PostDomainModel(id = 5, belongUserId = 2, date = Date(), location = null, description = "Moooooooooooooooooooooooooooo",
-            imageSrc = "https://images.unsplash.com/photo-1486728297118-82a07bc48a28?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80"
+        PostDomainModel(id = 5, belongUserId = 2, date = Date(), location = null, description = "village",
+            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
         )
     )
 
