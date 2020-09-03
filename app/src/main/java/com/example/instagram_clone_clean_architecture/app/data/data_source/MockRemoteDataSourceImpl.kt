@@ -11,8 +11,11 @@ import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import java.util.*
+import kotlin.random.Random
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
+
+    private val randomSeed = 100
 
     private var tmpIdCount = 5
 
@@ -71,6 +74,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         userName: String,
         password: String
     ): Either<UserDomainModel, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         for (userProfile in userProfileList) {
             if (userProfile.userName == userName) {
                 for (loginData in userLoginDataList) {
@@ -88,6 +96,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         userName: String,
         password: String
     ): Either<UserDomainModel, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         // check if the user name already exist
         for (userProfile in userProfileList) {
             if (userProfile.userName == userName) {
@@ -108,6 +121,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     override suspend fun getUserProfileById(userId: Int): Either<UserDomainModel?, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         delay(1000)
 
         for (userProfile in userProfileList) {
@@ -122,6 +140,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getUserProfileListByUserName(userName: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         val result = userProfileList.filter { userProfile ->
             userProfile.userName.contains(userName)
         }
@@ -131,6 +153,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun getFollowingUsersById(userId: Int): Either<List<UserDomainModel>, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         val result = mutableListOf<UserDomainModel>()
 
         userRelationList
@@ -148,6 +175,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun getFollowerUsersById(userId: Int): Either<List<UserDomainModel>, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         val result = mutableListOf<UserDomainModel>()
 
         userRelationList
@@ -165,6 +197,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun getPostByPostId(postId: Int): Either<PostDomainModel?, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         for (post in userPostList) {
             if (post.id == postId) {
                 return Either.Success(post)
@@ -184,6 +221,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getLikedUsersByPostId(postId: Int): Either<List<UserDomainModel>, Failure> {
         var result = mutableListOf<UserDomainModel>()
 
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         userLikedList
             .filter { it.second == postId }
             .forEach { pair ->
@@ -199,6 +240,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDataModel): Either<UserDomainModel, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
 
         val id = userProfile.id
 
@@ -232,6 +277,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun addUserRelation(followerId: Int, followingId: Int): Either<Unit, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         for (relation in userRelationList) {
             if (relation.first == followerId && relation.second == followingId) {
                 throw IllegalArgumentException("Cannot add relationship that is already exist")
@@ -254,6 +304,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun removeUserRelation(followerId: Int, followingId: Int): Either<Unit, Failure> {
         delay(1000)
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         var targetIndex = -1
         for ((index, relation) in userRelationList.withIndex()) {
             if (relation.first == followerId && relation.second == followingId) {
@@ -280,6 +335,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     override suspend fun addUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         for (liked in userLikedList) {
             if (liked.first == userId && liked.second == postId) {
                 throw IllegalArgumentException("Cannot add relationship that is already exist")
@@ -291,6 +351,11 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     override suspend fun removeUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         var targetIndex = -1
         for ((index, liked) in userLikedList.withIndex()) {
             if (liked.first == userId && liked.second == postId) {
@@ -307,9 +372,17 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     override suspend fun uploadPost(post: PostUploadDataModel): Either<PostDomainModel, Failure> {
+
+        if (randomBoolean()) {
+            return Either.Failure(Failure.NetworkConnection)
+        }
+
         val mockNewPost = userPostList[0].copy(id = ++tmpPostCount, belongUserId = post.belongUser)
         userPostList.add(mockNewPost)
         return Either.Success(mockNewPost)
     }
+
+    private fun randomBoolean(): Boolean =
+        Random(randomSeed).nextBoolean() && Random(randomSeed).nextBoolean() // 25% chance
 
 }
