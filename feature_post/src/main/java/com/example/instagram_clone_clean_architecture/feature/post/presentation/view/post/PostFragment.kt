@@ -14,10 +14,6 @@ class PostFragment: InjectionFragment() {
 
     private val viewModel: PostViewModel by instance()
 
-    private val observer = Observer<PostViewModel.ViewState>() {
-        Timber.d(it.toString())
-    }
-
     private lateinit var binding: FragmentPostBinding
 
     override fun onCreateView(
@@ -31,11 +27,6 @@ class PostFragment: InjectionFragment() {
         binding.viewModel = viewModel
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
     }
 
     override fun onStart() {

@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.post.presentation
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeaturePostNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -29,6 +30,18 @@ class PostViewModel(
     private val getBitmapUseCase: GetBitmapUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<PostViewModel.ViewState, PostViewModel.Action>(ViewState()) {
+
+    val isDataLoading = Transformations.map(stateLiveData) {
+        it.isLoginUserLoading || it.isUserSelectedImageLoading
+    }
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection failed"
+        }
+
+        return@map null
+    }
 
     fun promptToTakePhotoByCamera() = viewModelScope.launch(defaultDispatcher) {
         intentService.openCamera()
@@ -136,7 +149,9 @@ class PostViewModel(
             isBitmapDecoding = true
         )
         is Action.StartUploading -> state.copy(
-            isUploading = true
+            isUploading = true,
+            isNetworkError = false,
+            isServerError = false
         )
         is Action.FinishUploading -> state.copy(
             isUploading = false

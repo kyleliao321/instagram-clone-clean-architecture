@@ -10,8 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp">
+        android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/post_app_bar"
@@ -48,6 +47,17 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@{viewModel.errorMessage}"
+            android:background="?attr/colorError"
+            android:textColor="?attr/colorOnError"
+            android:translationZ="10dp"
+            app:visibleCondition="@{viewModel.errorMessage != null}"
+            app:layout_constraintTop_toBottomOf="@id/post_app_bar" />
+
         <ImageButton
             android:id="@+id/post_image_placeholder"
             android:layout_width="0dp"
@@ -76,6 +86,7 @@
             android:id="@+id/post_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             app:visibleCondition="@{viewModel.stateLiveData.bitmap != null}"
             app:layout_constraintTop_toBottomOf="@id/post_image"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,6 +107,7 @@
             android:id="@+id/post_location"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
             app:visibleCondition="@{viewModel.stateLiveData.bitmap != null}"
             app:layout_constraintTop_toBottomOf="@id/post_description"
             app:layout_constraintStart_toStartOf="parent"
