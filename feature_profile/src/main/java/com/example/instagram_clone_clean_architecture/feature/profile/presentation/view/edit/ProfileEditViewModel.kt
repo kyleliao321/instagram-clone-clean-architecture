@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.presentat
 
 import android.graphics.Bitmap
 import android.net.Uri
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
@@ -33,6 +34,18 @@ class ProfileEditViewModel(
 ) : BaseViewModel<ProfileEditViewModel.ViewState, ProfileEditViewModel.Action>(
     ViewState()
 ) {
+
+    val isDataLoading = Transformations.map(stateLiveData) {
+        it.isCachedImageLoading || it.isUserProfileLoading
+    }
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection failed"
+        }
+
+        return@map null
+    }
 
     fun promptToTakePhotoFromGallery() {
         intentService.openPhotoGallery()
@@ -127,6 +140,7 @@ class ProfileEditViewModel(
 
 
     override fun onLoadData() {
+        sendAction(Action.Reload)
         loadUserProfile()
         loadCachedUserSelectedImage()
     }
@@ -156,6 +170,7 @@ class ProfileEditViewModel(
             originalUserProfile = action.userProfile,
             bindingUserProfile = action.userProfile.copy()
         )
+        is Action.Reload -> ViewState()
     }
 
     data class ViewState(
@@ -177,5 +192,6 @@ class ProfileEditViewModel(
         object StartUpdatingUserProfile : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
+        object Reload: Action()
     }
 }

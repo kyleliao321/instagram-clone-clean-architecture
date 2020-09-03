@@ -16,10 +16,6 @@ class ProfileEditFragment: InjectionFragment() {
 
     private lateinit var binding: FragmentProfileEditBinding
 
-    private val observer = Observer<ProfileEditViewModel.ViewState> {
-        Timber.d(it.toString())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,11 +27,6 @@ class ProfileEditFragment: InjectionFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
     }
 
     override fun onStart() {

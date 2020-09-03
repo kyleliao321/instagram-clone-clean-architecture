@@ -10,199 +10,209 @@
             type="com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/edit_profile_app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_constraintTop_toTopOf="parent">
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/edit_profile_app_bar_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_constraintStart_toStartOf="@id/edit_profile_app_bar_content"
-                    app:layout_constraintEnd_toEndOf="@id/edit_profile_app_bar_content"
-                    app:layout_constraintTop_toTopOf="@id/edit_profile_app_bar_content"
-                    app:layout_constraintBottom_toBottomOf="@id/edit_profile_app_bar_content"
-                    android:text="Edit Profile" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save"
-                    app:layout_constraintTop_toTopOf="@+id/edit_profile_app_bar_content"
-                    app:layout_constraintBottom_toBottomOf="@+id/edit_profile_app_bar_content"
-                    app:layout_constraintEnd_toEndOf="@+id/edit_profile_app_bar_content"
-                    android:onClick="@{() -> viewModel.onUpdateUserProfile()}"
-                    android:enabled="@{!viewModel.stateLiveData.userProfileUpdating}"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/user_profile_updating_animation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:visibleCondition="@{viewModel.stateLiveData.userProfileUpdating}"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:SpinKit_Color="?attr/colorPrimary"
-            style="@style/SpinKitView.Large.Circle"/>
-
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:visibleCondition="@{viewModel.stateLiveData.userProfileLoading || viewModel.stateLiveData.cachedImageLoading}" >
-            <include
-                layout="@layout/fragment_profile_edit_shimmer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </com.facebook.shimmer.ShimmerFrameLayout>
+        android:layout_height="match_parent"
+        app:onRefreshListener="@{() -> viewModel.loadData()}"
+        app:refreshing="@{viewModel.isDataLoading()}" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:visibleCondition="@{(!viewModel.stateLiveData.userProfileLoading &amp; !viewModel.stateLiveData.cachedImageLoading)}">
+            android:layout_height="match_parent">
 
-            <ImageView
-                android:id="@+id/user_profile_image"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_margin="@dimen/user_edit_image_margin"
-                android:onClick="@{() -> viewModel.promptToTakePhotoFromGallery()}"
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/edit_profile_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/edit_profile_app_bar_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        app:layout_constraintStart_toStartOf="@id/edit_profile_app_bar_content"
+                        app:layout_constraintEnd_toEndOf="@id/edit_profile_app_bar_content"
+                        app:layout_constraintTop_toTopOf="@id/edit_profile_app_bar_content"
+                        app:layout_constraintBottom_toBottomOf="@id/edit_profile_app_bar_content"
+                        android:text="Edit Profile" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Save"
+                        app:layout_constraintTop_toTopOf="@+id/edit_profile_app_bar_content"
+                        app:layout_constraintBottom_toBottomOf="@+id/edit_profile_app_bar_content"
+                        app:layout_constraintEnd_toEndOf="@+id/edit_profile_app_bar_content"
+                        android:onClick="@{() -> viewModel.onUpdateUserProfile()}"
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/network_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{viewModel.errorMessage}"
+                android:gravity="center"
+                android:padding="10dp"
+                android:background="?attr/colorError"
+                android:textColor="?attr/colorOnError"
+                android:translationZ="10dp"
+                app:visibleCondition="@{viewModel.errorMessage != null}"
+                app:layout_constraintTop_toBottomOf="@id/edit_profile_app_bar" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/user_profile_updating_animation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:visibleCondition="@{viewModel.stateLiveData.userProfileUpdating}"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/user_image_name_divider"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:oldUserImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}"
-                app:newUserImage="@{viewModel.stateLiveData.cacheImage}"/>
+                app:SpinKit_Color="?attr/colorPrimary"
+                style="@style/SpinKitView.Large.Circle"/>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/user_image_name_divider"
+            <com.facebook.shimmer.ShimmerFrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".3" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/user_profile_name_edit_text_container"
-                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
-                android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
-                app:layout_constraintTop_toBottomOf="@+id/user_image_name_divider"
-                app:layout_constraintBottom_toTopOf="@+id/user_name_name_divider"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:visibleCondition="@{viewModel.stateLiveData.userProfileLoading || viewModel.stateLiveData.cachedImageLoading}" >
+                <include
+                    layout="@layout/fragment_profile_edit_shimmer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-                <com.google.android.material.textfield.TextInputEditText
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:visibleCondition="@{!(viewModel.isDataLoading || viewModel.stateLiveData.userProfileUpdating)}">
+
+                <ImageView
+                    android:id="@+id/user_profile_image"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/user_edit_image_margin"
+                    android:onClick="@{() -> viewModel.promptToTakePhotoFromGallery()}"
+                    android:clickable="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/user_image_name_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:oldUserImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}"
+                    app:newUserImage="@{viewModel.stateLiveData.cacheImage}"/>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/user_image_name_divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.stateLiveData.bindingUserProfile.name}"
-                    android:enabled="@{!viewModel.stateLiveData.userProfileUpdating}"
-                    />
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".3" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/user_profile_name_edit_text_container"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
+                    android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/user_image_name_divider"
+                    app:layout_constraintBottom_toTopOf="@+id/user_name_name_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:hint="Name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/user_name_name_divider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".45" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.stateLiveData.bindingUserProfile.name}"
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
+                        />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/user_profile_user_name"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
-                android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
-                app:layout_constraintTop_toBottomOf="@+id/user_name_name_divider"
-                app:layout_constraintBottom_toTopOf="@+id/name_description_divider"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:hint="User Name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/user_name_name_divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.stateLiveData.bindingUserProfile.userName}"
-                    android:enabled="@{!viewModel.stateLiveData.userProfileUpdating}"
-                    />
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".45" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/user_profile_user_name"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
+                    android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/user_name_name_divider"
+                    app:layout_constraintBottom_toTopOf="@+id/name_description_divider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:hint="User Name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/name_description_divider"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".6" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.stateLiveData.bindingUserProfile.userName}"
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
+                        />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/user_profile_description"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
-                android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
-                app:layout_constraintTop_toBottomOf="@+id/name_description_divider"
-                app:layout_constraintBottom_toTopOf="@+id/description_end_guideline"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:hint="Description"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/name_description_divider"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@={viewModel.stateLiveData.bindingUserProfile.description}"
-                    android:enabled="@{!viewModel.stateLiveData.userProfileUpdating}"
-                    />
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".6" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/user_profile_description"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginVertical="@dimen/user_edit_element_vertical_margin"
+                    android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"
+                    app:layout_constraintTop_toBottomOf="@+id/name_description_divider"
+                    app:layout_constraintBottom_toTopOf="@+id/description_end_guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:hint="Description"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/description_end_guideline"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent=".8" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@={viewModel.stateLiveData.bindingUserProfile.description}"
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
+                        />
 
-<!--            <Button-->
-<!--                android:id="@+id/save_button"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginHorizontal="@dimen/user_edit_element_horizontal_margin"-->
-<!--                android:text="Save"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/description_end_guideline"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                android:onClick="@{() -> viewModel.onUpdateUserProfile()}"-->
-<!--                android:enabled="@{!viewModel.stateLiveData.userProfileUpdating}"-->
-<!--                style="@style/Widget.MaterialComponents.Button.OutlinedButton" />-->
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/description_end_guideline"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintGuide_percent=".8" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </layout>
