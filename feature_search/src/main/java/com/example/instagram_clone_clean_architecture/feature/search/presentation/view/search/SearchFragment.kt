@@ -18,10 +18,6 @@ class SearchFragment : InjectionFragment() {
 
     private lateinit var binding: FragmentSearchBinding
 
-    private val observer = Observer<SearchViewModel.ViewState> {
-        Timber.d(it.toString())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -39,8 +35,6 @@ class SearchFragment : InjectionFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setSupportActionBar(binding.searchFragmentAppBar)
-
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
     }
 
     private fun setupRecyclerViewAdapter() {
