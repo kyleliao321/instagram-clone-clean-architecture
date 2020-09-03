@@ -18,10 +18,6 @@ class ProfileFollowingFragment: InjectionFragment() {
 
     private lateinit var binding: FragmentProfileFollowingBinding
 
-    private val observer = Observer<ProfileFollowingViewModel.ViewState> {
-        Timber.d(it.toString())
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,8 +36,6 @@ class ProfileFollowingFragment: InjectionFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as MainActivity).setSupportActionBar(binding.followingProfileAppBar)
-
-        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
 
         viewModel.loadData()
     }

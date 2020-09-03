@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following
 
 import android.view.View
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
@@ -27,6 +28,18 @@ class ProfileFollowingViewModel(
     ViewState()
 ) {
 
+    val isDataLoading = Transformations.map(stateLiveData) {
+        it.isFollowingListLoading || it.isLoginUserFollowingLoading || it.isLoginUserLoading
+    }
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection failed"
+        }
+
+        return@map null
+    }
+
     fun onNavigateToUserProfile(userProfile: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
         val navDir =
             ProfileFollowingFragmentDirections.actionProfileFollowingFragmentToProfileMainFragment(
@@ -43,7 +56,6 @@ class ProfileFollowingViewModel(
         addUserRelationUseCase(params) {
             it.fold(
                 onSucceed = {
-                    sendAction(Action.ReloadData)
                     loadData()
                 },
                 onFail = ::onFailure
@@ -57,7 +69,6 @@ class ProfileFollowingViewModel(
         removeUserRelationUseCase(params) {
             it.fold(
                 onSucceed = {
-                    sendAction(Action.ReloadData)
                     loadData()
                 },
                 onFail = ::onFailure
@@ -131,6 +142,7 @@ class ProfileFollowingViewModel(
     }
 
     override fun onLoadData() {
+        sendAction(Action.ReloadData)
         loadFollowingList()
         loadLoginUserData()
     }
