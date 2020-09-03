@@ -23,8 +23,14 @@ internal class ProfileRepositoryImpl(
         return cacheDataSource.getLoginUser()
     }
 
-    override suspend fun cleanupLocalLoginUser(): Either<Unit, Failure> =
+    override suspend fun cleanupCachedLoginUserData(): Either<Unit, Failure> =
         cacheDataSource.cacheLoginUserProfile(null)
+
+    override suspend fun cleanupLocalLoginUserName(): Either<Unit, Failure> =
+        localDataSource.updateLocalLoginUserName(null)
+
+    override suspend fun cleanupLocalLoginUserPassword(): Either<Unit, Failure> =
+        localDataSource.updateLocalLoginUserPassword(null)
 
     override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
         return remoteDataSource.getUserProfileById(id)

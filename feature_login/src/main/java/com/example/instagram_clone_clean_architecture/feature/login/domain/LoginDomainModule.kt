@@ -16,5 +16,4 @@ val domainModule = DI.Module("${MODULE_NAME}DomainModule") {
     bind() from singleton { UserRegisterUseCase(instance()) }
 
     bind() from singleton { GetLocalLoginUserDataUseCase(instance()) }
-
 }

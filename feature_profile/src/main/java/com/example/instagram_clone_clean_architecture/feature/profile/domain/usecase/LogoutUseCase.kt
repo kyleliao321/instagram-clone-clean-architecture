@@ -12,7 +12,13 @@ class LogoutUseCase(
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<Unit, Unit>(defaultDispatcher) {
 
-    override suspend fun run(params: Unit): Either<Unit, Failure> =
-        profileRepository.cleanupLocalLoginUser()
+    override suspend fun run(params: Unit): Either<Unit, Failure> {
+        // clean-up cached login user and local login user data
+        profileRepository.cleanupCachedLoginUserData()
+        profileRepository.cleanupLocalLoginUserName()
+        profileRepository.cleanupLocalLoginUserPassword()
+
+        return Either.Success(Unit)
+    }
 
 }

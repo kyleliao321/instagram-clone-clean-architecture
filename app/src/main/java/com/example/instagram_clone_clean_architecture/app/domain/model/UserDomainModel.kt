@@ -29,7 +29,7 @@ data class UserDomainModel(
             return Type.SAME
         }
 
-        if (userProfile == this) {
+        if (userProfile.id == this.id) {
             return Type.SAME
         }
 
