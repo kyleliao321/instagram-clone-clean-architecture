@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/search_fragment_app_bar_container"
             android:layout_width="match_parent"
@@ -57,6 +56,19 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/network_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{viewModel.errorMessage}"
+            android:gravity="center"
+            android:padding="10dp"
+            android:background="?attr/colorError"
+            android:textColor="?attr/colorOnError"
+            android:translationZ="10dp"
+            app:visibleCondition="@{viewModel.errorMessage != null}"
+            app:layout_constraintTop_toBottomOf="@id/search_fragment_app_bar_container" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/search_result_shimmer_container"

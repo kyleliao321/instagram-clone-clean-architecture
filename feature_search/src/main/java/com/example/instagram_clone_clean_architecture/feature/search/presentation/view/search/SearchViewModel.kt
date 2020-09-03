@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.search.presentation.view.search
 
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -18,6 +19,14 @@ class SearchViewModel(
     private val getUserProfileListUseCase: GetUserProfileListUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<SearchViewModel.ViewState, SearchViewModel.Action>(SearchViewModel.ViewState()) {
+
+    val errorMessage = Transformations.map(stateLiveData) {
+        if (it.isNetworkError) {
+            return@map "Network Connection failed"
+        }
+
+        return@map null
+    }
 
     fun onNavigateToProfileFeature(userId: Int) {
         val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(userId)
@@ -57,7 +66,9 @@ class SearchViewModel(
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.UserProfileListLoaded -> state.copy(
             isUserProfileListLoading = false,
-            userProfileList = action.userProfileList
+            userProfileList = action.userProfileList,
+            isNetworkError = false,
+            isServerError = false
         )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
