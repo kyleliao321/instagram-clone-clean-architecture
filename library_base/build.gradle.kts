@@ -68,6 +68,7 @@ dependencies {
     api(LibraryDependency.COIL)
     api(LibraryDependency.SPIN_KIT)
     api(LibraryDependency.MATERIAL_DESIGN)
+    api(LibraryDependency.SWIPE_REFRESH_LAYOUT)
 
     testImplementation(TestLibraryDependency.MOCKK)
     testImplementation(TestLibraryDependency.MOCKK_CO)

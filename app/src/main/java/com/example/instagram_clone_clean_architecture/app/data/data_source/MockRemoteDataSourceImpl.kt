@@ -383,6 +383,6 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     private fun randomBoolean(): Boolean =
-        (0..10).random() <= 5 // 50% chance
+        (0..10).random() <= 3 // 20% chance
 
 }

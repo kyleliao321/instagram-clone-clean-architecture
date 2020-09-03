@@ -5,10 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileMainBinding
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment
+import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
 import timber.log.Timber
 
@@ -19,7 +22,9 @@ class ProfileMainFragment: InjectionFragment() {
     private lateinit var binding: FragmentProfileMainBinding
 
     private val observer = Observer<ProfileMainViewModel.ViewState> {
-        Timber.d(it.toString())
+        if (it.isNetworkError) {
+            showSnackBar(resources.getString(R.string.network_error_message))
+        }
     }
 
     override fun onCreateView(
@@ -51,5 +56,10 @@ class ProfileMainFragment: InjectionFragment() {
                 UserPostGridViewAdapter.OnClickListener {
                     viewModel.onNavigateToPostDetail(it)
                 })
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 }

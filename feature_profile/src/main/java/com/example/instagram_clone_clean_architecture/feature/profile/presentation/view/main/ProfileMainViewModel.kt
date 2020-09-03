@@ -87,7 +87,6 @@ class ProfileMainViewModel(
         addUserRelationUseCase(param) {
             it.fold(
                 onSucceed = {
-                    sendAction(Action.ReloadData)
                     loadData()
                 },
                 onFail = ::onFailure
@@ -189,6 +188,7 @@ class ProfileMainViewModel(
     }
 
     override fun onLoadData() {
+        sendAction(Action.ReloadData)
         loadUserPost()
         loadUserProfile()
         loadLoginUserData()
