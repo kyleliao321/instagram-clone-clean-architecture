@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.login.R
@@ -18,9 +19,12 @@ class LoginFragment : InjectionFragment() {
     private val viewModel: LoginViewModel by instance()
 
     private val observer = Observer<LoginViewModel.ViewState> {
-        Timber.d(it.toString())
         if (it.isLoginFail) {
-            onLoginFail()
+            showSnackBar(resources.getString(R.string.login_error_message))
+        }
+
+        if (it.isNetworkError) {
+            showSnackBar(resources.getString(com.example.instagram_clone_clean_architecture.R.string.network_error_message))
         }
     }
 
@@ -50,9 +54,9 @@ class LoginFragment : InjectionFragment() {
         viewModel.loadData()
     }
 
-    private fun onLoginFail() {
+    private fun showSnackBar(message: String) {
         Snackbar
-            .make(requireView(), resources.getString(R.string.login_error_message), Snackbar.LENGTH_SHORT)
+            .make(requireView(), message, Snackbar.LENGTH_SHORT)
             .show()
     }
 

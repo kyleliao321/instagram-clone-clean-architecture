@@ -81,5 +81,25 @@ class UserLoginUseCaseTest {
         result shouldBeEqualTo Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
     }
 
+    @Test
+    fun `should return failure when login failed network connection`() {
+        val mockProfile = mockk<UserDomainModel>()
+        val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
+        var result: Either<UserDomainModel, Failure>? = null
+
+        // given
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(mockParam) {
+                result = it
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
+    }
+
 
 }

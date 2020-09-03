@@ -125,6 +125,24 @@ class LoginViewModelTest {
     }
 
     @Test
+    fun `verify view state when login failed on network connection`() {
+        val mockUserName = "1"
+        val mockUserPassword = "2"
+
+        // given
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
+
+        // expect
+        verify { observer.onChanged(any()) } // init, start, finish, fail
+        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
+            isNetworkError = true
+        )
+    }
+
+    @Test
     fun `verify view state if local user data exist and login succeed`() {
         val mockUserName = "1"
         val mockUserPassword = "2"

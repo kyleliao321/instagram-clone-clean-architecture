@@ -18,10 +18,12 @@ class RegisterFragment : InjectionFragment() {
     private val viewModel: RegisterViewModel by instance()
 
     private val observer = Observer<RegisterViewModel.ViewState>() {
-        Timber.d(it.toString())
-
         if (it.isRegisterFail) {
-            onRegisterFail()
+            showSnackBar(resources.getString(R.string.register_error_message))
+        }
+
+        if (it.isNetworkError) {
+            showSnackBar(resources.getString(com.example.instagram_clone_clean_architecture.R.string.network_error_message))
         }
     }
 
@@ -46,9 +48,9 @@ class RegisterFragment : InjectionFragment() {
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
     }
 
-    private fun onRegisterFail() {
+    private fun showSnackBar(message: String) {
         Snackbar
-            .make(requireView(), resources.getString(R.string.register_error_message), Snackbar.LENGTH_SHORT)
+            .make(requireView(), message, Snackbar.LENGTH_SHORT)
             .show()
     }
 

@@ -14,19 +14,17 @@ class UserLoginUseCase(
 ) : UseCase<UserDomainModel, UserLoginUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
-        var loginUserProfile: UserDomainModel? = null
+        val result = loginRepository.userLogin(params.userName, params.password)
 
-        loginRepository.userLogin(params.userName, params.password).fold(
-            onSucceed = { loginUserProfile = it }
-        )
-
-        return if (loginUserProfile == null) {
-            Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
-        } else {
-            loginRepository.updateLocalLoginUserName(params.userName)
-            loginRepository.updateLocalLoginUserPassword(params.password)
-            loginRepository.cacheLoginUserProfile(loginUserProfile!!)
-            Either.Success(loginUserProfile!!)
+        return when (result) {
+            is Either.Failure -> result
+            is Either.Success -> {
+                val userProfile = result.a
+                loginRepository.updateLocalLoginUserName(params.userName)
+                loginRepository.updateLocalLoginUserPassword(params.password)
+                loginRepository.cacheLoginUserProfile(userProfile)
+                result
+            }
         }
     }
 

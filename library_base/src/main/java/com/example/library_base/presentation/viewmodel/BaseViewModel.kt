@@ -22,7 +22,9 @@ abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initi
         get() = _state
 
     protected var state by Delegates.observable(initialState) { _, old, new ->
-        _state.value = new
+        if (old != new) {
+            _state.value = new
+        }
     }
 
     fun loadData() {

@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login
 
+import android.view.View
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureLoginNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -69,13 +70,16 @@ class LoginViewModel(
     }
 
     override fun onLoadData() {
+        sendAction(Action.StartDataLoading)
         loadLocalUserData()
     }
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.StartLogin -> state.copy(
             isLoginRunning = true,
-            isLoginFail = false
+            isLoginFail = false,
+            isServerError = false,
+            isNetworkError = false
         )
         is Action.FinishLogin -> state.copy(
             isLoginRunning = false,
@@ -94,6 +98,7 @@ class LoginViewModel(
         is Action.LocalUserDataLoaded -> state.copy(
             isLocalUserDataLoading = false
         )
+        is Action.StartDataLoading -> ViewState()
     }
 
     data class ViewState(
@@ -113,6 +118,7 @@ class LoginViewModel(
         object FailOnServerError: Action()
         object FailOnLoginData: Action()
         object LocalUserDataLoaded: Action()
+        object StartDataLoading: Action()
     }
 
 }

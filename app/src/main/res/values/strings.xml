@@ -4,4 +4,6 @@
     <string name="title_feature_search">Search Feature</string>
     <string name="title_feature_login">Login Feature</string>
     <string name="title_feature_post">Post Feature</string>
+
+    <string name="network_error_message">Network Connection Failed</string>
 </resources>

@@ -62,7 +62,10 @@ class RegisterViewModel(
             registerUserProfile = action.userProfile
         )
         is Action.StartRegister -> state.copy(
-            isRegistering = true
+            isRegistering = true,
+            isNetworkError = false,
+            isServerError = false,
+            isRegisterFail = false
         )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
