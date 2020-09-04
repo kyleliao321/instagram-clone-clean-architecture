@@ -79,6 +79,7 @@ git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
 - Styling with [theme/style](https://developer.android.com/guide/topics/ui/look-and-feel/themes). 
 - [Material-Design-Components](https://material.io/components).
 - [Data-Binding](https://developer.android.com/topic/libraries/data-binding).
+- Using [LeakCanary](https://square.github.io/leakcanary/) for memory leak detection.
 
 ### Kotlin
 - Inline function with [reified](https://kotlinlang.org/docs/reference/inline-functions.html) type parameter.
@@ -123,7 +124,7 @@ To prevent from memory leak, I use [WeakReference](https://developer.android.com
 
 ## TODO
 - Replace MockRemoteDataSource with actual API that get/upload data to/from server.
-- Detect memory leak.
+- ~~Detect memory leak.~~
 - Encrypt user data in SharedPreference.
 
 ## Reference
