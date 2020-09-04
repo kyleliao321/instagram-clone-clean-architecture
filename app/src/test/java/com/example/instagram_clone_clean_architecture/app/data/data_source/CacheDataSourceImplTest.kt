@@ -3,12 +3,11 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,7 +18,7 @@ import org.junit.runners.JUnit4
 class CacheDataSourceImplTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     private lateinit var cacheDataSource: CacheDataSource
 

@@ -14,9 +14,9 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.usecas
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -36,7 +36,7 @@ import org.junit.runners.JUnit4
 class PostViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

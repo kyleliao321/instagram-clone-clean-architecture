@@ -33,3 +33,9 @@ subprojects {
 tasks.register("clean",Delete::class){
     delete(rootProject.buildDir)
 }
+buildscript {
+    val kotlin_version by extra("1.3.72")
+    dependencies {
+        "classpath"("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+    }
+}

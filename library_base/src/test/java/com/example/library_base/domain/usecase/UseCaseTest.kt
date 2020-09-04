@@ -1,15 +1,12 @@
 package com.example.library_base.domain.usecase
 
-import android.util.Log
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldBeIn
 import org.amshove.kluent.shouldBeInstanceOf
 import org.junit.Rule
 import org.junit.Test
@@ -20,7 +17,7 @@ import org.junit.runners.JUnit4
 class UseCaseTest {
 
     @get:Rule
-    var mainCoroutineRule = CoroutineTestRule()
+    var mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     private val testUseCase = TestUseCase(mainCoroutineRule.testDispatcher)
 

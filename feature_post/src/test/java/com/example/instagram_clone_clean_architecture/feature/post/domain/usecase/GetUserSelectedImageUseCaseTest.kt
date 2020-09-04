@@ -3,28 +3,26 @@ package com.example.instagram_clone_clean_architecture.feature.post.domain.useca
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.io.File
 
 @RunWith(JUnit4::class)
 class GetUserSelectedImageUseCaseTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @MockK(relaxed = true)
     internal lateinit var postRepository: PostRepository

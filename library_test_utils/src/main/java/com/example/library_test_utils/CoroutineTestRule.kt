@@ -1,4 +1,4 @@
-package com.example.library_base.domain.utility
+package com.example.library_test_utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

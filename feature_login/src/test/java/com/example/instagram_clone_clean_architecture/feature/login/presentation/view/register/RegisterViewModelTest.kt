@@ -5,11 +5,10 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserRegisterUseCase
-import com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login.LoginViewModel
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -19,7 +18,6 @@ import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +28,7 @@ import org.junit.runners.JUnit4
 class RegisterViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

@@ -5,24 +5,13 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCachedLoginUserUseCase
-import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
-import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.CoroutineTestRule
+import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
-import okhttp3.Cache
-import org.amshove.kluent.invoking
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldThrow
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -33,7 +22,7 @@ import org.junit.runners.JUnit4
 class MainViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

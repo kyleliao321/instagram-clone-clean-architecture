@@ -6,11 +6,10 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostFragmentArgs
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -23,7 +22,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import java.util.*
 
 @RunWith(JUnit4::class)
 class ProfilePostViewModelTest {
@@ -32,7 +30,7 @@ class ProfilePostViewModelTest {
     val rule = InstantTaskExecutorRule()
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @MockK(relaxed = true)
     internal lateinit var profilePostFragmentArgs: ProfilePostFragmentArgs

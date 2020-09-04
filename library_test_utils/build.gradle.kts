@@ -1,23 +1,21 @@
 plugins {
-    id(GradlePluginId.ANDROID_DYNAMIC_FEATURE)
+    id(GradlePluginId.ANDROID_LIBRARY)
     id(GradlePluginId.KOTLIN_ANDROID)
     id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS)
-    id(GradlePluginId.SAFE_ARGS)
-    id(GradlePluginId.KOTLIN_KAPT)
 }
 
 android {
     compileSdkVersion(AndroidConfig.COMPILE_SDK_VERSION)
+    buildToolsVersion(AndroidConfig.BUILD_TOOLS_VERSION)
 
     defaultConfig {
-        applicationId = AndroidConfig.ID
         minSdkVersion(AndroidConfig.MIN_SDK_VERSION)
         targetSdkVersion(AndroidConfig.TARGET_SDK_VERSION)
-        buildToolsVersion(AndroidConfig.BUILD_TOOLS_VERSION)
-
         versionCode = AndroidConfig.VERSION_CODE
         versionName = AndroidConfig.VERSION_NAME
+
         testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
+        consumerProguardFiles("consumer_rules.pro")
     }
 
     buildTypes {
@@ -32,7 +30,6 @@ android {
             isDebuggable = BuildTypeDebug.isDebuggable
         }
 
-
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
@@ -44,33 +41,20 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    dataBinding {
-        isEnabled = true
-    }
-
-    sourceSets {
-        getByName("main").res.srcDirs("src/main/res")
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 
     // Temporary solution for "kotlinx-coroutines-test" dependency conflict in library_base
     packagingOptions {
+        // May not be needed after updating to AGP 4.x - check
         exclude("META-INF/AL2.0")
         exclude("META-INF/LGPL2.1")
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
 }
 
 dependencies {
-    implementation(project(ModuleDependency.APP))
-    testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
-
-    testImplementation(TestLibraryDependency.JUNIT)
-    testImplementation(TestLibraryDependency.MOCKK)
-    testImplementation(TestLibraryDependency.MOCKK_CO)
-    testImplementation(TestLibraryDependency.KLUENT)
-    testImplementation(TestLibraryDependency.KOTLIN_CO_TEST)
-    testImplementation(TestLibraryDependency.ANDROID_ARCH_CORE_TEST)
+    implementation(TestLibraryDependency.JUNIT)
+    implementation(LibraryDependency.KOTLIN_REFLECTION)
+    implementation(TestLibraryDependency.KOTLIN_CO_TEST)
 }

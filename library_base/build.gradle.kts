@@ -21,7 +21,13 @@ android {
     buildTypes {
         getByName(BuildType.RELEASE) {
             isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
+            isDebuggable = BuildTypeRelease.isDebuggable
             proguardFiles("proguard-android.txt", "proguard-rules.pro")
+        }
+
+        getByName(BuildType.DEBUG) {
+            isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
+            isDebuggable = BuildTypeDebug.isDebuggable
         }
 
         compileOptions {
@@ -48,10 +54,7 @@ android {
 }
 
 dependencies {
-    implementation(TestLibraryDependency.JUNIT)
-    implementation(LibraryDependency.KOTLIN_REFLECTION)
-    implementation(TestLibraryDependency.KOTLIN_CO_TEST)
-
+    api(LibraryDependency.KOTLIN_REFLECTION)
     api(LibraryDependency.KOTLIN_STDLIB)
     api(LibraryDependency.CORE_KTX)
     api(LibraryDependency.APP_COMPAT)
@@ -70,6 +73,9 @@ dependencies {
     api(LibraryDependency.MATERIAL_DESIGN)
     api(LibraryDependency.SWIPE_REFRESH_LAYOUT)
 
+    debugApi(LibraryDependency.LEAK_CANARY)
+
+    testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
     testImplementation(TestLibraryDependency.MOCKK)
     testImplementation(TestLibraryDependency.MOCKK_CO)
     testImplementation(TestLibraryDependency.KLUENT)

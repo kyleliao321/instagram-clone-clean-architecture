@@ -9,6 +9,7 @@ object ModuleDependency {
     const val FEATURE_LOGIN = ":feature_login"
     const val FEATURE_POST = ":feature_post"
     const val LIBRARY_BASE = ":library_base"
+    const val LIBRARY_TEST_UTILS = ":library_test_utils"
 
     fun getAllModules() = ModuleDependency::class.memberProperties
         .filter { it.isConst } // only const values are the module names

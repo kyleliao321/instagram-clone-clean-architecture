@@ -23,12 +23,11 @@
 package com.example.library_base.presentation.activity
 
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import com.example.library_base.BuildConfig
 import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.DITrigger
-import org.kodein.di.android.BuildConfig
 import org.kodein.di.android.closestDI
 import org.kodein.di.android.retainedDI
 import org.kodein.di.diContext

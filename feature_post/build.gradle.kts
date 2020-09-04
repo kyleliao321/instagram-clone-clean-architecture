@@ -23,7 +23,13 @@ android {
     buildTypes {
         getByName(BuildType.RELEASE) {
             isMinifyEnabled = BuildTypeRelease.isMinifyEnabled
+            isDebuggable = BuildTypeRelease.isDebuggable
             proguardFiles("proguard-android.txt", "proguard-rules.pro")
+        }
+
+        getByName(BuildType.DEBUG) {
+            isMinifyEnabled = BuildTypeDebug.isMinifyEnabled
+            isDebuggable = BuildTypeDebug.isDebuggable
         }
 
         compileOptions {
@@ -58,6 +64,8 @@ android {
 
 dependencies {
     implementation(project(ModuleDependency.APP))
+    testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
+
     testImplementation(TestLibraryDependency.JUNIT)
     testImplementation(TestLibraryDependency.MOCKK)
     testImplementation(TestLibraryDependency.MOCKK_CO)

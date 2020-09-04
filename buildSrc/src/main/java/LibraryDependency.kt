@@ -12,6 +12,7 @@ object LibraryVersions {
     const val MATERIAL_DESIGN = "1.2.0"
     const val SPIN_KIT = "1.4.0"
     const val SWIPE_REFRESH_LAYOUT = "1.1.0"
+    const val LEAK_CANARY = "2.4"
 }
 
 object LibraryDependency {
@@ -34,4 +35,5 @@ object LibraryDependency {
     const val MATERIAL_DESIGN = "com.google.android.material:material:${LibraryVersions.MATERIAL_DESIGN}"
     const val SPIN_KIT = "com.github.ybq:Android-SpinKit:${LibraryVersions.SPIN_KIT}"
     const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:${LibraryVersions.SWIPE_REFRESH_LAYOUT}"
+    const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${LibraryVersions.LEAK_CANARY}"
 }

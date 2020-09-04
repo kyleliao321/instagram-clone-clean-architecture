@@ -7,9 +7,9 @@ import com.example.instagram_clone_clean_architecture.feature.login.domain.repos
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -19,7 +19,6 @@ import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -30,7 +29,7 @@ import org.junit.runners.JUnit4
 class LoginViewModelTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @get:Rule
     val rule = InstantTaskExecutorRule()

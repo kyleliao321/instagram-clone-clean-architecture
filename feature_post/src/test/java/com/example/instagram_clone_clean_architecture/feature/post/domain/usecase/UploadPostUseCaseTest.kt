@@ -4,9 +4,9 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.utility.CoroutineTestRule
+import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_base.domain.utility.runBlockingTest
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -23,7 +23,7 @@ import org.junit.runners.JUnit4
 class UploadPostUseCaseTest {
 
     @get:Rule
-    val mainCoroutineRule = CoroutineTestRule()
+    val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @MockK(relaxed = true)
     internal lateinit var postRepository: PostRepository
