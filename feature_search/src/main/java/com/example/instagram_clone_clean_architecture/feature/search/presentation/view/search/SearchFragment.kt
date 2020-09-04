@@ -16,28 +16,27 @@ class SearchFragment : InjectionFragment() {
 
     private val viewModel : SearchViewModel by instance()
 
-    private lateinit var binding: FragmentSearchBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        val binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        setupRecyclerViewAdapter()
+        setupRecyclerViewAdapter(binding)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.searchFragmentAppBar)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.searchFragmentAppBar)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
     }
 
-    private fun setupRecyclerViewAdapter() {
+    private fun setupRecyclerViewAdapter(binding: FragmentSearchBinding) {
         binding.searchResultContainer.adapter = SearchUserProfileListAdapter(
             SearchUserProfileListAdapter.OnClickListener {
                 viewModel.onNavigateToProfileFeature(it.id)

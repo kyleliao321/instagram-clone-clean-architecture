@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.login.R
 import com.example.instagram_clone_clean_architecture.feature.login.databinding.FragmentRegisterBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
@@ -27,17 +28,17 @@ class RegisterFragment : InjectionFragment() {
         }
     }
 
-    private lateinit var binding: FragmentRegisterBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        val binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+
+        (requireActivity() as MainActivity).setSupportActionBar(binding.registerAppBar)
 
         return binding.root
     }
@@ -46,6 +47,11 @@ class RegisterFragment : InjectionFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
     }
 
     private fun showSnackBar(message: String) {

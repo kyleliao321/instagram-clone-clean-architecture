@@ -16,30 +16,34 @@ class ProfileFollowerFragment: InjectionFragment() {
 
     private val viewModel: ProfileFollowerViewModel by instance()
 
-    private lateinit var binding: FragmentProfileFollowerBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileFollowerBinding.inflate(inflater, container, false)
+        val binding = FragmentProfileFollowerBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        setFollowerListAdapter()
+        setFollowerListAdapter(binding)
+
+        (requireActivity() as MainActivity).setSupportActionBar(binding.followerProfileAppBar)
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.followerProfileAppBar)
-
+    override fun onStart() {
+        super.onStart()
         viewModel.loadData()
     }
 
-    private fun setFollowerListAdapter() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
+    }
+
+    private fun setFollowerListAdapter(binding: FragmentProfileFollowerBinding) {
         binding.userFollowerListContainer.adapter = UserProfileListViewAdapter(
             itemOnClickListener = UserProfileListViewAdapter.OnClickListener {
                 viewModel.onNavigateToUserProfile(it.userProfile)

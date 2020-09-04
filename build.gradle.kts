@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id("io.gitlab.arturbosch.detekt")
+    id(GradlePluginId.DETEKT)
     id(GradlePluginId.KOTLIN_JVM) apply false
     id(GradlePluginId.KOTLIN_ANDROID) apply false
     id(GradlePluginId.KOTLIN_ANDROID_EXTENSIONS) apply false
@@ -22,7 +22,7 @@ subprojects {
     // detekt can auto-reference the required file while working on module-level gradle.build.kts
     // Without it, any plugins that apply in module-level cannot be resolved when written.
     // (i.e: android block)
-    apply(plugin = "io.gitlab.arturbosch.detekt")
+    apply(plugin = GradlePluginId.DETEKT)
 
     detekt {
         config = files("${project.rootDir}/detekt.yml")

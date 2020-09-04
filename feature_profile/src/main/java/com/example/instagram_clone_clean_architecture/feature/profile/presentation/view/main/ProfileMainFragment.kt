@@ -19,30 +19,32 @@ class ProfileMainFragment: InjectionFragment() {
 
     private val viewModel: ProfileMainViewModel by instance()
 
-    private lateinit var binding: FragmentProfileMainBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileMainBinding.inflate(inflater, container, false)
+        val binding = FragmentProfileMainBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        setupUserPostListAdapter()
+        setupUserPostListAdapter(binding)
+        (requireActivity() as MainActivity).setSupportActionBar(binding.mainProfileAppBar)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.mainProfileAppBar)
-
+    override fun onStart() {
+        super.onStart()
         viewModel.loadData()
     }
 
-    private fun setupUserPostListAdapter() {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
+    }
+
+    private fun setupUserPostListAdapter(binding: FragmentProfileMainBinding) {
         binding.userPostContainer.adapter =
             UserPostGridViewAdapter(
                 UserPostGridViewAdapter.OnClickListener {

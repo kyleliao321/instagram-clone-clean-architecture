@@ -24,18 +24,17 @@ class LoginFragment : InjectionFragment() {
         }
     }
 
-    private lateinit var binding: FragmentLoginBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(inflater, container, false)
+        val binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        (requireActivity() as MainActivity).setSupportActionBar(binding.loginAppBar)
         return binding.root
     }
 
@@ -48,6 +47,11 @@ class LoginFragment : InjectionFragment() {
     override fun onStart() {
         super.onStart()
         viewModel.loadData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
     }
 
     private fun showSnackBar(message: String) {

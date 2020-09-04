@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileEditBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
@@ -14,17 +15,17 @@ class ProfileEditFragment: InjectionFragment() {
 
     private val viewModel: ProfileEditViewModel by instance()
 
-    private lateinit var binding: FragmentProfileEditBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfileEditBinding.inflate(inflater, container, false)
+        val binding = FragmentProfileEditBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
+
+        (requireActivity() as MainActivity).setSupportActionBar(binding.editProfileAppBar)
 
         return binding.root
     }
@@ -32,5 +33,10 @@ class ProfileEditFragment: InjectionFragment() {
     override fun onStart() {
         super.onStart()
         viewModel.loadData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
     }
 }

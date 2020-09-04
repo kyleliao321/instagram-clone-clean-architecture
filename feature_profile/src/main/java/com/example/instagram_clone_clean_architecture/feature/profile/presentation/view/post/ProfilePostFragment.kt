@@ -17,25 +17,28 @@ class ProfilePostFragment: InjectionFragment() {
 
     private val viewModel: ProfilePostViewModel by instance()
 
-    private lateinit var binding: FragmentProfilePostBinding
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentProfilePostBinding.inflate(inflater, container, false)
+        val binding = FragmentProfilePostBinding.inflate(inflater, container, false)
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+
+        (requireActivity() as MainActivity).setSupportActionBar(binding.postProfileAppBar)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.postProfileAppBar)
-
+    override fun onStart() {
+        super.onStart()
         viewModel.loadData()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        (requireActivity() as MainActivity).setSupportActionBar(null)
     }
 }
