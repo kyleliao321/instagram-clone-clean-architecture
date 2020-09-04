@@ -15,7 +15,9 @@ import kotlin.random.Random
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
-    private val randomSeed = 100
+    private val networkFailProbability = 20
+
+    private val mockRemoteImageSrc = "https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/mock-remote-image.jpg"
 
     private var tmpIdCount = 5
 
@@ -28,8 +30,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     )
 
     private val userProfileList = mutableListOf(
-        UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"),
-        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"),
+        UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = mockRemoteImageSrc),
+        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = mockRemoteImageSrc),
         UserDomainModel(id = 3, name = "John", userName = "john", postNum = 0, followingNum = 0, followerNum = 0)
     )
 
@@ -40,19 +42,19 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private val userPostList = mutableListOf(
         PostDomainModel(id = 1, belongUserId = 1, date = Date(), location = null, description = "village",
-            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
+            imageSrc = mockRemoteImageSrc
         ),
         PostDomainModel(id = 2, belongUserId = 1, date = Date(), location = null, description = "village",
-            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
+            imageSrc = mockRemoteImageSrc
         ),
         PostDomainModel(id = 3, belongUserId = 1, date = Date(), location = null, description = "village",
-            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
+            imageSrc = mockRemoteImageSrc
         ),
         PostDomainModel(id = 4, belongUserId = 2, date = Date(), location = null, description = "village",
-            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
+            imageSrc = mockRemoteImageSrc
         ),
         PostDomainModel(id = 5, belongUserId = 2, date = Date(), location = null, description = "village",
-            imageSrc = "https://i.imgur.com/NB1dLWZ.jpg"
+            imageSrc = mockRemoteImageSrc
         )
     )
 
@@ -387,6 +389,6 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     }
 
     private fun randomBoolean(): Boolean =
-        (0..10).random() <= 3 // 20% chance
+        (0..10).random() < (networkFailProbability/10)
 
 }

@@ -9,6 +9,22 @@ test.
 
 While it takes longer to setup a project, after setting-up, the workflow is less-error-prone. Making the application much reliable and confident to develop.
 
+## Installation
+
+### Android Studio
+- File -> New -> Project from Version Control
+- Pass "https://github.com/kyleliao321/instagram-clone-clean-architecture.git" into URL block.
+
+### Git Bash Terminal
+```bash
+git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
+```
+
+### Usage
+> Currently, there's no actual server for the application. It use MockRemoteDataSource internally to mock the behavior of getting data from remote. 
+
+To mock how likely the network connection will fail when using application, go to `app/src/main/java/com/example/instagram_clone_clean_architecture/app/data/data_source` and open `MockRemoteDataSource`. Modify the value of `networkFailProbability`. By default, it's 20% chance to fail.
+
 ## Demo
 
 - Login process
