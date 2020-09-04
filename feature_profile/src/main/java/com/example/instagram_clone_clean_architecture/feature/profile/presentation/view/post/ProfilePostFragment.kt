@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfilePostBinding
@@ -27,8 +28,7 @@ class ProfilePostFragment: InjectionFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-
-        (requireActivity() as MainActivity).setSupportActionBar(binding.postProfileAppBar)
+        setSupportAppBar(binding.postProfileAppBar)
         return binding.root
     }
 
@@ -39,6 +39,10 @@ class ProfilePostFragment: InjectionFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (requireActivity() as MainActivity).setSupportActionBar(null)
+        setSupportAppBar(null)
+    }
+
+    private fun setSupportAppBar(appBar: Toolbar?) {
+        (requireActivity() as MainActivity).setSupportActionBar(appBar)
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileFollowerBinding
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
@@ -28,7 +29,7 @@ class ProfileFollowerFragment: InjectionFragment() {
 
         setFollowerListAdapter(binding)
 
-        (requireActivity() as MainActivity).setSupportActionBar(binding.followerProfileAppBar)
+        setSupportAppBar(binding.followerProfileAppBar)
 
         return binding.root
     }
@@ -40,7 +41,11 @@ class ProfileFollowerFragment: InjectionFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (requireActivity() as MainActivity).setSupportActionBar(null)
+        setSupportAppBar(null)
+    }
+
+    private fun setSupportAppBar(appBar: Toolbar?) {
+        (requireActivity() as MainActivity).setSupportActionBar(appBar)
     }
 
     private fun setFollowerListAdapter(binding: FragmentProfileFollowerBinding) {

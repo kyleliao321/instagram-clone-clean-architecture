@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.instagram_clone_clean_architecture.R
@@ -30,7 +31,7 @@ class ProfileMainFragment: InjectionFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         setupUserPostListAdapter(binding)
-        (requireActivity() as MainActivity).setSupportActionBar(binding.mainProfileAppBar)
+        setSupportAppBar(binding.mainProfileAppBar)
         return binding.root
     }
 
@@ -41,7 +42,11 @@ class ProfileMainFragment: InjectionFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (requireActivity() as MainActivity).setSupportActionBar(null)
+        setSupportAppBar(null)
+    }
+
+    private fun setSupportAppBar(appBar: Toolbar?) {
+        (requireActivity() as MainActivity).setSupportActionBar(appBar)
     }
 
     private fun setupUserPostListAdapter(binding: FragmentProfileMainBinding) {

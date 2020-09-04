@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.login.R
@@ -34,7 +35,7 @@ class LoginFragment : InjectionFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        (requireActivity() as MainActivity).setSupportActionBar(binding.loginAppBar)
+        setSupportAppBar(binding.loginAppBar)
         return binding.root
     }
 
@@ -51,7 +52,11 @@ class LoginFragment : InjectionFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (requireActivity() as MainActivity).setSupportActionBar(null)
+        setSupportAppBar(null)
+    }
+
+    private fun setSupportAppBar(appBar: Toolbar?) {
+        (requireActivity() as MainActivity).setSupportActionBar(appBar)
     }
 
     private fun showSnackBar(message: String) {
