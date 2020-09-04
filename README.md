@@ -12,18 +12,23 @@ While it takes longer to setup a project, after setting-up, the workflow is less
 ## Demo
 
 - Login process
+
 ![login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/login-flow.gif)
 
 - Remember login process
+
 ![remember login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/remember-login-flow.gif)
 
 - Search user and follow/unfollow process
+
 ![search GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/search-user-follow-flow.gif)
 
 - Check post and like process
+
 ![check post GID](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/check-post-and-like-flow.gif)
 
 - Add post process
+
 ![add post GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/add-post-flow.gif)
 
 ## What I learned
