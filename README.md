@@ -9,6 +9,20 @@ test.
 
 While it takes longer to setup a project, after setting-up, the workflow is less-error-prone. Making the application much reliable and confident to develop.
 
+## Demo
+
+- Login process
+![login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/login-flow.gif)
+
+- Remember login process
+![remember login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/remember-login-and-logout-flow.gif)
+
+- Search user and follow/unfollow process
+![login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/search-user-follow-action-flow.gif)
+
+- Add post process
+![login GIF](https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/add-post-flow.gif)
+
 ## What I learned
 
 > While it is not the first android project I developed, I still learn a lot and strengthen some of the best-practice concept with it.
@@ -64,7 +78,7 @@ One approach mention in [this article](https://medium.com/google-developer-exper
 try {
   navController.navigate(navDir)
 } catch (e: Exception) {
-  if (e is java.lang.IllegalArgumentException) {
+  if (e is java.lang.IllegalArgumentException {
       navController.navigate(navDir.actionId, navDir.arguments)
   } else {
       throw e
