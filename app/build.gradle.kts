@@ -66,8 +66,9 @@ android {
 
 dependencies {
     api(project(ModuleDependency.LIBRARY_BASE))
-    testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
+    implementation(LibraryDependency.SECURITY_CRYPTO)
 
+    testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
     testImplementation(TestLibraryDependency.JUNIT)
     testImplementation(TestLibraryDependency.MOCKK)
     testImplementation(TestLibraryDependency.MOCKK_CO)

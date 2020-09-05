@@ -13,6 +13,7 @@ object LibraryVersions {
     const val SPIN_KIT = "1.4.0"
     const val SWIPE_REFRESH_LAYOUT = "1.1.0"
     const val LEAK_CANARY = "2.4"
+    const val SECURITY_CRYPTO = "1.0.0-rc03"
 }
 
 object LibraryDependency {
@@ -36,4 +37,5 @@ object LibraryDependency {
     const val SPIN_KIT = "com.github.ybq:Android-SpinKit:${LibraryVersions.SPIN_KIT}"
     const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:${LibraryVersions.SWIPE_REFRESH_LAYOUT}"
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${LibraryVersions.LEAK_CANARY}"
+    const val SECURITY_CRYPTO = "androidx.security:security-crypto:${LibraryVersions.SECURITY_CRYPTO}"
 }
