@@ -1,7 +1,10 @@
 package com.example.instagram_clone_clean_architecture.app
 
 import android.app.Application
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import com.example.instagram_clone_clean_architecture.BuildConfig
+import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.di.FeatureManager
 import com.example.instagram_clone_clean_architecture.app.domain.di.FragmentArgsExternalSource
@@ -30,7 +33,8 @@ class InstagramCloneApplication: Application(), DIAware {
 
     override fun onCreate() {
         super.onCreate()
-        initLocalDataSource()
+        initContentResolver()
+        initEncryptedSharedPreference()
         initTimber()
 
         Timber.i("Application context is created!")
@@ -40,7 +44,27 @@ class InstagramCloneApplication: Application(), DIAware {
         Timber.plant(Timber.DebugTree())
     }
 
-    private fun initLocalDataSource() {
-        localDataSource.init(this)
+    private fun initContentResolver() {
+        val contentResolver = applicationContext.contentResolver
+
+        localDataSource.init(contentResolver)
+    }
+
+    private fun initEncryptedSharedPreference() {
+        val keyGenParameterSpec = MasterKeys.AES256_GCM_SPEC
+        val masterKeyAlias = MasterKeys.getOrCreate(keyGenParameterSpec)
+
+        val sharedPrefsKey = resources.getString(R.string.shared_preference_key)
+
+        val encryptedSharedPref = EncryptedSharedPreferences
+            .create(
+                sharedPrefsKey,
+                masterKeyAlias,
+                applicationContext,
+                EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+            )
+
+        localDataSource.init(encryptedSharedPref)
     }
 }

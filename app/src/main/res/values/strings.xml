@@ -6,4 +6,6 @@
     <string name="title_feature_post">Post Feature</string>
 
     <string name="network_error_message">Network Connection Failed</string>
+
+    <string name="shared_preference_key">com.example.instagram_clone_clean_architecture.shared_preference</string>
 </resources>

@@ -1,25 +1,26 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
+import android.content.ContentProvider
+import android.content.ContentResolver
 import android.content.Context
-import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.appcompat.app.AppCompatActivity
+import androidx.security.crypto.EncryptedSharedPreferences
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import timber.log.Timber
-import java.io.File
+import java.lang.ref.SoftReference
 import java.lang.ref.WeakReference
 
-class LocalDataSourceImpl : LocalDataSource {
+class LocalDataSourceImpl: LocalDataSource {
 
-    private lateinit var applicationContext: WeakReference<Context>
+    private lateinit var sharedPrefsRefer: SoftReference<SharedPreferences>
 
-    private val SHARE_PREFERENCE_KEY = "com.example.instagram_clone_clean_architecture.shared_preference"
+    private lateinit var contentResolverRefer: SoftReference<ContentResolver>
 
     private val LOCAL_LOGIN_USER_NAME_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_name"
 
@@ -27,16 +28,19 @@ class LocalDataSourceImpl : LocalDataSource {
 
     private val ERROR_STRING = ""
 
-    override fun init(context: Context) {
-        applicationContext = WeakReference(context)
+    override fun init(contentResolver: ContentResolver) {
+        contentResolverRefer = SoftReference(contentResolver)
+    }
+
+    override fun init(encryptedSharedPrefs: SharedPreferences) {
+        sharedPrefsRefer = SoftReference(encryptedSharedPrefs)
     }
 
     override suspend fun getLocalLoginUserName(): Either<String, Failure> {
-        val context = applicationContext.get()
-            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
 
-        val sharePrefs = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
-        val localLoginUserName = sharePrefs.getString(LOCAL_LOGIN_USER_NAME_KEY, ERROR_STRING)
+        val localLoginUserName = sharedPrefs.getString(LOCAL_LOGIN_USER_NAME_KEY, ERROR_STRING)
 
         return if (localLoginUserName == ERROR_STRING) {
             Either.Failure(Failure.LocalAccountNotFound)
@@ -46,11 +50,10 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun getLocalLoginUserPassword(): Either<String, Failure> {
-        val context = applicationContext.get()
-            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
 
-        val sharePrefs = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
-        val localLoginUserPassword = sharePrefs.getString(LOCAL_LOGIN_USER_PASSWORD_KEY, ERROR_STRING)
+        val localLoginUserPassword = sharedPrefs.getString(LOCAL_LOGIN_USER_PASSWORD_KEY, ERROR_STRING)
 
         return if (localLoginUserPassword == ERROR_STRING) {
             Either.Failure(Failure.LocalAccountNotFound)
@@ -60,11 +63,10 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun updateLocalLoginUserName(userName: String?): Either<Unit, Failure> {
-        val context = applicationContext.get()
-            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
 
-        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
-        sharePref.edit().apply {
+        sharedPrefs.edit().apply {
             putString(LOCAL_LOGIN_USER_NAME_KEY, userName ?: ERROR_STRING)
             commit()
         }
@@ -73,11 +75,10 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun updateLocalLoginUserPassword(password: String?): Either<Unit, Failure> {
-        val context = applicationContext.get()
-            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
 
-        val sharePref = context.getSharedPreferences(SHARE_PREFERENCE_KEY, Context.MODE_PRIVATE)
-        sharePref.edit().apply {
+        sharedPrefs.edit().apply {
             putString(LOCAL_LOGIN_USER_PASSWORD_KEY, password ?: ERROR_STRING)
             commit()
         }
@@ -86,13 +87,13 @@ class LocalDataSourceImpl : LocalDataSource {
     }
 
     override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> {
-        val context = applicationContext.get()
-            ?: throw IllegalStateException("$applicationContext cannot be resolved")
+        val contentResolver = contentResolverRefer.get()
+            ?: throw IllegalStateException("Cannot get ContentProvider object")
 
         val bitmap = if (Build.VERSION.SDK_INT < 28) {
-            MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+            MediaStore.Images.Media.getBitmap(contentResolver, uri)
         } else {
-            val source = ImageDecoder.createSource(context.contentResolver, uri)
+            val source = ImageDecoder.createSource(contentResolver, uri)
             ImageDecoder.decodeBitmap(source)
         }
 

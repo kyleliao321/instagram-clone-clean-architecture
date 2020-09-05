@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import android.app.Application
+import android.content.ContentResolver
 import android.content.SharedPreferences
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
@@ -24,7 +25,7 @@ class LocalDataSourceImplTest {
     val mainCoroutineRule = com.example.library_test_utils.CoroutineTestRule()
 
     @MockK(relaxed = true)
-    internal lateinit var application: Application
+    internal lateinit var contentResolver: ContentResolver
 
     @MockK(relaxed = true)
     internal lateinit var sharePref: SharedPreferences
@@ -39,7 +40,8 @@ class LocalDataSourceImplTest {
         MockKAnnotations.init(this)
 
         localDataSource = LocalDataSourceImpl()
-        localDataSource.init(application)
+        localDataSource.init(contentResolver)
+        localDataSource.init(sharePref)
     }
 
     @Test
@@ -47,7 +49,6 @@ class LocalDataSourceImplTest {
         var result: Either<String, Failure>? = null
 
         // given
-        every { application.getSharedPreferences(any(), any()) } returns sharePref
         every { sharePref.getInt(any(), any()) } returns -1
 
         // when
@@ -64,7 +65,6 @@ class LocalDataSourceImplTest {
         var result: Either<String, Failure>? = null
 
         // given
-        every { application.getSharedPreferences(any(), any()) } returns sharePref
         every { sharePref.getInt(any(), any()) } returns -1
 
         // when
@@ -82,7 +82,6 @@ class LocalDataSourceImplTest {
         val mockLocalUserName = "1"
 
         // given
-        every { application.getSharedPreferences(any(), any()) } returns sharePref
         every { sharePref.edit() } returns sharePrefEditor
         every { sharePrefEditor.putString(any(), any()) } returns sharePrefEditor
         every { sharePrefEditor.commit() } returns true
@@ -102,7 +101,6 @@ class LocalDataSourceImplTest {
         val mockLocalUserPassword = "1"
 
         // given
-        every { application.getSharedPreferences(any(), any()) } returns sharePref
         every { sharePref.edit() } returns sharePrefEditor
         every { sharePrefEditor.putString(any(), any()) } returns sharePrefEditor
         every { sharePrefEditor.commit() } returns true
