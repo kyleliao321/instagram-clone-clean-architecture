@@ -127,6 +127,7 @@ To prevent from memory leak, I use [WeakReference](https://developer.android.com
 - Replace MockRemoteDataSource with actual API that get/upload data to/from server.
 - ~~Detect memory leak.~~
 - ~~Encrypt user data in SharedPreference.~~
+- Fix Lint error.
 
 ## Reference
 - [Android-Showcase](https://github.com/igorwojda/android-showcase) by Igor Wojda
