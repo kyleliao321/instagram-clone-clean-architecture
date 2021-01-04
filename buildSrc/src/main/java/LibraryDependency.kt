@@ -14,6 +14,9 @@ object LibraryVersions {
     const val SWIPE_REFRESH_LAYOUT = "1.1.0"
     const val LEAK_CANARY = "2.4"
     const val SECURITY_CRYPTO = "1.0.0-rc03"
+    const val RETROFIT = "2.9.0"
+    const val OK_HTTP = "4.8.1"
+    const val GSON = "2.8.0"
 }
 
 object LibraryDependency {
@@ -38,4 +41,7 @@ object LibraryDependency {
     const val SWIPE_REFRESH_LAYOUT = "androidx.swiperefreshlayout:swiperefreshlayout:${LibraryVersions.SWIPE_REFRESH_LAYOUT}"
     const val LEAK_CANARY = "com.squareup.leakcanary:leakcanary-android:${LibraryVersions.LEAK_CANARY}"
     const val SECURITY_CRYPTO = "androidx.security:security-crypto:${LibraryVersions.SECURITY_CRYPTO}"
+    const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersions.RETROFIT}"
+    const val OK_HTTP = "com.squareup.okhttp3:okhttp:${LibraryVersions.OK_HTTP}"
+    const val GSON = "com.squareup.retrofit2:converter-gson:${LibraryVersions.GSON}"
 }

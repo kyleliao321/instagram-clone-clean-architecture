@@ -72,6 +72,9 @@ dependencies {
     api(LibraryDependency.SPIN_KIT)
     api(LibraryDependency.MATERIAL_DESIGN)
     api(LibraryDependency.SWIPE_REFRESH_LAYOUT)
+    api(LibraryDependency.RETROFIT)
+    api(LibraryDependency.OK_HTTP)
+    api(LibraryDependency.GSON)
 
     debugApi(LibraryDependency.LEAK_CANARY)
 
