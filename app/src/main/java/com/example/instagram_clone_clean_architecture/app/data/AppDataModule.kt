@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.data.data_source.Local
 import com.example.instagram_clone_clean_architecture.app.data.data_source.MockRemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.repository.AppRepositoryImpl
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
@@ -28,4 +29,6 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind() from singleton { instance<Retrofit>().create(AccountServices::class.java) }
 
     bind() from singleton { instance<Retrofit>().create(UserServices::class.java) }
+
+    bind() from singleton { instance<Retrofit>().create(PostServices::class.java) }
 }

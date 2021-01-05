@@ -1,13 +1,14 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import com.example.instagram_clone_clean_architecture.app.data.model.LoginCredentialDataModel
+import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileDataModel
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.GetUserProfileResponse
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.LoginResponse
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.SearchUserProfilesResponse
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.*
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
@@ -39,6 +40,9 @@ class RemoteDataSourceImplTest {
     @MockK(relaxed = true)
     internal lateinit var userServices: UserServices
 
+    @MockK(relaxed = true)
+    internal lateinit var postServices: PostServices
+
     private lateinit var remoteDataSourceImpl: RemoteDataSource
 
     private val mockUserId = "mockUserId"
@@ -57,6 +61,17 @@ class RemoteDataSourceImplTest {
         followerNum = 0
     )
 
+    private val mockPostId = "mockPostId"
+
+    private val mockPost = PostDataModel(
+        id = mockPostId,
+        description = "mockDes",
+        location = "mockLocation",
+        timestamp = "mockTimestamp",
+        imageSrc = "mockImageSrc",
+        postedUserId = mockUserId
+    )
+
     private val mockLoginCredential = LoginCredentialDataModel(
         jwt = "mockJwt",
         userId = mockUserId
@@ -66,7 +81,7 @@ class RemoteDataSourceImplTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices)
+        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices)
     }
 
     @Test
@@ -290,4 +305,95 @@ class RemoteDataSourceImplTest {
         // expect
         result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
+
+    @Test
+    fun `getPostByPostId should return correct result when postService getPost return HTTP_OK`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetPostResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetPostResponse>>(relaxed = true)
+
+        every { mockReqBody.post } returns mockPost
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { postServices.getPost(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getPostByPostId(mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(PostDomainModel.from(mockPost))
+    }
+
+    @Test
+    fun `getPostByPostId should return server error failure when postService getPost return other than HTTP_OK`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetPostResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetPostResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_NOT_FOUND
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { postServices.getPost(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getPostByPostId(mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `getPostListByUserId should return correct result when postServices getPosts return HTTP_OK`() {
+        var result: Either<List<PostDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetPostsResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetPostsResponse>>(relaxed = true)
+
+        every { mockReqBody.posts } returns listOf(mockPost)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { postServices.getPosts(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getPostListByUserId(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(listOf(mockPost).map { PostDomainModel.from(it) })
+    }
+
+    @Test
+    fun `getPostListByUserId should return server error failure when postServices getPosts return other than HTTP_OK`() {
+        var result: Either<List<PostDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetPostsResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetPostsResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { postServices.getPosts(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getPostListByUserId(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
 }

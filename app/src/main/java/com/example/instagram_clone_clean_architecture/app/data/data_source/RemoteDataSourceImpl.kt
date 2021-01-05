@@ -4,6 +4,7 @@ import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadD
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -14,7 +15,8 @@ import java.net.HttpURLConnection
 
 class RemoteDataSourceImpl(
     private val accountServices: AccountServices,
-    private val userServices: UserServices
+    private val userServices: UserServices,
+    private val postServices: PostServices
 ): RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
@@ -82,12 +84,28 @@ class RemoteDataSourceImpl(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPostByPostId(postId: String): Either<PostDomainModel?, Failure> {
-        TODO("Not yet implemented")
+    override suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure> {
+        val res = postServices.getPost(postId)
+        val status = res.code()
+        val data = res.body()?.post
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(PostDomainModel.from(data))
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getPostListByUserId(userId: String): Either<List<PostDomainModel>, Failure> {
-        TODO("Not yet implemented")
+        val res = postServices.getPosts(userId)
+        val status = res.code()
+        val data = res.body()?.posts
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(data.map { PostDomainModel.from(it) })
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure> {

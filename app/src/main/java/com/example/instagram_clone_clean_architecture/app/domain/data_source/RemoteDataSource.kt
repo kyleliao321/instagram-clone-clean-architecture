@@ -30,7 +30,7 @@ interface RemoteDataSource {
 
     suspend fun getFollowerUsersById(userId: String) : Either<List<UserDomainModel>, Failure>
 
-    suspend fun getPostByPostId(postId: String) : Either<PostDomainModel?, Failure>
+    suspend fun getPostByPostId(postId: String) : Either<PostDomainModel, Failure>
 
     suspend fun getPostListByUserId(userId: String) : Either<List<PostDomainModel>, Failure>
 

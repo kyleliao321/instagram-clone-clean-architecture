@@ -197,7 +197,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(result)
     }
 
-    override suspend fun getPostByPostId(postId: String): Either<PostDomainModel?, Failure> {
+    override suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -210,7 +210,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             }
         }
 
-        return Either.Success(null)
+        return Either.Failure(Failure.ServerError)
     }
 
     override suspend fun getPostListByUserId(userId: String): Either<List<PostDomainModel>, Failure> {
