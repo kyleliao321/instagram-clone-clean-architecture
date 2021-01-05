@@ -16,5 +16,5 @@ class GetLikedUsersUseCase(
     override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> =
         profileRepository.getLikedUsersByPostId(params.postId)
 
-    data class Param(val postId: Int)
+    data class Param(val postId: String)
 }

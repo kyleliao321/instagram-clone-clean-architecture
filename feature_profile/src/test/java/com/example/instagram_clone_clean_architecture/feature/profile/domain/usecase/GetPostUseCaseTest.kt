@@ -40,7 +40,7 @@ class GetPostUseCaseTest {
     @Test
     fun `should return Success when repository return non-null value`() {
         val post = mockk<PostDomainModel>(relaxed = true)
-        val param = GetPostUseCase.Param(1)
+        val param = GetPostUseCase.Param("mockId")
         var result: Either<PostDomainModel, Failure>? = null
 
         coEvery { profileRepository.getPostByPostId(any()) } returns Either.Success(post)
@@ -56,7 +56,7 @@ class GetPostUseCaseTest {
 
     @Test
     fun `should return Failure when repository return null value`() {
-        val param = GetPostUseCase.Param(1)
+        val param = GetPostUseCase.Param("mockId")
         var result: Either<PostDomainModel, Failure>? = null
 
         coEvery { profileRepository.getPostByPostId(any()) } returns Either.Success(null)
@@ -73,7 +73,7 @@ class GetPostUseCaseTest {
     @Test
 
     fun `should return Failure when repository return failure`() {
-        val param = GetPostUseCase.Param(1)
+        val param = GetPostUseCase.Param("mockId")
         var result: Either<PostDomainModel, Failure>? = null
 
         coEvery { profileRepository.getPostByPostId(any()) } returns Either.Failure(Failure.NetworkConnection)

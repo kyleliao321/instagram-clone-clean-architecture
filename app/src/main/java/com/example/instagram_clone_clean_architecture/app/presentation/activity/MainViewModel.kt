@@ -92,11 +92,11 @@ class MainViewModel(
     data class ViewState(
         val isLocalUserDataLoading: Boolean = true,
         val isLocalAccountError: Boolean = false,
-        val localUserId: Int? = null
+        val localUserId: String? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class LocalUserDataLoaded(val userId: Int?): Action()
+        class LocalUserDataLoaded(val userId: String?): Action()
         object FailOnLocalAccountError : Action()
         object ReloadData : Action()
     }

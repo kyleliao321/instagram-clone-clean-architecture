@@ -29,7 +29,7 @@ class PostUploadDomainModelTest {
                 description = "1",
                 location = "1",
                 date = Date(),
-                belongUserId = 1
+                belongUserId = "mockUserId"
             )
 
         // expect
@@ -43,7 +43,7 @@ class PostUploadDomainModelTest {
                 description = "1",
                 location = "1",
                 date = Date(),
-                belongUserId = 1
+                belongUserId = "mockUserId"
             )
 
         // expect
@@ -57,7 +57,7 @@ class PostUploadDomainModelTest {
                 imageFile = mockFile,
                 location = "1",
                 date = Date(),
-                belongUserId = 1
+                belongUserId = "mockUserId"
             )
 
         // expect
@@ -71,7 +71,7 @@ class PostUploadDomainModelTest {
                 imageFile = mockFile,
                 description = "1",
                 date = Date(),
-                belongUserId = 1
+                belongUserId = "mockUserId"
             )
 
         // expect
@@ -85,7 +85,7 @@ class PostUploadDomainModelTest {
                 imageFile = mockFile,
                 location = "1",
                 description = "1",
-                belongUserId = 1
+                belongUserId = "mockUserId"
             )
 
         // expect

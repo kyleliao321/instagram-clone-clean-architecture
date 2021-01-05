@@ -28,7 +28,7 @@ class SearchViewModel(
         return@map null
     }
 
-    fun onNavigateToProfileFeature(userId: Int) {
+    fun onNavigateToProfileFeature(userId: String) {
         val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(userId)
         navManager.onNavEvent(navDir)
     }

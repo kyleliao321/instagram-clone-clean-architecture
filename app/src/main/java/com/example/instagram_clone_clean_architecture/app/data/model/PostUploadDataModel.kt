@@ -7,7 +7,7 @@ data class PostUploadDataModel(
     val image: ByteArray,
     val location: String? = null,
     val date: Date,
-    val belongUser: Int,
+    val belongUser: String,
     val description: String? = null
 ) {
     companion object {

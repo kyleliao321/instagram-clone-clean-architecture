@@ -24,17 +24,17 @@ interface ProfileRepository {
     /**
      * getter for view information
      */
-    suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure>
+    suspend fun getUserProfileById(id: String): Either<UserDomainModel?, Failure>
 
-    suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowerById(id: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun getFollowingById(id: Int): Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowingById(id: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun getPostByUserId(id: Int): Either<List<PostDomainModel>, Failure>
+    suspend fun getPostByUserId(id: String): Either<List<PostDomainModel>, Failure>
 
-    suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure>
+    suspend fun getPostByPostId(id: String): Either<PostDomainModel?, Failure>
 
-    suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure>
+    suspend fun getLikedUsersByPostId(id: String): Either<List<UserDomainModel>, Failure>
 
     suspend fun consumeUserSelectedImageUri(): Either<Uri, Failure>
 
@@ -45,11 +45,11 @@ interface ProfileRepository {
      */
     suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure>
 
-    suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure>
+    suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure>
 
-    suspend fun removeUserRelation(follower: Int, following: Int): Either<Unit, Failure>
+    suspend fun removeUserRelation(follower: String, following: String): Either<Unit, Failure>
 
-    suspend fun addLikedPost(userId: Int, postId: Int): Either<Unit, Failure>
+    suspend fun addLikedPost(userId: String, postId: String): Either<Unit, Failure>
 
-    suspend fun removeLikedPost(userId: Int, postId: Int): Either<Unit, Failure>
+    suspend fun removeLikedPost(userId: String, postId: String): Either<Unit, Failure>
 }

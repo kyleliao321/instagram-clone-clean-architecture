@@ -8,7 +8,7 @@ data class PostUploadDomainModel(
     var description: String? = null,
     var location: String? = null,
     var date: Date? = null,
-    var belongUserId: Int? = null
+    var belongUserId: String? = null
 ) {
 
     val isPostReady get() =

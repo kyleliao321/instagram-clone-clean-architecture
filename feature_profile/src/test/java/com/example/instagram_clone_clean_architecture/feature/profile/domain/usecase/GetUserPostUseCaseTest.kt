@@ -38,7 +38,7 @@ class GetUserPostUseCaseTest {
     fun `should return correct type when invoke`() {
         val postList = mockk<List<PostDomainModel>>()
 
-        val param = GetUserPostUseCase.Param(1)
+        val param = GetUserPostUseCase.Param("mockId")
         var result: Either<List<PostDomainModel>, com.example.library_base.domain.exception.Failure>? = null
 
         coEvery { profileRepository.getPostByUserId(any()) } returns Either.Success(postList)

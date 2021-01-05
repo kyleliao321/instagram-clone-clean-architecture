@@ -136,7 +136,7 @@ class PostViewModelTest {
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
         every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockImage)
         every { runBlocking { postRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
-        every { mockLoginUser.id } returns 1
+        every { mockLoginUser.id } returns "mockId"
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
@@ -206,7 +206,7 @@ class PostViewModelTest {
         // given
         every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
         every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(null)
-        every { mockLoginUser.id } returns 1
+        every { mockLoginUser.id } returns "mockId"
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }

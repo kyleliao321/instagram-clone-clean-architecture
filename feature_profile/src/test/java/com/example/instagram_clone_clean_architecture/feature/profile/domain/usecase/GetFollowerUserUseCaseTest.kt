@@ -38,7 +38,7 @@ class GetFollowerUserUseCaseTest {
     @Test
     fun `should return correct type when invoke`() {
         val userProfiles = mockk<List<UserDomainModel>>()
-        val param = GetFollowerUserUseCase.Param(1)
+        val param = GetFollowerUserUseCase.Param("mockId")
         var result: Either<List<UserDomainModel>, Failure>? = null
 
         coEvery { profileRepository.getFollowerById(any()) } returns Either.Success(userProfiles)

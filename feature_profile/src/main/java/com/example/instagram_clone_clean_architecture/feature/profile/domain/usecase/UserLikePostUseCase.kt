@@ -15,5 +15,5 @@ class UserLikePostUseCase(
     override suspend fun run(params: Param): Either<Unit, Failure> =
         profileRepository.addLikedPost(params.userId, params.postId)
 
-    data class Param(val userId: Int, val postId: Int)
+    data class Param(val userId: String, val postId: String)
 }

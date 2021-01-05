@@ -15,5 +15,5 @@ class RemoveUserRelationUseCase(
     override suspend fun run(params: Param): Either<Unit, Failure> =
         profileRepository.removeUserRelation(params.follower, params.following)
 
-    data class Param(val follower: Int, val following: Int)
+    data class Param(val follower: String, val following: String)
 }

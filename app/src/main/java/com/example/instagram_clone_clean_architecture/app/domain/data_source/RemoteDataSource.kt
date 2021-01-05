@@ -22,29 +22,29 @@ interface RemoteDataSource {
     ///////////////////////////// Remote database operations ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    suspend fun getUserProfileById(userId: Int) : Either<UserDomainModel?, Failure>
+    suspend fun getUserProfileById(userId: String) : Either<UserDomainModel?, Failure>
 
     suspend fun getUserProfileListByUserName(userName: String) : Either<List<UserDomainModel>, Failure>
 
-    suspend fun getFollowingUsersById(userId: Int) : Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowingUsersById(userId: String) : Either<List<UserDomainModel>, Failure>
 
-    suspend fun getFollowerUsersById(userId: Int) : Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowerUsersById(userId: String) : Either<List<UserDomainModel>, Failure>
 
-    suspend fun getPostByPostId(postId: Int) : Either<PostDomainModel?, Failure>
+    suspend fun getPostByPostId(postId: String) : Either<PostDomainModel?, Failure>
 
-    suspend fun getPostListByUserId(userId: Int) : Either<List<PostDomainModel>, Failure>
+    suspend fun getPostListByUserId(userId: String) : Either<List<PostDomainModel>, Failure>
 
-    suspend fun getLikedUsersByPostId(postId: Int) : Either<List<UserDomainModel>, Failure>
+    suspend fun getLikedUsersByPostId(postId: String) : Either<List<UserDomainModel>, Failure>
 
     suspend fun updateUserProfile(userProfile: UserProfileUploadDataModel) : Either<UserDomainModel, Failure>
 
-    suspend fun addUserRelation(followerId: Int, followingId: Int) : Either<Unit, Failure>
+    suspend fun addUserRelation(followerId: String, followingId: String) : Either<Unit, Failure>
 
-    suspend fun removeUserRelation(followerId: Int, followingId: Int) : Either<Unit, Failure>
+    suspend fun removeUserRelation(followerId: String, followingId: String) : Either<Unit, Failure>
 
-    suspend fun addUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
+    suspend fun addUserLikePost(userId: String, postId: String) : Either<Unit, Failure>
 
-    suspend fun removeUserLikePost(userId: Int, postId: Int) : Either<Unit, Failure>
+    suspend fun removeUserLikePost(userId: String, postId: String) : Either<Unit, Failure>
 
     suspend fun uploadPost(post: PostUploadDataModel) : Either<PostDomainModel, Failure>
 

@@ -19,57 +19,53 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private val mockRemoteImageSrc = "https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/mock-remote-image.jpg"
 
-    private var tmpIdCount = 5
-
-    private var tmpPostCount = 5
-
     private val userLoginDataList = mutableListOf(
-        Pair(1, "12345"),
-        Pair(2, "23456"),
-        Pair(3, "34567")
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "12345"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "23456"),
+        Pair("663a6f68-1cee-4774-8497-bec671f85611", "34567")
     )
 
     private val userProfileList = mutableListOf(
-        UserDomainModel(id = 1, name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = mockRemoteImageSrc),
-        UserDomainModel(id = 2, name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = mockRemoteImageSrc),
-        UserDomainModel(id = 3, name = "John", userName = "john", postNum = 0, followingNum = 0, followerNum = 0)
+        UserDomainModel(id = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", name = "Kyle", userName = "kyle", description =  "My name is Kyle", postNum = 3, followingNum = 1, followerNum = 0, imageSrc = mockRemoteImageSrc),
+        UserDomainModel(id = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", name = "Anna", userName = "anna", postNum = 2, followingNum = 0,followerNum =  1, imageSrc = mockRemoteImageSrc),
+        UserDomainModel(id = "663a6f68-1cee-4774-8497-bec671f85611", name = "John", userName = "john", postNum = 0, followingNum = 0, followerNum = 0)
     )
 
     // follower - following relationship
     private val userRelationList = mutableListOf(
-        Pair(1, 2)
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d")
     )
 
     private val userPostList = mutableListOf(
-        PostDomainModel(id = 1, belongUserId = 1, date = Date(), location = null, description = "village",
+        PostDomainModel(id = "d7347a85-f721-43a0-b3f3-aa08718abdfc", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = 2, belongUserId = 1, date = Date(), location = null, description = "village",
+        PostDomainModel(id = "9374acb7-8da8-4344-b040-02742d3d914c", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = 3, belongUserId = 1, date = Date(), location = null, description = "village",
+        PostDomainModel(id = "22a5d295-d622-45a6-bf06-47007856aa01", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = 4, belongUserId = 2, date = Date(), location = null, description = "village",
+        PostDomainModel(id = "8575cdb2-1d95-4c9f-b2ea-5631ec83bc12", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = 5, belongUserId = 2, date = Date(), location = null, description = "village",
+        PostDomainModel(id = "289b4b07-f203-4931-9524-8ee06d39e934", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         )
     )
 
     // user - likedPost relationship
     private val userLikedList = mutableListOf(
-        Pair(1, 1),
-        Pair(1, 2),
-        Pair(1, 3),
-        Pair(1, 4),
-        Pair(1, 5),
-        Pair(2, 1),
-        Pair(2, 2),
-        Pair(2, 3),
-        Pair(2, 4),
-        Pair(3, 2)
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "d7347a85-f721-43a0-b3f3-aa08718abdfc"),
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "9374acb7-8da8-4344-b040-02742d3d914c"),
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "22a5d295-d622-45a6-bf06-47007856aa01"),
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "8575cdb2-1d95-4c9f-b2ea-5631ec83bc12"),
+        Pair("7375a95e-82b5-4b7a-8cf8-59338f5a8a43", "289b4b07-f203-4931-9524-8ee06d39e934"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "d7347a85-f721-43a0-b3f3-aa08718abdfc"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "9374acb7-8da8-4344-b040-02742d3d914c"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "22a5d295-d622-45a6-bf06-47007856aa01"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "8575cdb2-1d95-4c9f-b2ea-5631ec83bc12"),
+        Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "9374acb7-8da8-4344-b040-02742d3d914c")
     )
 
     override suspend fun userLogin(
@@ -116,7 +112,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         // first, create a user profile in database
         val newUserProfile = UserDomainModel(
-            id = ++tmpIdCount, name = userName, userName = userName, postNum = 0, followingNum = 0, followerNum = 0
+            id = generateId(), name = userName, userName = userName, postNum = 0, followingNum = 0, followerNum = 0
         )
         userProfileList.add(newUserProfile)
 
@@ -126,7 +122,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(newUserProfile)
     }
 
-    override suspend fun getUserProfileById(userId: Int): Either<UserDomainModel?, Failure> {
+    override suspend fun getUserProfileById(userId: String): Either<UserDomainModel?, Failure> {
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
@@ -157,7 +153,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(result)
     }
 
-    override suspend fun getFollowingUsersById(userId: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -179,7 +175,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(result)
     }
 
-    override suspend fun getFollowerUsersById(userId: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getFollowerUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -201,7 +197,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(result)
     }
 
-    override suspend fun getPostByPostId(postId: Int): Either<PostDomainModel?, Failure> {
+    override suspend fun getPostByPostId(postId: String): Either<PostDomainModel?, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -217,14 +213,14 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(null)
     }
 
-    override suspend fun getPostListByUserId(userId: Int): Either<List<PostDomainModel>, Failure> {
+    override suspend fun getPostListByUserId(userId: String): Either<List<PostDomainModel>, Failure> {
         delay(1000)
         val result = userPostList.filter { it.belongUserId == userId }
 
         return Either.Success(result)
     }
 
-    override suspend fun getLikedUsersByPostId(postId: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure> {
         var result = mutableListOf<UserDomainModel>()
 
         if (randomBoolean()) {
@@ -281,7 +277,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         }
     }
 
-    override suspend fun addUserRelation(followerId: Int, followingId: Int): Either<Unit, Failure> {
+    override suspend fun addUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -308,7 +304,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun removeUserRelation(followerId: Int, followingId: Int): Either<Unit, Failure> {
+    override suspend fun removeUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
         delay(1000)
 
         if (randomBoolean()) {
@@ -340,7 +336,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun addUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+    override suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
@@ -356,7 +352,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun removeUserLikePost(userId: Int, postId: Int): Either<Unit, Failure> {
+    override suspend fun removeUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
@@ -383,12 +379,15 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             return Either.Failure(Failure.NetworkConnection)
         }
 
-        val mockNewPost = userPostList[0].copy(id = ++tmpPostCount, belongUserId = post.belongUser)
+        val mockNewPost = userPostList[0].copy(id = generateId(), belongUserId = post.belongUser)
         userPostList.add(mockNewPost)
         return Either.Success(mockNewPost)
     }
 
     private fun randomBoolean(): Boolean =
         (0..10).random() < (networkFailProbability/10)
+
+    private fun generateId(): String =
+        UUID.randomUUID().toString()
 
 }

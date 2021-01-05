@@ -1,7 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.domain.model
 
 data class UserDomainModel(
-    val id: Int,
+    val id: String,
     var name: String,
     var userName: String,
     var imageSrc: String? = null,

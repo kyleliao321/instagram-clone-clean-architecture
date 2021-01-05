@@ -31,6 +31,6 @@ class GetUserProfileUseCase(
         return result!!
     }
 
-    data class Param(val id: Int)
+    data class Param(val id: String)
 
 }

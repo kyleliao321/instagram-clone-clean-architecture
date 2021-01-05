@@ -16,5 +16,5 @@ class GetUserPostUseCase(
     override suspend fun run(params: Param): Either<List<PostDomainModel>, Failure> =
         profileRepository.getPostByUserId(params.id)
 
-    data class Param(val id: Int)
+    data class Param(val id: String)
 }

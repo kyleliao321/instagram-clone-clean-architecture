@@ -32,27 +32,27 @@ internal class ProfileRepositoryImpl(
     override suspend fun cleanupLocalLoginUserPassword(): Either<Unit, Failure> =
         localDataSource.updateLocalLoginUserPassword(null)
 
-    override suspend fun getUserProfileById(id: Int): Either<UserDomainModel?, Failure> {
+    override suspend fun getUserProfileById(id: String): Either<UserDomainModel?, Failure> {
         return remoteDataSource.getUserProfileById(id)
     }
 
-    override suspend fun getFollowerById(id: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getFollowerById(id: String): Either<List<UserDomainModel>, Failure> {
         return remoteDataSource.getFollowerUsersById(id)
     }
 
-    override suspend fun getFollowingById(id: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getFollowingById(id: String): Either<List<UserDomainModel>, Failure> {
         return remoteDataSource.getFollowingUsersById(id)
     }
 
-    override suspend fun getPostByUserId(id: Int): Either<List<PostDomainModel>, Failure> {
+    override suspend fun getPostByUserId(id: String): Either<List<PostDomainModel>, Failure> {
         return remoteDataSource.getPostListByUserId(id)
     }
 
-    override suspend fun getPostByPostId(id: Int): Either<PostDomainModel?, Failure> {
+    override suspend fun getPostByPostId(id: String): Either<PostDomainModel?, Failure> {
         return remoteDataSource.getPostByPostId(id)
     }
 
-    override suspend fun getLikedUsersByPostId(id: Int): Either<List<UserDomainModel>, Failure> {
+    override suspend fun getLikedUsersByPostId(id: String): Either<List<UserDomainModel>, Failure> {
         return remoteDataSource.getLikedUsersByPostId(id)
     }
 
@@ -81,19 +81,19 @@ internal class ProfileRepositoryImpl(
         return remoteDataSource.updateUserProfile(newProfile)
     }
 
-    override suspend fun addUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
+    override suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure> {
         return remoteDataSource.addUserRelation(follower, following)
     }
 
-    override suspend fun removeUserRelation(follower: Int, following: Int): Either<Unit, Failure> {
+    override suspend fun removeUserRelation(follower: String, following: String): Either<Unit, Failure> {
         return remoteDataSource.removeUserRelation(follower, following)
     }
 
-    override suspend fun addLikedPost(userId: Int, postId: Int): Either<Unit, Failure> {
+    override suspend fun addLikedPost(userId: String, postId: String): Either<Unit, Failure> {
         return remoteDataSource.addUserLikePost(userId, postId)
     }
 
-    override suspend fun removeLikedPost(userId: Int, postId: Int): Either<Unit, Failure> {
+    override suspend fun removeLikedPost(userId: String, postId: String): Either<Unit, Failure> {
         return remoteDataSource.removeUserLikePost(userId, postId)
     }
 

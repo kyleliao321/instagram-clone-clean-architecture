@@ -4,7 +4,7 @@ import android.net.Uri
 
 data class UserProfileUploadDomainModel(
     val image: Uri?,
-    val id: Int,
+    val id: String,
     val name: String,
     val userName: String,
     val description: String

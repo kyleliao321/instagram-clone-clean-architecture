@@ -16,5 +16,5 @@ class GetFollowingUserUseCase(
     override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> =
         repository.getFollowingById(params.id)
 
-    data class Param(val id: Int)
+    data class Param(val id: String)
 }

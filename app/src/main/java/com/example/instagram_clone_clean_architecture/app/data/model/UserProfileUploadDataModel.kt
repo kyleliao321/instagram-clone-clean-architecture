@@ -6,7 +6,7 @@ import com.example.library_base.domain.extension.getJpegByteArray
 
 data class UserProfileUploadDataModel(
     val image: ByteArray?,
-    val id: Int,
+    val id: String,
     val name: String,
     val userName: String,
     val description: String

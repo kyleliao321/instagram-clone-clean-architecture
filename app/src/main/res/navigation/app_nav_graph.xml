@@ -9,7 +9,7 @@
         app:graphResName="feature_profile_nav_graph">
         <argument
             android:name="userId"
-            app:argType="integer" />
+            app:argType="string" />
         <action
             android:id="@id/featureSearchNavGraph"
             app:destination="@id/featureSearchNavGraph" />

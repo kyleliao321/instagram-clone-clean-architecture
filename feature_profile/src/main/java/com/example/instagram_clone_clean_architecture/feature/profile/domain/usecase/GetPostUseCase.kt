@@ -31,5 +31,5 @@ class GetPostUseCase(
         return result!!
     }
 
-    data class Param(val id: Int)
+    data class Param(val id: String)
 }

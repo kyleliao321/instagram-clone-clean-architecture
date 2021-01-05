@@ -16,5 +16,5 @@ class GetFollowerUserUseCase(
     override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> =
         profileRepository.getFollowerById(params.id)
 
-    data class Param(val id: Int)
+    data class Param(val id: String)
 }

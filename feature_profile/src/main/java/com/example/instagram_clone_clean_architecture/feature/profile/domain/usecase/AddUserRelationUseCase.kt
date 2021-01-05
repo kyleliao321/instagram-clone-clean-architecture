@@ -15,5 +15,5 @@ class AddUserRelationUseCase(
     override suspend fun run(params: Param): Either<Unit, Failure> =
         profileRepository.addUserRelation(params.follower, params.following)
 
-    data class Param(val follower: Int, val following: Int)
+    data class Param(val follower: String, val following: String)
 }

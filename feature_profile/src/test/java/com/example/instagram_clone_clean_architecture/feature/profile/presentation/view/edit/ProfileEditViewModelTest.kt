@@ -65,7 +65,7 @@ class ProfileEditViewModelTest {
     /**
      * Mock data
      */
-    private val correctUserId = 1
+    private val correctUserId = "mockId"
 
     private val correctUserProfile = UserDomainModel(
         id = correctUserId, name = "Kyle", userName = "kyle", postNum = 1, followingNum = 1, followerNum = 1
@@ -114,7 +114,7 @@ class ProfileEditViewModelTest {
         // given
         val navDir =
             ProfileEditFragmentDirections.actionProfileEditFragmentToProfileMainFragment(
-                1
+                "mockId"
             )
         val params = NavigationUseCase.Param(navDir)
 
