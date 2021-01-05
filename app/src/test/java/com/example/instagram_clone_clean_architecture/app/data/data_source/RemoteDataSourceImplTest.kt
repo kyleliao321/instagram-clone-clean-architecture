@@ -4,10 +4,7 @@ import com.example.instagram_clone_clean_architecture.app.data.model.LoginCreden
 import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.*
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.RelationServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -17,6 +14,7 @@ import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
+import okhttp3.HttpUrl
 import org.amshove.kluent.shouldBeEqualTo
 import org.amshove.kluent.shouldNotBe
 import org.amshove.kluent.shouldNotBeEqualTo
@@ -46,6 +44,9 @@ class RemoteDataSourceImplTest {
 
     @MockK(relaxed = true)
     internal lateinit var relationServices: RelationServices
+
+    @MockK(relaxed = true)
+    internal lateinit var likeServices: LikeServices
 
     private lateinit var remoteDataSourceImpl: RemoteDataSource
 
@@ -99,7 +100,7 @@ class RemoteDataSourceImplTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices, relationServices)
+        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices, relationServices, likeServices)
     }
 
     @Test
@@ -593,5 +594,141 @@ class RemoteDataSourceImplTest {
         // expect
         result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
+
+    @Test
+    fun `getLikedUsersByPostId should return correct result when likeService getLikes return with HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetLikesResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetLikesResponse>>(relaxed = true)
+
+        every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.getLikes(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getLikedUsersByPostId(mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(listOf(mockUserProfile).map { UserDomainModel.from(it) })
+    }
+
+    @Test
+    fun `getLikedUsersByPostId should return server error failure when likeService getLikes return other than HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetLikesResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetLikesResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.getLikes(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getLikedUsersByPostId(mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `addUserLikePost should return correct result when likeService likePost return with HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<LikePostResponse>(relaxed = true)
+        val mockReq = mockk<Response<LikePostResponse>>(relaxed = true)
+
+        every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.likePost(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.addUserLikePost(mockUserId, mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
+    fun `addUserLikePost should return server error failure when likeService likePost return other than HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<LikePostResponse>(relaxed = true)
+        val mockReq = mockk<Response<LikePostResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.likePost(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.addUserLikePost(mockUserId, mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `removeUserLikePost should return correct result when likeService dislikePost return with HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<DislikePostResponse>(relaxed = true)
+        val mockReq = mockk<Response<DislikePostResponse>>(relaxed = true)
+
+        every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.dislikePost(any(), any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.removeUserLikePost(mockUserId, mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
+    fun `removeUserLikePost should return server error failure when likeService dislikePost return other than HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<DislikePostResponse>(relaxed = true)
+        val mockReq = mockk<Response<DislikePostResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { likeServices.dislikePost(any(), any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.removeUserLikePost(mockUserId, mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
 
 }

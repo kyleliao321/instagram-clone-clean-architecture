@@ -4,10 +4,8 @@ import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadD
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AddRelationRequest
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.RelationServices
-import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.LikePostRequest
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -19,7 +17,8 @@ class RemoteDataSourceImpl(
     private val accountServices: AccountServices,
     private val userServices: UserServices,
     private val postServices: PostServices,
-    private val relationServices: RelationServices
+    private val relationServices: RelationServices,
+    private val likeServices: LikeServices
 ): RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
@@ -128,7 +127,15 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure> {
-        TODO("Not yet implemented")
+        val res = likeServices.getLikes(postId)
+        val status = res.code()
+        val data = res.body()?.likedUsers
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(data.map { UserDomainModel.from(it) })
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDataModel): Either<UserDomainModel, Failure> {
@@ -167,11 +174,28 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
-        TODO("Not yet implemented")
+        val reqBody = LikePostRequest(userId, postId)
+        val res = likeServices.likePost(reqBody)
+        val status = res.code()
+        val data = res.body()?.likedUsers
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(Unit)
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun removeUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
-        TODO("Not yet implemented")
+        val res = likeServices.dislikePost(userId, postId)
+        val status = res.code()
+        val data = res.body()?.likedUsers
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(Unit)
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun uploadPost(post: PostUploadDataModel): Either<PostDomainModel, Failure> {
