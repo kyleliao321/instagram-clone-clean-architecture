@@ -1,5 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.domain.model
 
+import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileDataModel
+
 data class UserDomainModel(
     val id: String,
     var name: String,
@@ -10,6 +12,21 @@ data class UserDomainModel(
     var followingNum: Int,
     var followerNum: Int
 ) {
+
+    companion object {
+        fun from(dataModel: UserProfileDataModel): UserDomainModel {
+            return UserDomainModel(
+                id = dataModel.id,
+                userName = dataModel.userName,
+                name = dataModel.alias,
+                imageSrc = if (dataModel.imageSrc === "") null else dataModel.imageSrc,
+                description = if (dataModel.description === "") null else dataModel.description,
+                postNum = dataModel.postNum,
+                followerNum = dataModel.followerNum,
+                followingNum = dataModel.followingNum
+            )
+        }
+    }
 
     enum class Type {
         SAME, REMOVE, FOLLOW

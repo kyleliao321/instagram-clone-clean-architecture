@@ -4,6 +4,7 @@ import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadD
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
@@ -12,7 +13,8 @@ import com.example.library_base.domain.utility.Either
 import java.net.HttpURLConnection
 
 class RemoteDataSourceImpl(
-    private val accountServices: AccountServices
+    private val accountServices: AccountServices,
+    private val userServices: UserServices
 ): RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
@@ -49,11 +51,27 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getUserProfileById(userId: String): Either<UserDomainModel, Failure> {
-        TODO("Not yet implemented")
+        val res = userServices.getUserProfileAsync(userId)
+        val status = res.code()
+        val data = res.body()?.user
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(UserDomainModel.from(data))
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getUserProfileListByUserName(userName: String): Either<List<UserDomainModel>, Failure> {
-        TODO("Not yet implemented")
+        val res = userServices.searchUserProfilesAsync(userName)
+        val status = res.code()
+        val data = res.body()?.users
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(data.map { UserDomainModel.from(it) })
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
