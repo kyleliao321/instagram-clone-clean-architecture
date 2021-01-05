@@ -6,6 +6,7 @@ object TestLibraryVersion {
     const val MOCKK_CO = "1.3.8"
     const val KLUENT = "1.61"
     const val ANDROIDX_ARCH_CORE_TEST = "2.1.0"
+    const val MOCK_WEB_SERVER = "4.9.0"
 }
 
 object TestLibraryDependency {
@@ -15,4 +16,5 @@ object TestLibraryDependency {
     const val MOCKK_CO = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${TestLibraryVersion.MOCKK_CO}"
     const val KLUENT = "org.amshove.kluent:kluent:${TestLibraryVersion.KLUENT}"
     const val ANDROID_ARCH_CORE_TEST = "androidx.arch.core:core-testing:${TestLibraryVersion.ANDROIDX_ARCH_CORE_TEST}"
+    const val MOCK_WEB_SERVER = "com.squareup.okhttp3:mockwebserver:${TestLibraryVersion.MOCK_WEB_SERVER}"
 }

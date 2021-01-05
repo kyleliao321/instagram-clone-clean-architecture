@@ -75,6 +75,7 @@ dependencies {
     testImplementation(TestLibraryDependency.KLUENT)
     testImplementation(TestLibraryDependency.KOTLIN_CO_TEST)
     testImplementation(TestLibraryDependency.ANDROID_ARCH_CORE_TEST)
+    testImplementation(TestLibraryDependency.MOCK_WEB_SERVER)
 }
 
 /**
