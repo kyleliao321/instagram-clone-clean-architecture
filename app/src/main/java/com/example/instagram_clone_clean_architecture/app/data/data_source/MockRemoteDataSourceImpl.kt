@@ -95,7 +95,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun userRegister(
         userName: String,
         password: String
-    ): Either<UserDomainModel, Failure> {
+    ): Either<Unit, Failure> {
 
         delay(1000)
 
@@ -119,10 +119,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         // second, add id-password pair in database
         userLoginDataList.add(Pair(newUserProfile.id, password))
 
-        return Either.Success(newUserProfile)
+        return Either.Success(Unit)
     }
 
-    override suspend fun getUserProfileById(userId: String): Either<UserDomainModel?, Failure> {
+    override suspend fun getUserProfileById(userId: String): Either<UserDomainModel, Failure> {
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
@@ -136,7 +136,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             }
         }
 
-        return Either.Success(null)
+        return Either.Failure(Failure.ServerError)
     }
 
     override suspend fun getUserProfileListByUserName(userName: String): Either<List<UserDomainModel>, Failure> {

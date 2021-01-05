@@ -72,8 +72,7 @@ class RegisterViewModelTest {
             isServerError = false,
             isNetworkError = false,
             userName = null,
-            userPassword = null,
-            registerUserProfile = null
+            userPassword = null
         )
     }
 
@@ -81,12 +80,11 @@ class RegisterViewModelTest {
     fun `verify view state when register successfully`() {
         val mockUserName = "userName"
         val mockUserPassword = "userPassword"
-        val mockRegisterUserProfile = mockk<UserDomainModel>(relaxed = true)
 
         // given
         testViewModel.stateLiveData.value!!.userName = mockUserName
         testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
-        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(mockRegisterUserProfile)
+        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(Unit)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userRegister() }
@@ -98,8 +96,7 @@ class RegisterViewModelTest {
             isNetworkError = false,
             isServerError = false,
             userName = null,
-            userPassword = null,
-            registerUserProfile = mockRegisterUserProfile
+            userPassword = null
         )
     }
 
@@ -124,8 +121,7 @@ class RegisterViewModelTest {
             isNetworkError = true,
             isServerError = false,
             userName = null,
-            userPassword = null,
-            registerUserProfile = null
+            userPassword = null
         )
     }
 

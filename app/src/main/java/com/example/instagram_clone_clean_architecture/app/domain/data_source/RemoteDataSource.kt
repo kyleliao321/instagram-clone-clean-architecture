@@ -15,14 +15,14 @@ interface RemoteDataSource {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     suspend fun userLogin(userName: String, password: String) : Either<UserDomainModel, Failure>
 
-    suspend fun userRegister(userName: String, password: String) : Either<UserDomainModel, Failure>
+    suspend fun userRegister(userName: String, password: String) : Either<Unit, Failure>
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Remote database operations ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    suspend fun getUserProfileById(userId: String) : Either<UserDomainModel?, Failure>
+    suspend fun getUserProfileById(userId: String) : Either<UserDomainModel, Failure>
 
     suspend fun getUserProfileListByUserName(userName: String) : Either<List<UserDomainModel>, Failure>
 

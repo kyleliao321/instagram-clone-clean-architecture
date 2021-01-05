@@ -40,12 +40,12 @@ class RegisterViewModel(
 
                 userRegisterUseCase(param) {
                     it.fold(
-                        onSucceed = { userProfile ->
-                            sendAction(Action.FinishRegister(userProfile))
+                        onSucceed = {
+                            sendAction(Action.FinishRegister)
                             navigateToLoginFragment()
                         },
                         onFail = { failure ->
-                            sendAction(Action.FinishRegister(null))
+                            sendAction(Action.FinishRegister)
                             onFailure(failure)
                         }
                     )
@@ -67,8 +67,7 @@ class RegisterViewModel(
         is Action.FinishRegister -> state.copy(
             isRegistering = false,
             userPassword = null,
-            userName = null,
-            registerUserProfile = action.userProfile
+            userName = null
         )
         is Action.StartRegister -> state.copy(
             isRegistering = true,
@@ -93,12 +92,11 @@ class RegisterViewModel(
         val isServerError: Boolean = false,
         val isRegisterFail: Boolean = false,
         var userName: String? = null,
-        var userPassword: String? = null,
-        val registerUserProfile: UserDomainModel? = null
+        var userPassword: String? = null
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class FinishRegister(val userProfile: UserDomainModel?) : Action()
+        object FinishRegister : Action()
         object StartRegister : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()

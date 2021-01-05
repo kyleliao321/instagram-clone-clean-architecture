@@ -11,9 +11,9 @@ import kotlinx.coroutines.Dispatchers
 class UserRegisterUseCase(
     private val loginRepository: LoginRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-) : UseCase<UserDomainModel, UserRegisterUseCase.Param>(defaultDispatcher) {
+) : UseCase<Unit, UserRegisterUseCase.Param>(defaultDispatcher) {
 
-    override suspend fun run(params: Param): Either<UserDomainModel, Failure> =
+    override suspend fun run(params: Param): Either<Unit, Failure> =
         loginRepository.userRegister(params.userName, params.password)
 
     data class Param(val userName: String, val password: String)

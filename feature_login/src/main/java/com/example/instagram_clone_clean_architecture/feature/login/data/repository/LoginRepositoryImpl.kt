@@ -24,7 +24,7 @@ class LoginRepositoryImpl(
     override suspend fun userRegister(
         userName: String,
         password: String
-    ): Either<UserDomainModel, Failure> {
+    ): Either<Unit, Failure> {
         return remoteDataSource.userRegister(userName, password)
     }
 

@@ -38,10 +38,10 @@ class UserRegisterUseCaseTest {
 
     @Test
     fun `should return correct type when login succeed`() {
-        val mockReturnData = mockk<UserDomainModel>()
+        val mockReturnData = mockk<Unit>()
         val mockParam = mockk<UserRegisterUseCase.Param>(relaxed = true)
 
-        var result: Either<UserDomainModel, Failure>? = null
+        var result: Either<Unit, Failure>? = null
 
         // given
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(mockReturnData)
@@ -61,7 +61,7 @@ class UserRegisterUseCaseTest {
     fun `should return correct type when login fail`() {
         val mockParam = mockk<UserRegisterUseCase.Param>(relaxed = true)
 
-        var result: Either<UserDomainModel, Failure>? = null
+        var result: Either<Unit, Failure>? = null
 
         // given
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Failure(

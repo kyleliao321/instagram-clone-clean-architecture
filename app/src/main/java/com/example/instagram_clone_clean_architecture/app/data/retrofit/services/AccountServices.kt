@@ -10,7 +10,7 @@ interface AccountServices {
     @POST("/api/v1/accounts/register")
     suspend fun registerNewAccountAsync(
         @Body accountInfo: AccountRequest
-    ): Response<Void>
+    ): Response<Unit>
 
     @POST("/api/v1/accounts/login")
     suspend fun loginAsync(

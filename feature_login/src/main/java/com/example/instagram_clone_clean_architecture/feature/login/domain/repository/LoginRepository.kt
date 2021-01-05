@@ -8,7 +8,7 @@ interface LoginRepository {
 
     suspend fun userLogin(userName: String, password: String) : Either<UserDomainModel, Failure>
 
-    suspend fun userRegister(userName: String, password: String) : Either<UserDomainModel, Failure>
+    suspend fun userRegister(userName: String, password: String) : Either<Unit, Failure>
 
     suspend fun getLocalLoginUserName() : Either<String, Failure>
 
