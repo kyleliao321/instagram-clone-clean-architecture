@@ -3,8 +3,10 @@ package com.example.instagram_clone_clean_architecture.app.data.data_source
 import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AddRelationRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.RelationServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -16,7 +18,8 @@ import java.net.HttpURLConnection
 class RemoteDataSourceImpl(
     private val accountServices: AccountServices,
     private val userServices: UserServices,
-    private val postServices: PostServices
+    private val postServices: PostServices,
+    private val relationServices: RelationServices
 ): RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
@@ -77,11 +80,27 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
-        TODO("Not yet implemented")
+        val res = relationServices.getFollowings(userId)
+        val status = res.code()
+        val data = res.body()?.followings
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(data.map { UserDomainModel.from(it) })
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getFollowerUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
-        TODO("Not yet implemented")
+        val res = relationServices.getFollowers(userId)
+        val status = res.code()
+        val data = res.body()?.followers
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(data.map { UserDomainModel.from(it) })
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure> {
@@ -120,14 +139,31 @@ class RemoteDataSourceImpl(
         followerId: String,
         followingId: String
     ): Either<Unit, Failure> {
-        TODO("Not yet implemented")
+        val reqBody = AddRelationRequest(followerId, followingId)
+        val res = relationServices.addRelation(reqBody)
+        val status = res.code()
+        val data = res.body()?.followings
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(Unit)
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun removeUserRelation(
         followerId: String,
         followingId: String
     ): Either<Unit, Failure> {
-        TODO("Not yet implemented")
+        val res = relationServices.removeRelation(followerId, followingId)
+        val status = res.code()
+        val data = res.body()?.followings
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            Either.Success(Unit)
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure> {

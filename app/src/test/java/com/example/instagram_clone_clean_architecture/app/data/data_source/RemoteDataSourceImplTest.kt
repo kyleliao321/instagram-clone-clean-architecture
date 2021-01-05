@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.data.model.UserProfile
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.*
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.AccountServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.PostServices
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.RelationServices
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.UserServices
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
@@ -43,6 +44,9 @@ class RemoteDataSourceImplTest {
     @MockK(relaxed = true)
     internal lateinit var postServices: PostServices
 
+    @MockK(relaxed = true)
+    internal lateinit var relationServices: RelationServices
+
     private lateinit var remoteDataSourceImpl: RemoteDataSource
 
     private val mockUserId = "mockUserId"
@@ -50,9 +54,23 @@ class RemoteDataSourceImplTest {
     private val mockPassword = "mockPassword"
     private val mockUserNameKeyword = "mocKeyword"
 
+    private val mockSecondUserId = "mockSecUserId"
+    private val mockSecondUserName = "mockSecondUserName"
+
     private val mockUserProfile = UserProfileDataModel(
         id = mockUserId,
         userName = mockUserName,
+        alias = "mockAlias",
+        description = "mockDescription",
+        imageSrc = "mockImageSrc",
+        postNum = 0,
+        followingNum = 0,
+        followerNum = 0
+    )
+
+    private val mockSecondUserProfile = UserProfileDataModel(
+        id = mockSecondUserId,
+        userName = mockSecondUserName,
         alias = "mockAlias",
         description = "mockDescription",
         imageSrc = "mockImageSrc",
@@ -81,7 +99,7 @@ class RemoteDataSourceImplTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices)
+        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices, relationServices)
     }
 
     @Test
@@ -390,6 +408,186 @@ class RemoteDataSourceImplTest {
         // when
         mainCoroutineRule.runBlockingTest {
             result = remoteDataSourceImpl.getPostListByUserId(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `getFollowingUsersById should return correct result when relationService getFollowings return with HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetFollowingsResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetFollowingsResponse>>(relaxed = true)
+
+        every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.getFollowings(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getFollowingUsersById(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map { UserDomainModel.from(it) })
+    }
+
+    @Test
+    fun `getFollowingUsersById should return server error failure when relationService getFollowings return other than HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetFollowingsResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetFollowingsResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.getFollowings(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getFollowingUsersById(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `getFollowerUsersById should return correct result when relationService getFollowers return with HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetFollowersResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetFollowersResponse>>(relaxed = true)
+
+        every { mockReqBody.followers } returns listOf(mockSecondUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.getFollowers(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getFollowerUsersById(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map { UserDomainModel.from(it) })
+    }
+
+    @Test
+    fun `getFollowerUsersById should return server error failure when relationService getFollowers return other than HTTP_OK`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<GetFollowersResponse>(relaxed = true)
+        val mockReq = mockk<Response<GetFollowersResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.getFollowers(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.getFollowerUsersById(mockUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `addUserRelation should return correct result when relationService addRelation return with HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<AddRelationResponse>(relaxed = true)
+        val mockReq = mockk<Response<AddRelationResponse>>(relaxed = true)
+
+        every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.addRelation(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.addUserRelation(mockUserId, mockSecondUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
+    fun `addUserRelation should return server error failure when relationService addRelation return other than HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<AddRelationResponse>(relaxed = true)
+        val mockReq = mockk<Response<AddRelationResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.addRelation(any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.addUserRelation(mockUserId, mockSecondUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `removeUserRelation should return correct result when relationService removeRelation return with HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<RemoveRelationResponse>(relaxed = true)
+        val mockReq = mockk<Response<RemoveRelationResponse>>(relaxed = true)
+
+        every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
+        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.removeRelation(any(), any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.removeUserRelation(mockUserId, mockSecondUserId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(Unit)
+    }
+
+    @Test
+    fun `removeUserRelation should return server error failure when relationService removeRelation return other than HTTP_OK`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        val mockReqBody = mockk<RemoveRelationResponse>(relaxed = true)
+        val mockReq = mockk<Response<RemoveRelationResponse>>(relaxed = true)
+
+        every { mockReq.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockReq.body() } returns mockReqBody
+
+        coEvery { relationServices.removeRelation(any(), any()) } returns mockReq
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.removeUserRelation(mockUserId, mockSecondUserId)
         }
 
         // expect
