@@ -99,7 +99,7 @@ class RemoteDataSourceImplTest {
     private val mockUploadPost = PostUploadDomainModel(
         date = Date(),
         belongUserId = mockUserId,
-        imageByteArray = ByteArray(10)
+        cachedImageFile = mockk(relaxed = true)
     )
 
     private val mockLoginCredential = LoginCredentialDataModel(

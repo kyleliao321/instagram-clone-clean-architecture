@@ -4,12 +4,17 @@ import android.net.Uri
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import java.io.File
 
 interface CacheDataSource {
+
+    fun init(cacheDir: File): Unit
 
     fun getAuthToken() : String?
 
     fun cacheAuthToken(token: String): Unit
+
+    suspend fun cacheCompressedUploadImage(fileName: String, byteArray: ByteArray) : Either<File, Failure>
 
     suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?) : Either<Unit, Failure>
 

@@ -4,6 +4,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.usercase.UseCase
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,12 +19,30 @@ class UploadPostUseCase(
     override suspend fun run(params: Param): Either<PostDomainModel, Failure> {
         val post = params.post
 
-        return if (post.isPostReady) {
-            post.date = Date()
-            postRepository.uploadPostUseCase(params.post)
-        } else {
-            Either.Failure(Failure.PostNotComplete)
+        if (!post.isPostReady) {
+            return Either.Failure(Failure.PostNotComplete)
         }
+
+        val getBitmapResult = postRepository.getBitmap(post.imageUri!!)
+
+        if (getBitmapResult is Either.Failure) {
+            return Either.Failure(getBitmapResult.b)
+        }
+
+        val bitmap = (getBitmapResult as Either.Success).a
+        val byteArray = bitmap.getJpegByteArray()
+        val randomFileName = UUID.randomUUID().toString()
+        val cacheFileResult = postRepository.cacheCompressedImageFile(randomFileName, byteArray)
+
+        if (cacheFileResult is Either.Failure) {
+            return Either.Failure(cacheFileResult.b)
+        }
+
+        val cachedFile = (cacheFileResult as Either.Success).a
+        post.cachedImageFile = cachedFile
+        post.date = Date()
+
+        return postRepository.uploadPost(post)
     }
 
     data class Param(val post: PostUploadDomainModel)

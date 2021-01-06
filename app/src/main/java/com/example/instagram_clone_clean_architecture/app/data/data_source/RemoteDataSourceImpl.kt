@@ -7,8 +7,11 @@ import com.example.instagram_clone_clean_architecture.app.data.retrofit.services
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.extension.asImageMultipartFormData
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.net.HttpURLConnection
 
@@ -233,7 +236,7 @@ class RemoteDataSourceImpl(
         val locationField = post.location?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val timestampField = post.date!!.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val postedUserIdField = post.belongUserId!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val postImageField = post.imageByteArray!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val postImageField = post.cachedImageFile!!.asImageMultipartFormData("postImage")
 
         val res = postServices.addNewPostAsync(
             descriptionField,

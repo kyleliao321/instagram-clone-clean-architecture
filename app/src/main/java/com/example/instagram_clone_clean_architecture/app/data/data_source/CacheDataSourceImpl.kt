@@ -5,8 +5,14 @@ import com.example.instagram_clone_clean_architecture.app.domain.data_source.Cac
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 class CacheDataSourceImpl : CacheDataSource {
+
+    private lateinit var cacheDir: File
 
     private var userSelectedImageUri: Uri? = null
 
@@ -14,10 +20,31 @@ class CacheDataSourceImpl : CacheDataSource {
 
     private var authToken: String? = null
 
+    override fun init(cacheDir: File) {
+        this.cacheDir = cacheDir
+    }
+
     override fun getAuthToken(): String? = authToken
 
     override fun cacheAuthToken(token: String) {
         authToken = token
+    }
+
+    override suspend fun cacheCompressedUploadImage(
+        fileName: String,
+        byteArray: ByteArray
+    ): Either<File, Failure> {
+        val cacheFile = File(cacheDir, fileName).apply { createNewFile() }
+
+        var fos: FileOutputStream? = null
+
+        fos = FileOutputStream(cacheFile)
+
+        fos!!.write(byteArray)
+        fos!!.flush()
+        fos!!.close()
+
+        return Either.Success(cacheFile)
     }
 
     override suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?): Either<Unit, Failure> {

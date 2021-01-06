@@ -40,6 +40,7 @@ class InstagramCloneApplication: Application(), DIAware {
         super.onCreate()
         initContentResolver()
         initEncryptedSharedPreference()
+        initCacheDir()
         initTimber()
 
         Timber.i("Application context is created!")
@@ -53,6 +54,10 @@ class InstagramCloneApplication: Application(), DIAware {
         val contentResolver = applicationContext.contentResolver
 
         localDataSource.init(contentResolver)
+    }
+
+    private fun initCacheDir() {
+        cacheDataSource.init(cacheDir)
     }
 
     private fun initEncryptedSharedPreference() {

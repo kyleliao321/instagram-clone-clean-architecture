@@ -12,12 +12,17 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.reposi
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.utility.Either
+import java.io.File
 
 class PostRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val cacheDataSource: CacheDataSource
 ) : PostRepository {
+
+    override suspend fun cacheCompressedImageFile(fileName: String, byteArray: ByteArray): Either<File, Failure> {
+        return cacheDataSource.cacheCompressedUploadImage(fileName, byteArray)
+    }
 
     override suspend fun getLoginUserProfile(): Either<UserDomainModel, Failure> {
         return cacheDataSource.getLoginUser()
@@ -27,20 +32,8 @@ class PostRepositoryImpl(
         cacheDataSource.consumeCachedSelectedImageUri()
 
     // TODO: get bitmap and put into uploadPost should be done inside UseCase
-    override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure> {
-        return if (postUploadDomainModel.imageFile !== null) {
-            var bitmap: Bitmap? = null
-
-            getBitmap(postUploadDomainModel.imageFile!!).fold(
-                onSucceed = { bitmap = it }
-            )
-
-            postUploadDomainModel.imageByteArray = bitmap?.getJpegByteArray()
-
-            remoteDataSource.uploadPost(postUploadDomainModel)
-        } else {
-            remoteDataSource.uploadPost(postUploadDomainModel)
-        }
+    override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
+        return remoteDataSource.uploadPost(post)
     }
 
     override suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure> =

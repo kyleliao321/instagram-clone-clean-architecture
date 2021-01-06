@@ -4,11 +4,8 @@ import android.net.Uri
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import java.util.*
 
 class PostUploadDomainModelTest {
@@ -25,7 +22,7 @@ class PostUploadDomainModelTest {
     fun `isPostReady should return true when all fields are non-null value`() {
         val post =
             PostUploadDomainModel(
-                imageFile = mockFile,
+                imageUri = mockFile,
                 description = "1",
                 location = "1",
                 date = Date(),
@@ -54,7 +51,7 @@ class PostUploadDomainModelTest {
     fun `isPostReady should return true when description is missing`() {
         val post =
             PostUploadDomainModel(
-                imageFile = mockFile,
+                imageUri = mockFile,
                 location = "1",
                 date = Date(),
                 belongUserId = "mockUserId"
@@ -68,7 +65,7 @@ class PostUploadDomainModelTest {
     fun `isPostReady should return true when location is missing`() {
         val post =
             PostUploadDomainModel(
-                imageFile = mockFile,
+                imageUri = mockFile,
                 description = "1",
                 date = Date(),
                 belongUserId = "mockUserId"
@@ -82,7 +79,7 @@ class PostUploadDomainModelTest {
     fun `isPostReady should return true when date is missing`() {
         val post =
             PostUploadDomainModel(
-                imageFile = mockFile,
+                imageUri = mockFile,
                 location = "1",
                 description = "1",
                 belongUserId = "mockUserId"
@@ -96,7 +93,7 @@ class PostUploadDomainModelTest {
     fun `isPostReady should return false when belongUserId is missing`() {
         val post =
             PostUploadDomainModel(
-                imageFile = mockFile,
+                imageUri = mockFile,
                 location = "1",
                 date = Date(),
                 description = "1"

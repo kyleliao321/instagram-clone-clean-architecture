@@ -7,14 +7,17 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import java.io.File
 
 interface PostRepository {
+
+    suspend fun cacheCompressedImageFile(fileName: String, byteArray: ByteArray): Either<File, Failure>
 
     suspend fun getLoginUserProfile(): Either<UserDomainModel, Failure>
 
     suspend fun getUserSelectedImage(): Either<Uri?, Failure>
 
-    suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure>
+    suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure>
 
     suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
 

@@ -14,15 +14,11 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.usecas
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
@@ -61,6 +57,8 @@ class PostViewModelTest {
 
     private lateinit var getBitmapUseCase: GetBitmapUseCase
 
+    private lateinit var mockPostUseCase: UploadPostUseCase
+
     private lateinit var viewModel: PostViewModel
 
     @Before
@@ -71,13 +69,14 @@ class PostViewModelTest {
         getUserSelectedImageUseCase = GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher)
         uploadPostUseCase = UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)
         getBitmapUseCase = GetBitmapUseCase(postRepository, mainCoroutineRule.testDispatcher)
+        mockPostUseCase = spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher))
 
         viewModel = PostViewModel(
             intentService,
             navManager,
             getLoginUserUseCase,
             getUserSelectedImageUseCase,
-            uploadPostUseCase,
+            mockPostUseCase,
             getBitmapUseCase,
             mainCoroutineRule.testDispatcher
         )
@@ -144,7 +143,7 @@ class PostViewModelTest {
         // expect
         val expectPost =
             PostUploadDomainModel(
-                imageFile = mockImage,
+                imageUri = mockImage,
                 belongUserId = mockLoginUser.id
             )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
@@ -180,7 +179,7 @@ class PostViewModelTest {
         // expect
         val expectPost =
             PostUploadDomainModel(
-                imageFile = mockImage
+                imageUri = mockImage
             )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
@@ -214,7 +213,7 @@ class PostViewModelTest {
         // expect
         val expectPost =
             PostUploadDomainModel(
-                imageFile = null,
+                imageUri = null,
                 belongUserId = mockLoginUser.id
             )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
@@ -246,7 +245,7 @@ class PostViewModelTest {
         // expect
         val expectPost =
             PostUploadDomainModel(
-                imageFile = null
+                imageUri = null
             )
         viewModel.stateLiveData.value shouldBeEqualTo PostViewModel.ViewState(
             isUserSelectedImageLoading = false,
@@ -267,13 +266,12 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost succeed`() {
+        // given
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
         val mockReturnPost = mockk<PostDomainModel>()
         val mockUser = mockk<UserDomainModel>(relaxed = true)
 
-        // given
-        every { runBlocking { mockPost.isPostReady } } returns true
-        every { runBlocking { postRepository.uploadPostUseCase(any()) } } returns Either.Success(mockReturnPost)
+        every { runBlocking { mockPostUseCase.run(any()) } } returns Either.Success(mockReturnPost)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -287,12 +285,11 @@ class PostViewModelTest {
 
     @Test
     fun `verify view state when uploadPost fail on network connection`() {
+        // given
         val mockPost = mockk<PostUploadDomainModel>(relaxed = true)
         val mockUser = mockk<UserDomainModel>(relaxed = true)
 
-        // given
-        every { runBlocking { mockPost.isPostReady } } returns true
-        every { runBlocking { postRepository.uploadPostUseCase(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { mockPostUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -312,8 +309,7 @@ class PostViewModelTest {
         val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
-        every { runBlocking { mockPost.isPostReady } } returns true
-        every { runBlocking { postRepository.uploadPostUseCase(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { mockPostUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -333,7 +329,7 @@ class PostViewModelTest {
         val mockUser = mockk<UserDomainModel>(relaxed = true)
 
         // given
-        every { runBlocking { mockPost.isPostReady } } returns false
+        every { runBlocking { mockPostUseCase.run(any()) } } returns Either.Failure(Failure.PostNotComplete)
 
         // when
         mainCoroutineRule.runBlockingTest {
