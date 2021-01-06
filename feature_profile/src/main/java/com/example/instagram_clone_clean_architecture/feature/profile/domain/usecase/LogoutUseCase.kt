@@ -7,6 +7,7 @@ import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
+// TODO: clean cache should be done in repository layer
 class LogoutUseCase(
     private val profileRepository: ProfileRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
