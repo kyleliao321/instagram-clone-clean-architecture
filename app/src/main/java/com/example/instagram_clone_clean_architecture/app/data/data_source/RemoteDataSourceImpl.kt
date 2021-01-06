@@ -1,7 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
-import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AddRelationRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.LikePostRequest
@@ -9,8 +8,11 @@ import com.example.instagram_clone_clean_architecture.app.data.retrofit.services
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.net.HttpURLConnection
 
 class RemoteDataSourceImpl(
@@ -79,7 +81,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
-        val res = relationServices.getFollowings(userId)
+        val res = relationServices.getFollowingsAsync(userId)
         val status = res.code()
         val data = res.body()?.followings
 
@@ -91,7 +93,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getFollowerUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
-        val res = relationServices.getFollowers(userId)
+        val res = relationServices.getFollowersAsync(userId)
         val status = res.code()
         val data = res.body()?.followers
 
@@ -103,7 +105,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure> {
-        val res = postServices.getPost(postId)
+        val res = postServices.getPostAsync(postId)
         val status = res.code()
         val data = res.body()?.post
 
@@ -115,7 +117,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getPostListByUserId(userId: String): Either<List<PostDomainModel>, Failure> {
-        val res = postServices.getPosts(userId)
+        val res = postServices.getPostsAsync(userId)
         val status = res.code()
         val data = res.body()?.posts
 
@@ -127,7 +129,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure> {
-        val res = likeServices.getLikes(postId)
+        val res = likeServices.getLikesAsync(postId)
         val status = res.code()
         val data = res.body()?.likedUsers
 
@@ -138,8 +140,29 @@ class RemoteDataSourceImpl(
         }
     }
 
-    override suspend fun updateUserProfile(userProfile: UserProfileUploadDataModel): Either<UserDomainModel, Failure> {
-        TODO("Not yet implemented")
+    override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
+        val idField = userProfile.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val userNameField = userProfile.userName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val aliasField = userProfile.name.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val descriptionField = userProfile.description.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val userImage = userProfile.imageByteArray?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+        val res = userServices.updateUserProfileAsync(
+            userProfile.id,
+            idField,
+            userNameField,
+            aliasField,
+            descriptionField,
+            userImage
+        )
+        val status = res.code()
+        val data = res.body()?.userId
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            getUserProfileById(data)
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 
     override suspend fun addUserRelation(
@@ -147,7 +170,7 @@ class RemoteDataSourceImpl(
         followingId: String
     ): Either<Unit, Failure> {
         val reqBody = AddRelationRequest(followerId, followingId)
-        val res = relationServices.addRelation(reqBody)
+        val res = relationServices.addRelationAsync(reqBody)
         val status = res.code()
         val data = res.body()?.followings
 
@@ -162,7 +185,7 @@ class RemoteDataSourceImpl(
         followerId: String,
         followingId: String
     ): Either<Unit, Failure> {
-        val res = relationServices.removeRelation(followerId, followingId)
+        val res = relationServices.removeRelationAsync(followerId, followingId)
         val status = res.code()
         val data = res.body()?.followings
 
@@ -175,7 +198,7 @@ class RemoteDataSourceImpl(
 
     override suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
         val reqBody = LikePostRequest(userId, postId)
-        val res = likeServices.likePost(reqBody)
+        val res = likeServices.likePostAsync(reqBody)
         val status = res.code()
         val data = res.body()?.likedUsers
 
@@ -187,7 +210,7 @@ class RemoteDataSourceImpl(
     }
 
     override suspend fun removeUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
-        val res = likeServices.dislikePost(userId, postId)
+        val res = likeServices.dislikePostAsync(userId, postId)
         val status = res.code()
         val data = res.body()?.likedUsers
 

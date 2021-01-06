@@ -7,7 +7,8 @@ data class UserProfileUploadDomainModel(
     val id: String,
     val name: String,
     val userName: String,
-    val description: String
+    val description: String,
+    var imageByteArray: ByteArray? = null
 ) {
     companion object {
         fun from(domainModel: UserDomainModel, uri: Uri?):UserProfileUploadDomainModel {

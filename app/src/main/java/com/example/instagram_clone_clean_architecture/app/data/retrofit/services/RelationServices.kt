@@ -10,22 +10,22 @@ import retrofit2.http.*
 
 interface RelationServices {
     @GET("/api/v1/relations/followers/{userId}")
-    suspend fun getFollowers(
+    suspend fun getFollowersAsync(
         @Path("userId") userId: String
     ): Response<GetFollowersResponse>
 
     @GET("/api/v1/relations/followings/{userId}")
-    suspend fun getFollowings(
+    suspend fun getFollowingsAsync(
         @Path("userId") userId: String
     ): Response<GetFollowingsResponse>
 
     @POST("/api/v1/relations/")
-    suspend fun addRelation(
+    suspend fun addRelationAsync(
         @Body addRelationRequest: AddRelationRequest
     ): Response<AddRelationResponse>
 
     @DELETE("/api/v1/relations/follower/{followerId}/following/{followingId}")
-    suspend fun removeRelation(
+    suspend fun removeRelationAsync(
         @Path("followerId") followerId: String,
         @Path("followingId") followingId: String
     ): Response<RemoveRelationResponse>

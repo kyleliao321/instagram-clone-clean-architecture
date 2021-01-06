@@ -9,17 +9,17 @@ import retrofit2.http.*
 
 interface LikeServices {
     @GET("/api/v1/likes/")
-    suspend fun getLikes(
+    suspend fun getLikesAsync(
         @Query("postId") postId: String
     ): Response<GetLikesResponse>
 
     @POST("/api/v1/likes")
-    suspend fun likePost(
+    suspend fun likePostAsync(
         @Body body: LikePostRequest
     ): Response<LikePostResponse>
 
     @DELETE("/api/v1/likes/user/{userId}/post/{postId}")
-    suspend fun dislikePost(
+    suspend fun dislikePostAsync(
         @Path("userId") userId: String,
         @Path("postId") postId: String
     ): Response<DislikePostResponse>

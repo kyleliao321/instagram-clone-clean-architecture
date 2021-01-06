@@ -9,12 +9,12 @@ import retrofit2.http.Query
 
 interface PostServices {
     @GET("/api/v1/posts/{postId}")
-    suspend fun getPost(
+    suspend fun getPostAsync(
         @Path("postId") postId: String
     ): Response<GetPostResponse>
 
     @GET("/api/v1/posts/")
-    suspend fun getPosts(
+    suspend fun getPostsAsync(
         @Query("userId") userId: String
     ): Response<GetPostsResponse>
 }

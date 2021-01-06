@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.profile.data.repo
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Base64
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
@@ -11,6 +12,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.utility.Either
 
 internal class ProfileRepositoryImpl(
@@ -65,20 +67,20 @@ internal class ProfileRepositoryImpl(
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
-        val uri = userProfile.image
-
-        val newProfile = if (uri == null) {
-            UserProfileUploadDataModel.from(userProfile, null)
-        } else {
+        return if (userProfile.image !== null) {
             var bitmap: Bitmap? = null
-            localDataSource.getBitmap(uri).fold(
-                onSucceed = { bitmap = it },
-                onFail = { bitmap = null }
+            localDataSource.getBitmap(userProfile.image!!).fold(
+                onSucceed = { bitmap = it }
             )
-            UserProfileUploadDataModel.from(userProfile, bitmap)
-        }
 
-        return remoteDataSource.updateUserProfile(newProfile)
+            val imageByteArray = bitmap?.getJpegByteArray()
+
+            userProfile.imageByteArray = imageByteArray
+
+            remoteDataSource.updateUserProfile(userProfile)
+        } else {
+            remoteDataSource.updateUserProfile(userProfile)
+        }
     }
 
     override suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure> {

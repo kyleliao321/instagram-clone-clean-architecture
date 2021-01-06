@@ -68,7 +68,7 @@ complexity:
     threshold: 60
   LongParameterList:
     active: true
-    threshold: 6
+    threshold: 8
     ignoreDefaultParameters: false
   MethodOverloading:
     active: true
@@ -292,10 +292,6 @@ naming:
     active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
     forbiddenName: ''
-  FunctionMaxLength:
-    active: false
-    excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
-    maximumFunctionNameLength: 30
   FunctionMinLength:
     active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"

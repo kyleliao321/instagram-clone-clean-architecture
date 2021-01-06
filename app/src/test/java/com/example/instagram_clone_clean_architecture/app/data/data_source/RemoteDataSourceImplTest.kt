@@ -8,17 +8,15 @@ import com.example.instagram_clone_clean_architecture.app.data.retrofit.services
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import okhttp3.HttpUrl
 import org.amshove.kluent.shouldBeEqualTo
-import org.amshove.kluent.shouldNotBe
 import org.amshove.kluent.shouldNotBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -67,6 +65,14 @@ class RemoteDataSourceImplTest {
         postNum = 0,
         followingNum = 0,
         followerNum = 0
+    )
+
+    private val mockUploadUserProfile = UserProfileUploadDomainModel(
+        id = mockUserId,
+        userName = mockUserName,
+        name = "mockAlias",
+        description = "mockDes",
+        image = mockk(relaxed = true)
     )
 
     private val mockSecondUserProfile = UserProfileDataModel(
@@ -331,13 +337,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetPostResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetPostResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetPostResponse>>(relaxed = true)
 
         every { mockReqBody.post } returns mockPost
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { postServices.getPost(any()) } returns mockReq
+        coEvery { postServices.getPostAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -354,12 +360,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetPostResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetPostResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetPostResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_NOT_FOUND
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_NOT_FOUND
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { postServices.getPost(any()) } returns mockReq
+        coEvery { postServices.getPostAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -376,13 +382,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetPostsResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetPostsResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetPostsResponse>>(relaxed = true)
 
         every { mockReqBody.posts } returns listOf(mockPost)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { postServices.getPosts(any()) } returns mockReq
+        coEvery { postServices.getPostsAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -399,12 +405,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetPostsResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetPostsResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetPostsResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { postServices.getPosts(any()) } returns mockReq
+        coEvery { postServices.getPostsAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -421,13 +427,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetFollowingsResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetFollowingsResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetFollowingsResponse>>(relaxed = true)
 
         every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.getFollowings(any()) } returns mockReq
+        coEvery { relationServices.getFollowingsAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -444,12 +450,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetFollowingsResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetFollowingsResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetFollowingsResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.getFollowings(any()) } returns mockReq
+        coEvery { relationServices.getFollowingsAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -466,13 +472,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetFollowersResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetFollowersResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetFollowersResponse>>(relaxed = true)
 
         every { mockReqBody.followers } returns listOf(mockSecondUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.getFollowers(any()) } returns mockReq
+        coEvery { relationServices.getFollowersAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -489,12 +495,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetFollowersResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetFollowersResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetFollowersResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.getFollowers(any()) } returns mockReq
+        coEvery { relationServices.getFollowersAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -511,13 +517,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<AddRelationResponse>(relaxed = true)
-        val mockReq = mockk<Response<AddRelationResponse>>(relaxed = true)
+        val mockRes = mockk<Response<AddRelationResponse>>(relaxed = true)
 
         every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.addRelation(any()) } returns mockReq
+        coEvery { relationServices.addRelationAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -534,12 +540,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<AddRelationResponse>(relaxed = true)
-        val mockReq = mockk<Response<AddRelationResponse>>(relaxed = true)
+        val mockRes = mockk<Response<AddRelationResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.addRelation(any()) } returns mockReq
+        coEvery { relationServices.addRelationAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -556,13 +562,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<RemoveRelationResponse>(relaxed = true)
-        val mockReq = mockk<Response<RemoveRelationResponse>>(relaxed = true)
+        val mockRes = mockk<Response<RemoveRelationResponse>>(relaxed = true)
 
         every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.removeRelation(any(), any()) } returns mockReq
+        coEvery { relationServices.removeRelationAsync(any(), any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -579,12 +585,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<RemoveRelationResponse>(relaxed = true)
-        val mockReq = mockk<Response<RemoveRelationResponse>>(relaxed = true)
+        val mockRes = mockk<Response<RemoveRelationResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { relationServices.removeRelation(any(), any()) } returns mockReq
+        coEvery { relationServices.removeRelationAsync(any(), any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -601,13 +607,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetLikesResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetLikesResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetLikesResponse>>(relaxed = true)
 
         every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { likeServices.getLikes(any()) } returns mockReq
+        coEvery { likeServices.getLikesAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -624,12 +630,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<GetLikesResponse>(relaxed = true)
-        val mockReq = mockk<Response<GetLikesResponse>>(relaxed = true)
+        val mockRes = mockk<Response<GetLikesResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { likeServices.getLikes(any()) } returns mockReq
+        coEvery { likeServices.getLikesAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -646,13 +652,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<LikePostResponse>(relaxed = true)
-        val mockReq = mockk<Response<LikePostResponse>>(relaxed = true)
+        val mockRes = mockk<Response<LikePostResponse>>(relaxed = true)
 
         every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { likeServices.likePost(any()) } returns mockReq
+        coEvery { likeServices.likePostAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -669,12 +675,12 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<LikePostResponse>(relaxed = true)
-        val mockReq = mockk<Response<LikePostResponse>>(relaxed = true)
+        val mockRes = mockk<Response<LikePostResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { likeServices.likePost(any()) } returns mockReq
+        coEvery { likeServices.likePostAsync(any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -691,13 +697,13 @@ class RemoteDataSourceImplTest {
 
         // given
         val mockReqBody = mockk<DislikePostResponse>(relaxed = true)
-        val mockReq = mockk<Response<DislikePostResponse>>(relaxed = true)
+        val mockRes = mockk<Response<DislikePostResponse>>(relaxed = true)
 
         every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
-        every { mockReq.code() } returns HttpURLConnection.HTTP_OK
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockReqBody
 
-        coEvery { likeServices.dislikePost(any(), any()) } returns mockReq
+        coEvery { likeServices.dislikePostAsync(any(), any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -713,17 +719,69 @@ class RemoteDataSourceImplTest {
         var result: Either<Unit, Failure>? = null
 
         // given
-        val mockReqBody = mockk<DislikePostResponse>(relaxed = true)
-        val mockReq = mockk<Response<DislikePostResponse>>(relaxed = true)
+        val mockResBody = mockk<DislikePostResponse>(relaxed = true)
+        val mockRes = mockk<Response<DislikePostResponse>>(relaxed = true)
 
-        every { mockReq.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
-        every { mockReq.body() } returns mockReqBody
+        every { mockRes.code() } returns HttpURLConnection.HTTP_BAD_REQUEST
+        every { mockRes.body() } returns mockResBody
 
-        coEvery { likeServices.dislikePost(any(), any()) } returns mockReq
+        coEvery { likeServices.dislikePostAsync(any(), any()) } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {
             result = remoteDataSourceImpl.removeUserLikePost(mockUserId, mockPostId)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
+
+    @Test
+    fun `updateUserProfile should return correct result when userService updateUserProfile return with HTTP_OK`() {
+        var result: Either<UserDomainModel, Failure>? = null
+
+        // given
+        val mockResBody = mockk<UpdateUserProfileResponse>(relaxed = true)
+        val mockRes = mockk<Response<UpdateUserProfileResponse>>(relaxed = true)
+
+        every { mockResBody.userId } returns mockUserId
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.body() } returns mockResBody
+
+        val mockGetResBody = mockk<GetUserProfileResponse>(relaxed = true)
+        val mockGetRes = mockk<Response<GetUserProfileResponse>>(relaxed = true)
+
+        every { mockGetResBody.user } returns mockUserProfile
+        every { mockGetRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockGetRes.body() } returns mockGetResBody
+
+        coEvery { userServices.updateUserProfileAsync(any(), any(), any(), any(), any(), any()) } returns mockRes
+        coEvery { userServices.getUserProfileAsync(any()) } returns mockGetRes
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.updateUserProfile(mockUploadUserProfile)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(UserDomainModel.from(mockUserProfile))
+    }
+
+    @Test
+    fun `updateUserProfile should return server error failure when userService updateUserProfile return other than HTTP_OK`() {
+        var result: Either<UserDomainModel, Failure>? = null
+
+        // given
+        val mockRes = mockk<Response<UpdateUserProfileResponse>>(relaxed = true)
+
+        every { mockRes.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockRes.body() } returns null
+
+        coEvery { userServices.updateUserProfileAsync(any(), any(), any(), any(), any(), any()) } returns mockRes
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.updateUserProfile(mockUploadUserProfile)
         }
 
         // expect
