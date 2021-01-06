@@ -7,11 +7,8 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.reposi
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
@@ -138,6 +135,34 @@ class UploadPostUseCaseTest {
 
         // expect
         result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
+    }
+
+    @Test
+    fun `cachedFile should call delete no matter what postRepository uploadPost return`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockBitmap = mockk<Bitmap>(relaxed = true)
+        val cachedFile = mockk<File>(relaxed = true)
+        val post = mockk<PostUploadDomainModel>(relaxed = true)
+        val param = mockk<UploadPostUseCase.Param>(relaxed = true)
+
+        every { param.post } returns post
+        every { post.isPostReady } returns true
+        every { post.imageUri } returns mockk()
+        coEvery { postRepository.getBitmap(any()) } returns Either.Success(mockBitmap)
+        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Success(cachedFile)
+        coEvery { postRepository.uploadPost(any()) } returns Either.Failure(Failure.NetworkConnection)
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(param) {
+                result = it
+            }
+        }
+
+        // expect
+        verify(exactly = 1) { cachedFile.delete() }
     }
 
 }

@@ -31,7 +31,6 @@ class PostRepositoryImpl(
     override suspend fun getUserSelectedImage(): Either<Uri?, Failure> =
         cacheDataSource.consumeCachedSelectedImageUri()
 
-    // TODO: get bitmap and put into uploadPost should be done inside UseCase
     override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
         return remoteDataSource.uploadPost(post)
     }

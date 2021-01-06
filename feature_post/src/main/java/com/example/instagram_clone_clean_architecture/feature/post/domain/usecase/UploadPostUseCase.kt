@@ -42,7 +42,9 @@ class UploadPostUseCase(
         post.cachedImageFile = cachedFile
         post.date = Date()
 
-        return postRepository.uploadPost(post)
+        return postRepository.uploadPost(post).also {
+            cachedFile.delete()
+        }
     }
 
     data class Param(val post: PostUploadDomainModel)
