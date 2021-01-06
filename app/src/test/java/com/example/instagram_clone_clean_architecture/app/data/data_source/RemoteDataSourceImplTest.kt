@@ -7,6 +7,7 @@ import com.example.instagram_clone_clean_architecture.app.data.retrofit.response
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.library_base.domain.exception.Failure
@@ -24,6 +25,7 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Response
 import java.net.HttpURLConnection
+import java.util.*
 
 @RunWith(JUnit4::class)
 class RemoteDataSourceImplTest {
@@ -95,6 +97,12 @@ class RemoteDataSourceImplTest {
         timestamp = "mockTimestamp",
         imageSrc = "mockImageSrc",
         postedUserId = mockUserId
+    )
+
+    private val mockUploadPost = PostUploadDomainModel(
+        date = Date(),
+        belongUserId = mockUserId,
+        imageByteArray = ByteArray(10)
     )
 
     private val mockLoginCredential = LoginCredentialDataModel(
@@ -788,5 +796,66 @@ class RemoteDataSourceImplTest {
         result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
 
+    @Test
+    fun `uploadPost should return post not complete failure when given post is not upload ready`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockFailUploadPost = mockk<PostUploadDomainModel>(relaxed = true)
+
+        every { mockFailUploadPost.isPostUploadReady } returns false
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.uploadPost(mockFailUploadPost)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.PostNotComplete)
+    }
+
+    @Test
+    fun `uploadPost should return correct result when postServices addNewPost return with HTTP_OK`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockResBody = mockk<AddNewPostResponse>(relaxed = true)
+        val mockRes = mockk<Response<AddNewPostResponse>>(relaxed = true)
+
+        every { mockResBody.post } returns mockPost
+        every { mockRes.code() } returns HttpURLConnection.HTTP_CREATED
+        every { mockRes.body() } returns mockResBody
+
+        coEvery { postServices.addNewPostAsync(any(), any(), any(), any(), any()) } returns mockRes
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.uploadPost(mockUploadPost)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Success(PostDomainModel.from(mockPost))
+    }
+
+    @Test
+    fun `uploadPost should return server error failure when postServices addNewPost return other than HTTP_OK`() {
+        var result: Either<PostDomainModel, Failure>? = null
+
+        // given
+        val mockRes = mockk<Response<AddNewPostResponse>>(relaxed = true)
+
+        every { mockRes.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
+        every { mockRes.body() } returns null
+
+        coEvery { postServices.addNewPostAsync(any(), any(), any(), any(), any()) } returns mockRes
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.uploadPost(mockUploadPost)
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.ServerError)
+    }
 
 }

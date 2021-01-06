@@ -2,7 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.post.data.reposit
 
 import android.graphics.Bitmap
 import android.net.Uri
-import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
@@ -28,20 +27,18 @@ class PostRepositoryImpl(
         cacheDataSource.consumeCachedSelectedImageUri()
 
     override suspend fun uploadPostUseCase(postUploadDomainModel: PostUploadDomainModel): Either<PostDomainModel, Failure> {
-        val imageUri = postUploadDomainModel.imageFile!!
-        var bitmap: Bitmap? = null
+        return if (postUploadDomainModel.imageFile !== null) {
+            var bitmap: Bitmap? = null
 
-        getBitmap(imageUri).fold(
-            onSucceed = { bitmap = it },
-            onFail = {}
-        )
+            getBitmap(postUploadDomainModel.imageFile!!).fold(
+                onSucceed = { bitmap = it }
+            )
 
-        return if (bitmap == null) {
-            Either.Failure(Failure.PhotoGalleryServiceFail)
+            postUploadDomainModel.imageByteArray = bitmap?.getJpegByteArray()
+
+            remoteDataSource.uploadPost(postUploadDomainModel)
         } else {
-            val imageByteArray = bitmap!!.getJpegByteArray()
-            val dataModel = PostUploadDataModel.from(postUploadDomainModel, imageByteArray)
-            remoteDataSource.uploadPost(dataModel)
+            remoteDataSource.uploadPost(postUploadDomainModel)
         }
     }
 

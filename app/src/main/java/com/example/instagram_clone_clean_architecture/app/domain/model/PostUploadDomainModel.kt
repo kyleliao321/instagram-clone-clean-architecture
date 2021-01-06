@@ -8,10 +8,14 @@ data class PostUploadDomainModel(
     var description: String? = null,
     var location: String? = null,
     var date: Date? = null,
-    var belongUserId: String? = null
+    var belongUserId: String? = null,
+    var imageByteArray: ByteArray? = null
 ) {
 
     val isPostReady get() =
         imageFile != null && belongUserId != null
+
+    val isPostUploadReady get() =
+        imageByteArray != null && belongUserId != null && date != null
 
 }

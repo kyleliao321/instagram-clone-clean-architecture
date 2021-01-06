@@ -1,7 +1,5 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
-import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
-import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
@@ -10,9 +8,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfi
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
-import timber.log.Timber
 import java.util.*
-import kotlin.random.Random
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
@@ -374,13 +370,13 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun uploadPost(post: PostUploadDataModel): Either<PostDomainModel, Failure> {
+    override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
 
         if (randomBoolean()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
-        val mockNewPost = userPostList[0].copy(id = generateId(), belongUserId = post.belongUser)
+        val mockNewPost = userPostList[0].copy(id = generateId(), belongUserId = post.belongUserId!!)
         userPostList.add(mockNewPost)
         return Either.Success(mockNewPost)
     }

@@ -1,12 +1,12 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
-import com.example.instagram_clone_clean_architecture.app.data.model.PostUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AccountRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.AddRelationRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.LikePostRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
 import com.example.library_base.domain.exception.Failure
@@ -221,7 +221,31 @@ class RemoteDataSourceImpl(
         }
     }
 
-    override suspend fun uploadPost(post: PostUploadDataModel): Either<PostDomainModel, Failure> {
-        TODO("Not yet implemented")
+    override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
+        if (!post.isPostUploadReady) {
+            return Either.Failure(Failure.PostNotComplete)
+        }
+
+        val descriptionField = post.description?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val locationField = post.location?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val timestampField = post.date!!.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val postedUserIdField = post.belongUserId!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val postImageField = post.imageByteArray!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+        val res = postServices.addNewPostAsync(
+            descriptionField,
+            locationField,
+            timestampField,
+            postedUserIdField,
+            postImageField
+        )
+        val status = res.code()
+        val data = res.body()?.post
+
+        return if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
+            Either.Success(PostDomainModel.from(data))
+        } else {
+            Either.Failure(Failure.ServerError)
+        }
     }
 }

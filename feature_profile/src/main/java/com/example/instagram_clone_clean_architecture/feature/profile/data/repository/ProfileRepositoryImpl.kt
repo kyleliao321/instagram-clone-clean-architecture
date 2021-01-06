@@ -2,8 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.profile.data.repo
 
 import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Base64
-import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileUploadDataModel
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource

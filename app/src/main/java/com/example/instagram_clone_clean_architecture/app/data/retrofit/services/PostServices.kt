@@ -1,11 +1,12 @@
 package com.example.instagram_clone_clean_architecture.app.data.retrofit.services
 
+import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.AddNewPostResponse
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.GetPostResponse
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.GetPostsResponse
+import okhttp3.RequestBody
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface PostServices {
     @GET("/api/v1/posts/{postId}")
@@ -17,4 +18,14 @@ interface PostServices {
     suspend fun getPostsAsync(
         @Query("userId") userId: String
     ): Response<GetPostsResponse>
+
+    @Multipart
+    @POST("/api/v1/posts/")
+    suspend fun addNewPostAsync(
+        @Part("description") description: RequestBody? = null,
+        @Part("location") location: RequestBody? = null,
+        @Part("timestamp") timestamp: RequestBody,
+        @Part("postedUserId") userId: RequestBody,
+        @Part("postImage") postImage: RequestBody
+    ): Response<AddNewPostResponse>
 }
