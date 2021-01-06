@@ -33,6 +33,7 @@ class SearchViewModel(
         navManager.onNavEvent(navDir)
     }
 
+    // TODO: keyword validation should be done inside getUserProfileListUseCase
     fun loadUserProfileList() = viewModelScope.launch(defaultDispatcher) {
         state.keyword?.let {
             if (it.isNotBlank()) {

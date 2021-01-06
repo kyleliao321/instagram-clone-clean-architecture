@@ -64,6 +64,7 @@ internal class ProfileRepositoryImpl(
         return localDataSource.getBitmap(uri)
     }
 
+    // TODO: get bitmap and put into uploadPost should be done inside UseCase
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
         return if (userProfile.image !== null) {
             var bitmap: Bitmap? = null

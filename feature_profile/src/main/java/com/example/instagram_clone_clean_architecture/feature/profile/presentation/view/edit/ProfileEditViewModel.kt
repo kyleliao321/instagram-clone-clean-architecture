@@ -61,6 +61,7 @@ class ProfileEditViewModel(
         navigationUseCase(params)
     }
 
+    // TODO: updated user data should be validate inside updateUserProfileUseCase
     fun onUpdateUserProfile() = viewModelScope.launch(defaultDispatcher) {
         state.bindingUserProfile?.let { updatedUserProfile ->
             // Start updating animation

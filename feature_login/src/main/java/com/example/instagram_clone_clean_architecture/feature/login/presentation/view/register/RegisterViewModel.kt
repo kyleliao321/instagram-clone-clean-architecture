@@ -32,6 +32,7 @@ class RegisterViewModel(
         navManager.onNavEvent(navDir)
     }
 
+    // TODO: register information should be validate inside userRegisterUseCase
     fun userRegister() = viewModelScope.launch(defaultDispatcher) {
         if (state.userName != null && state.userPassword != null) {
             if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {

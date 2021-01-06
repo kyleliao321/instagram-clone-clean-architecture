@@ -40,6 +40,7 @@ class LoginViewModel(
         navManager.onNavEvent(navDir)
     }
 
+    // TODO: user login information should be validate inside userLoginUserCase
     fun userLogin(userName: String?, userPassword: String?) = viewModelScope.launch(defaultDispatcher) {
         if (userName != null && userPassword != null) {
             if (userName!!.isNotBlank() && userPassword!!.isNotBlank()) {
