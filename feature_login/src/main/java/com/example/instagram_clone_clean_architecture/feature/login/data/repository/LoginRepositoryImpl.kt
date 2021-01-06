@@ -52,4 +52,9 @@ class LoginRepositoryImpl(
     override suspend fun updateLocalAuthToken(token: String): Either<Unit, Failure> {
         return localDataSource.updateAuthorizedToken(token)
     }
+
+    override suspend fun cacheAuthToken(token: String): Either<Unit, Failure> {
+        cacheDataSource.cacheAuthToken(token)
+        return Either.Success(Unit)
+    }
 }

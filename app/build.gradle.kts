@@ -67,6 +67,7 @@ android {
 dependencies {
     api(project(ModuleDependency.LIBRARY_BASE))
     implementation(LibraryDependency.SECURITY_CRYPTO)
+    implementation(LibraryDependency.OK_HTTP_LOG_INTERCEPTOR)
 
     testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
     testImplementation(TestLibraryDependency.JUNIT)

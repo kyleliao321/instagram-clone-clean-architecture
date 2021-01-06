@@ -12,6 +12,14 @@ class CacheDataSourceImpl : CacheDataSource {
 
     private var loginUser: UserDomainModel? = null
 
+    private var authToken: String? = null
+
+    override fun getAuthToken(): String? = authToken
+
+    override fun cacheAuthToken(token: String) {
+        authToken = token
+    }
+
     override suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?): Either<Unit, Failure> {
         loginUser = userProfile
         return Either.Success(Unit)

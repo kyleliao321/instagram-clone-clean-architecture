@@ -17,6 +17,7 @@ object LibraryVersions {
     const val RETROFIT = "2.9.0"
     const val OK_HTTP = "4.8.1"
     const val GSON = "2.8.0"
+    const val OK_HTTP_LOG_INTERCEPTOR = "4.9.0"
 }
 
 object LibraryDependency {
@@ -44,4 +45,5 @@ object LibraryDependency {
     const val RETROFIT = "com.squareup.retrofit2:retrofit:${LibraryVersions.RETROFIT}"
     const val OK_HTTP = "com.squareup.okhttp3:okhttp:${LibraryVersions.OK_HTTP}"
     const val GSON = "com.squareup.retrofit2:converter-gson:${LibraryVersions.GSON}"
+    const val OK_HTTP_LOG_INTERCEPTOR = "com.squareup.okhttp3:logging-interceptor:${LibraryVersions.OK_HTTP_LOG_INTERCEPTOR}"
 }

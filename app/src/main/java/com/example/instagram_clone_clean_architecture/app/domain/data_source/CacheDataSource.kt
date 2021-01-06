@@ -7,6 +7,10 @@ import com.example.library_base.domain.utility.Either
 
 interface CacheDataSource {
 
+    fun getAuthToken() : String?
+
+    fun cacheAuthToken(token: String): Unit
+
     suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?) : Either<Unit, Failure>
 
     suspend fun getLoginUser() : Either<UserDomainModel, Failure>

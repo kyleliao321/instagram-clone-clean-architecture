@@ -23,6 +23,7 @@ class UserLoginUseCase(
                 loginRepository.updateLocalLoginUserName(params.userName)
                 loginRepository.updateLocalLoginUserPassword(params.password)
                 loginRepository.updateLocalAuthToken(credential.jwt)
+                loginRepository.cacheAuthToken(credential.jwt)
                 loginRepository.cacheLoginUserProfile(credential.userProfile)
                 Either.Success(credential.userProfile)
             }

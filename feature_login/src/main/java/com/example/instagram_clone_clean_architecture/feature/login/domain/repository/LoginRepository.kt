@@ -23,4 +23,5 @@ interface LoginRepository {
 
     suspend fun cacheLoginUserProfile(userProfile: UserDomainModel) : Either<Unit, Failure>
 
+    suspend fun cacheAuthToken(token: String) : Either<Unit, Failure>
 }

@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.data.data_source.Local
 import com.example.instagram_clone_clean_architecture.app.data.data_source.MockRemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.RemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.repository.AppRepositoryImpl
+import com.example.instagram_clone_clean_architecture.app.data.retrofit.intercetors.AuthorizeInterceptor
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
@@ -31,6 +32,9 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind<LocalDataSource>() with singleton { LocalDataSourceImpl() }
 
     bind<CacheDataSource>() with singleton { CacheDataSourceImpl() }
+
+    // Retrofit Interceptor
+    bind() from singleton { AuthorizeInterceptor(instance()) }
 
     // Retrofit services
     bind() from singleton { instance<Retrofit>().create(AccountServices::class.java) }
