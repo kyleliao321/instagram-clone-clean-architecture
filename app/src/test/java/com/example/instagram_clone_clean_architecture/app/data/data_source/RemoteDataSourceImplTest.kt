@@ -272,7 +272,7 @@ class RemoteDataSourceImplTest {
         val mockLoginResBody = mockk<LoginResponse>(relaxed = true)
         val mockLoginReq = mockk<Response<LoginResponse>>(relaxed = true)
 
-        every { mockLoginResBody.loginCredential } returns mockLoginCredential
+        every { mockLoginResBody.credential } returns mockLoginCredential
         every { mockLoginReq.code() } returns HttpURLConnection.HTTP_OK
         every { mockLoginReq.body() } returns mockLoginResBody
 

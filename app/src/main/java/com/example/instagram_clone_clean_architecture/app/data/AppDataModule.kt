@@ -4,6 +4,7 @@ import com.example.instagram_clone_clean_architecture.app.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.app.data.data_source.CacheDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.LocalDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.MockRemoteDataSourceImpl
+import com.example.instagram_clone_clean_architecture.app.data.data_source.RemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.repository.AppRepositoryImpl
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
@@ -17,7 +18,15 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
 
     bind<AppRepository>() with singleton { AppRepositoryImpl(instance()) }
 
-    bind<RemoteDataSource>() with singleton { MockRemoteDataSourceImpl() }
+    bind<RemoteDataSource>() with singleton {
+        RemoteDataSourceImpl(
+            instance(),
+            instance(),
+            instance(),
+            instance(),
+            instance()
+        )
+    }
 
     bind<LocalDataSource>() with singleton { LocalDataSourceImpl() }
 

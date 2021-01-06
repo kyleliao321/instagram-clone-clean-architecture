@@ -13,6 +13,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.net.HttpURLConnection
 
 class RemoteDataSourceImpl(
@@ -28,10 +29,10 @@ class RemoteDataSourceImpl(
     ): Either<UserDomainModel, Failure> {
         val accountReq = AccountRequest(userName, password)
         val res = accountServices.loginAsync(accountReq)
-
+        
         return when (res.code()) {
             HttpURLConnection.HTTP_OK -> {
-                val data = res.body()?.loginCredential
+                val data = res.body()?.credential
                 return when (data) {
                     null -> Either.Failure(Failure.ServerError)
                     else -> getUserProfileById(data.userId)

@@ -3,5 +3,5 @@ package com.example.instagram_clone_clean_architecture.app.data.retrofit.respons
 import com.example.instagram_clone_clean_architecture.app.data.model.LoginCredentialDataModel
 
 data class LoginResponse(
-    val loginCredential: LoginCredentialDataModel
+    val credential: LoginCredentialDataModel
 )
