@@ -158,7 +158,7 @@ class RemoteDataSourceImpl(
         val status = res.code()
         val data = res.body()?.userId
 
-        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+        return if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
             getUserProfileById(data)
         } else {
             Either.Failure(Failure.ServerError)
@@ -174,7 +174,7 @@ class RemoteDataSourceImpl(
         val status = res.code()
         val data = res.body()?.followings
 
-        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+        return if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
             Either.Success(Unit)
         } else {
             Either.Failure(Failure.ServerError)
@@ -202,7 +202,7 @@ class RemoteDataSourceImpl(
         val status = res.code()
         val data = res.body()?.likedUsers
 
-        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+        return if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
             Either.Success(Unit)
         } else {
             Either.Failure(Failure.ServerError)

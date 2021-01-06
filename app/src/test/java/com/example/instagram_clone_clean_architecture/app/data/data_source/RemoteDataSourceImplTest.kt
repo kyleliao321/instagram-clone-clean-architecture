@@ -520,7 +520,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addUserRelation should return correct result when relationService addRelation return with HTTP_OK`() {
+    fun `addUserRelation should return correct result when relationService addRelation return with HTTP_CREATED`() {
         var result: Either<Unit, Failure>? = null
 
         // given
@@ -528,7 +528,7 @@ class RemoteDataSourceImplTest {
         val mockRes = mockk<Response<AddRelationResponse>>(relaxed = true)
 
         every { mockReqBody.followings } returns listOf(mockSecondUserProfile)
-        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.code() } returns HttpURLConnection.HTTP_CREATED
         every { mockRes.body() } returns mockReqBody
 
         coEvery { relationServices.addRelationAsync(any()) } returns mockRes
@@ -543,7 +543,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addUserRelation should return server error failure when relationService addRelation return other than HTTP_OK`() {
+    fun `addUserRelation should return server error failure when relationService addRelation return other than HTTP_CREATED`() {
         var result: Either<Unit, Failure>? = null
 
         // given
@@ -655,7 +655,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addUserLikePost should return correct result when likeService likePost return with HTTP_OK`() {
+    fun `addUserLikePost should return correct result when likeService likePost return with HTTP_CREATED`() {
         var result: Either<Unit, Failure>? = null
 
         // given
@@ -663,7 +663,7 @@ class RemoteDataSourceImplTest {
         val mockRes = mockk<Response<LikePostResponse>>(relaxed = true)
 
         every { mockReqBody.likedUsers } returns listOf(mockUserProfile)
-        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.code() } returns HttpURLConnection.HTTP_CREATED
         every { mockRes.body() } returns mockReqBody
 
         coEvery { likeServices.likePostAsync(any()) } returns mockRes
@@ -678,7 +678,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `addUserLikePost should return server error failure when likeService likePost return other than HTTP_OK`() {
+    fun `addUserLikePost should return server error failure when likeService likePost return other than HTTP_CREATED`() {
         var result: Either<Unit, Failure>? = null
 
         // given
@@ -745,7 +745,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `updateUserProfile should return correct result when userService updateUserProfile return with HTTP_OK`() {
+    fun `updateUserProfile should return correct result when userService updateUserProfile return with HTTP_CREATED`() {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
@@ -753,7 +753,7 @@ class RemoteDataSourceImplTest {
         val mockRes = mockk<Response<UpdateUserProfileResponse>>(relaxed = true)
 
         every { mockResBody.userId } returns mockUserId
-        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
+        every { mockRes.code() } returns HttpURLConnection.HTTP_CREATED
         every { mockRes.body() } returns mockResBody
 
         val mockGetResBody = mockk<GetUserProfileResponse>(relaxed = true)
@@ -776,7 +776,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `updateUserProfile should return server error failure when userService updateUserProfile return other than HTTP_OK`() {
+    fun `updateUserProfile should return server error failure when userService updateUserProfile return other than HTTP_CREATED`() {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
@@ -815,7 +815,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `uploadPost should return correct result when postServices addNewPost return with HTTP_OK`() {
+    fun `uploadPost should return correct result when postServices addNewPost return with HTTP_CREATED`() {
         var result: Either<PostDomainModel, Failure>? = null
 
         // given
@@ -838,7 +838,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `uploadPost should return server error failure when postServices addNewPost return other than HTTP_OK`() {
+    fun `uploadPost should return server error failure when postServices addNewPost return other than HTTP_CREATED`() {
         var result: Either<PostDomainModel, Failure>? = null
 
         // given
