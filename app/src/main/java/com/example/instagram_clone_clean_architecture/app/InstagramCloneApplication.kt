@@ -5,6 +5,7 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.R
+import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.di.FeatureManager
 import com.example.instagram_clone_clean_architecture.app.domain.di.FragmentArgsExternalSource
@@ -18,6 +19,10 @@ import timber.log.Timber
 class InstagramCloneApplication: Application(), DIAware {
 
     private val localDataSource: LocalDataSource by instance()
+
+    // keep reference to prevent memory cache been clear by GC
+    // ! Temporary solution. Should cache data both in memory and DataStore
+    private val cacheDataSource: CacheDataSource by instance()
 
     /**
      * Top-level DI module manager, includes all dependencies.
