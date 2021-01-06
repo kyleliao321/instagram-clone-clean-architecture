@@ -26,6 +26,8 @@ class LocalDataSourceImpl: LocalDataSource {
 
     private val LOCAL_LOGIN_USER_PASSWORD_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_password"
 
+    private val LOCAL_TOKEN_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_token"
+
     private val ERROR_STRING = ""
 
     override fun init(contentResolver: ContentResolver) {
@@ -62,6 +64,19 @@ class LocalDataSourceImpl: LocalDataSource {
         }
     }
 
+    override suspend fun getAuthorizedToken(): Either<String, Failure> {
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
+
+        val localToken = sharedPrefs.getString(LOCAL_TOKEN_KEY, ERROR_STRING)
+
+        return if (localToken == ERROR_STRING) {
+            Either.Failure(Failure.LocalAccountNotFound)
+        } else {
+            Either.Success(localToken!!)
+        }
+    }
+
     override suspend fun updateLocalLoginUserName(userName: String?): Either<Unit, Failure> {
         val sharedPrefs = sharedPrefsRefer.get()
             ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
@@ -80,6 +95,18 @@ class LocalDataSourceImpl: LocalDataSource {
 
         sharedPrefs.edit().apply {
             putString(LOCAL_LOGIN_USER_PASSWORD_KEY, password ?: ERROR_STRING)
+            commit()
+        }
+
+        return Either.Success(Unit)
+    }
+
+    override suspend fun updateAuthorizedToken(token: String?): Either<Unit, Failure> {
+        val sharedPrefs = sharedPrefsRefer.get()
+            ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
+
+        sharedPrefs.edit().apply {
+            putString(LOCAL_TOKEN_KEY, token ?: ERROR_STRING)
             commit()
         }
 

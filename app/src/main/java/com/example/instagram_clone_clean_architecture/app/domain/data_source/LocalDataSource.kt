@@ -21,9 +21,13 @@ interface LocalDataSource {
 
     suspend fun getLocalLoginUserPassword(): Either<String, Failure>
 
+    suspend fun getAuthorizedToken(): Either<String, Failure>
+
     suspend fun updateLocalLoginUserName(userName: String?): Either<Unit, Failure>
 
     suspend fun updateLocalLoginUserPassword(password: String?): Either<Unit, Failure>
+
+    suspend fun updateAuthorizedToken(token: String?): Either<Unit, Failure>
 
     suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
 }

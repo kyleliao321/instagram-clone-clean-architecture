@@ -13,7 +13,6 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import timber.log.Timber
 import java.net.HttpURLConnection
 
 class RemoteDataSourceImpl(
