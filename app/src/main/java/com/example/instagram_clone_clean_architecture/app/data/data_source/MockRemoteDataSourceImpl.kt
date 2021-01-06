@@ -1,10 +1,7 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
@@ -65,10 +62,12 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         Pair("c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", "9374acb7-8da8-4344-b040-02742d3d914c")
     )
 
+    private val mockToken = "mockToken"
+
     override suspend fun userLogin(
         userName: String,
         password: String
-    ): Either<UserDomainModel, Failure> {
+    ): Either<LoginCredentialDomainModel, Failure> {
 
         delay(1000)
 
@@ -80,7 +79,9 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             if (userProfile.userName == userName) {
                 for (loginData in userLoginDataList) {
                     if (loginData.first == userProfile.id && loginData.second == password) {
-                        return Either.Success(userProfile)
+                        return Either.Success(
+                            LoginCredentialDomainModel(mockToken, userProfile)
+                        )
                     }
                 }
             }

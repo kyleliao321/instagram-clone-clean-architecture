@@ -6,10 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.data.model.UserProfile
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.*
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.CoroutineTestRule
@@ -266,7 +263,7 @@ class RemoteDataSourceImplTest {
 
     @Test
     fun `userLogin should return correct result when accountServices loginAsync return with HTTP_OK`() {
-        var result: Either<UserDomainModel, Failure>? = null
+        var result: Either<LoginCredentialDomainModel, Failure>? = null
 
         // given
         val mockLoginResBody = mockk<LoginResponse>(relaxed = true)
@@ -292,12 +289,17 @@ class RemoteDataSourceImplTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Success(UserDomainModel.from(mockUserProfile))
+        result shouldBeEqualTo Either.Success(
+            LoginCredentialDomainModel(
+            mockLoginCredential.jwt,
+            UserDomainModel.from(mockUserProfile)
+        )
+        )
     }
 
     @Test
     fun `userLogin should return unauthorized failure result when accountServices loginAsync return with HTTP_UNAUTHORIZED`() {
-        var result: Either<UserDomainModel, Failure>? = null
+        var result: Either<LoginCredentialDomainModel, Failure>? = null
 
         // given
         val mockLoginResBody = mockk<LoginResponse>(relaxed = true)
@@ -319,7 +321,7 @@ class RemoteDataSourceImplTest {
 
     @Test
     fun `userLogin should return server error failure result when accountServices loginAsync return other than HTTP_OK or HTTP_UNAUTHORIZED`() {
-        var result: Either<UserDomainModel, Failure>? = null
+        var result: Either<LoginCredentialDomainModel, Failure>? = null
 
         // given
         val mockLoginResBody = mockk<LoginResponse>(relaxed = true)

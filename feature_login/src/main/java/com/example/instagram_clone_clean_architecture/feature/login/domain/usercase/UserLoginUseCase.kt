@@ -19,11 +19,12 @@ class UserLoginUseCase(
         return when (result) {
             is Either.Failure -> result
             is Either.Success -> {
-                val userProfile = result.a
+                val credential = result.a
                 loginRepository.updateLocalLoginUserName(params.userName)
                 loginRepository.updateLocalLoginUserPassword(params.password)
-                loginRepository.cacheLoginUserProfile(userProfile)
-                result
+                loginRepository.updateLocalAuthToken(credential.jwt)
+                loginRepository.cacheLoginUserProfile(credential.userProfile)
+                Either.Success(credential.userProfile)
             }
         }
     }

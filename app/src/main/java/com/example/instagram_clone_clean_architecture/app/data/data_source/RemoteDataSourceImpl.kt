@@ -5,10 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.requests.LikePostRequest
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.services.*
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -25,20 +22,25 @@ class RemoteDataSourceImpl(
     override suspend fun userLogin(
         userName: String,
         password: String
-    ): Either<UserDomainModel, Failure> {
+    ): Either<LoginCredentialDomainModel, Failure> {
         val accountReq = AccountRequest(userName, password)
         val res = accountServices.loginAsync(accountReq)
-        
-        return when (res.code()) {
-            HttpURLConnection.HTTP_OK -> {
-                val data = res.body()?.credential
-                return when (data) {
-                    null -> Either.Failure(Failure.ServerError)
-                    else -> getUserProfileById(data.userId)
-                }
+        val status = res.code()
+        val data = res.body()?.credential
+
+        return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            val userProfile = getUserProfileById(data.userId)
+            return when (userProfile) {
+                is Either.Success -> Either.Success(LoginCredentialDomainModel(
+                    data.jwt,
+                    userProfile.a
+                ))
+                is Either.Failure -> Either.Failure(userProfile.b)
             }
-            HttpURLConnection.HTTP_UNAUTHORIZED -> Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
-            else -> Either.Failure(Failure.ServerError)
+        } else if (status === HttpURLConnection.HTTP_UNAUTHORIZED) {
+            Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
+        } else {
+            Either.Failure(Failure.ServerError)
         }
     }
 

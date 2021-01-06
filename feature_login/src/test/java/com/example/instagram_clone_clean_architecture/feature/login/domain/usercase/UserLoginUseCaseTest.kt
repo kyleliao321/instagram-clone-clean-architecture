@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.login.domain.usercase
 
+import com.example.instagram_clone_clean_architecture.app.domain.model.LoginCredentialDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.library_base.domain.exception.Failure
@@ -30,6 +31,13 @@ class UserLoginUseCaseTest {
 
     private lateinit var testUseCase: UserLoginUseCase
 
+    private val mockUserProfile = mockk<UserDomainModel>()
+
+    private val mockLoginCredential = LoginCredentialDomainModel(
+        jwt = "mockJwt",
+        userProfile = mockUserProfile
+    )
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -39,12 +47,11 @@ class UserLoginUseCaseTest {
 
     @Test
     fun `should return success and trigger caching, updating when login succeed`() {
-        val mockProfile = mockk<UserDomainModel>()
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -57,12 +64,13 @@ class UserLoginUseCaseTest {
         verify(exactly = 1) { runBlocking { loginRepository.updateLocalLoginUserName(any()) } }
         verify(exactly = 1) { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } }
         verify(exactly = 1) { runBlocking { loginRepository.cacheLoginUserProfile(any()) } }
-        result shouldBeEqualTo Either.Success(mockProfile)
+        verify(exactly = 1) { runBlocking { loginRepository.updateLocalAuthToken(any()) } }
+        verify(exactly = 1) { runBlocking { loginRepository.userLogin(any(), any()) } }
+        result shouldBeEqualTo Either.Success(mockUserProfile)
     }
 
     @Test
     fun `should return failure when login failed`() {
-        val mockProfile = mockk<UserDomainModel>()
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 
@@ -82,7 +90,6 @@ class UserLoginUseCaseTest {
 
     @Test
     fun `should return failure when login failed network connection`() {
-        val mockProfile = mockk<UserDomainModel>()
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 

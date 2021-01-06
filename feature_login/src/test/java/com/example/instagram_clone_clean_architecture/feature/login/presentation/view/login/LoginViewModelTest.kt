@@ -2,6 +2,7 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.example.instagram_clone_clean_architecture.app.domain.model.LoginCredentialDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
@@ -89,9 +90,11 @@ class LoginViewModelTest {
         val mockUserName = "1"
         val mockUserPassword = "2"
         val mockProfile = mockk<UserDomainModel>(relaxed = true)
+        val mockLoginCredential = mockk<LoginCredentialDomainModel>(relaxed = true)
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
+        every { mockLoginCredential.userProfile } returns mockProfile
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
         every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)
@@ -146,9 +149,11 @@ class LoginViewModelTest {
         val mockUserName = "1"
         val mockUserPassword = "2"
         val mockProfile = mockk<UserDomainModel>(relaxed = true)
+        val mockLoginCredential = mockk<LoginCredentialDomainModel>(relaxed = true)
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockProfile)
+        every { mockLoginCredential.userProfile } returns mockProfile
+        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
         every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
         every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)

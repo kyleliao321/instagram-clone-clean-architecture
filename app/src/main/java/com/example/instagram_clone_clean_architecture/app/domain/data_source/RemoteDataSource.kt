@@ -1,9 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.domain.data_source
 
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfileUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 
@@ -12,7 +9,7 @@ interface RemoteDataSource {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Authentication operations ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    suspend fun userLogin(userName: String, password: String) : Either<UserDomainModel, Failure>
+    suspend fun userLogin(userName: String, password: String) : Either<LoginCredentialDomainModel, Failure>
 
     suspend fun userRegister(userName: String, password: String) : Either<Unit, Failure>
 
