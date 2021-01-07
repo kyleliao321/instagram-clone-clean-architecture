@@ -31,7 +31,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.credential
 
-            return if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            return if (status == HttpURLConnection.HTTP_OK && data != null) {
                 val userProfile = getUserProfileById(data.userId)
                 return when (userProfile) {
                     is Either.Success -> Either.Success(LoginCredentialDomainModel(
@@ -40,7 +40,7 @@ class RemoteDataSourceImpl(
                     ))
                     is Either.Failure -> Either.Failure(userProfile.b)
                 }
-            } else if (status === HttpURLConnection.HTTP_UNAUTHORIZED) {
+            } else if (status == HttpURLConnection.HTTP_UNAUTHORIZED) {
                 Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -74,7 +74,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.user
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(UserDomainModel.from(data))
             } else {
                 Either.Failure(Failure.ServerError)
@@ -90,7 +90,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.users
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(data.map { UserDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
@@ -106,7 +106,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.followings
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(data.map { UserDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
@@ -122,7 +122,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.followers
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(data.map { UserDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
@@ -138,7 +138,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.post
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(PostDomainModel.from(data))
             } else {
                 Either.Failure(Failure.ServerError)
@@ -154,7 +154,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.posts
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(data.map { PostDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
@@ -170,7 +170,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.likedUsers
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(data.map { UserDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
@@ -199,7 +199,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.userId
 
-            if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
+            if (status == HttpURLConnection.HTTP_CREATED && data != null) {
                 getUserProfileById(data)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -219,7 +219,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.followings
 
-            if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
+            if (status == HttpURLConnection.HTTP_CREATED && data != null) {
                 Either.Success(Unit)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -238,7 +238,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.followings
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(Unit)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -255,7 +255,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.likedUsers
 
-            if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
+            if (status == HttpURLConnection.HTTP_CREATED && data != null) {
                 Either.Success(Unit)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -271,7 +271,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.likedUsers
 
-            if (status === HttpURLConnection.HTTP_OK && data !== null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 Either.Success(Unit)
             } else {
                 Either.Failure(Failure.ServerError)
@@ -303,7 +303,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.post
 
-            if (status === HttpURLConnection.HTTP_CREATED && data !== null) {
+            if (status == HttpURLConnection.HTTP_CREATED && data != null) {
                 Either.Success(PostDomainModel.from(data))
             } else {
                 Either.Failure(Failure.ServerError)

@@ -27,6 +27,7 @@ class ProfilePostViewModel(
     ViewState()
 ) {
 
+    // TODO: potentially fail
     val isLoginUserLikedPost = Transformations.map(stateLiveData) {
         if (it.loginUserProfile != null && !it.isLikedUsersLoading) {
             return@map it.loginUserProfile in it.likedUsers

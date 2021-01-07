@@ -20,7 +20,7 @@ class UpdateUserProfileUseCase(
     override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
         val getImageBitmapResult = params.userProfile.imageUri?.let { profileRepository.getBitmap(it) }
 
-        if (getImageBitmapResult !== null && getImageBitmapResult is Either.Failure) {
+        if (getImageBitmapResult != null && getImageBitmapResult is Either.Failure) {
             return getImageBitmapResult
         }
 
@@ -31,7 +31,7 @@ class UpdateUserProfileUseCase(
 
         val cacheFileResult = imageByteArray?.let { profileRepository.cacheCompressedUploadImage(randomFileName, it) }
 
-        if (cacheFileResult !== null && cacheFileResult is Either.Failure) {
+        if (cacheFileResult != null && cacheFileResult is Either.Failure) {
             return cacheFileResult
         }
 

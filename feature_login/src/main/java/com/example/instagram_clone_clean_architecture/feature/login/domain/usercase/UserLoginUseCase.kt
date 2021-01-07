@@ -14,7 +14,7 @@ class UserLoginUseCase(
 ) : UseCase<UserDomainModel, UserLoginUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
-        if (params.userName === null || params.password === null) {
+        if (params.userName == null || params.password == null) {
             return Either.Failure(Failure.FormDataNotComplete)
         }
 

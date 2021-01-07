@@ -13,7 +13,7 @@ class UserRegisterUseCase(
 ) : UseCase<Unit, UserRegisterUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<Unit, Failure> {
-        if (params.userName === null || params.password === null) {
+        if (params.userName == null || params.password == null) {
             return Either.Failure(Failure.FormDataNotComplete)
         }
 

@@ -14,7 +14,7 @@ class GetUserProfileListUseCase(
 ) : UseCase<List<UserDomainModel>, GetUserProfileListUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> {
-        if (params.keyword === null || params.keyword.isBlank()) {
+        if (params.keyword == null || params.keyword.isBlank()) {
             return Either.Failure(Failure.FormDataNotComplete)
         }
 
