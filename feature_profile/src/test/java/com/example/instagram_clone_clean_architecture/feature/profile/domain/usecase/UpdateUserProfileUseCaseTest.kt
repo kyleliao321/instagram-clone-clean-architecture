@@ -6,6 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserProfi
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.extension.getJpegByteArray
+import com.example.library_base.domain.extension.resizeAndCrop
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_test_utils.runBlockingTest
@@ -33,6 +34,8 @@ class UpdateUserProfileUseCaseTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+
+        mockkStatic("com.example.library_base.domain.extension.BitmapExtensionKt")
 
         testUseCase = UpdateUserProfileUseCase(
             profileRepository,
@@ -73,7 +76,9 @@ class UpdateUserProfileUseCaseTest {
         val user = mockk<UserProfileUploadDomainModel>(relaxed = true)
         val param = mockk<UpdateUserProfileUseCase.Param>(relaxed = true)
 
-        every { imageBitmap.getJpegByteArray(any()) } returns imageByteArray
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns imageByteArray
+
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)
@@ -101,7 +106,9 @@ class UpdateUserProfileUseCaseTest {
         val user = mockk<UserProfileUploadDomainModel>(relaxed = true)
         val param = mockk<UpdateUserProfileUseCase.Param>(relaxed = true)
 
-        every { imageBitmap.getJpegByteArray(any()) } returns imageByteArray
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns imageByteArray
+
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)
@@ -153,7 +160,9 @@ class UpdateUserProfileUseCaseTest {
         val user = mockk<UserProfileUploadDomainModel>(relaxed = true)
         val param = mockk<UpdateUserProfileUseCase.Param>(relaxed = true)
 
-        every { imageBitmap.getJpegByteArray(any()) } returns imageByteArray
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns imageByteArray
+
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)

@@ -5,6 +5,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploa
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.extension.getJpegByteArray
+import com.example.library_base.domain.extension.resizeAndCrop
 import com.example.library_base.domain.usercase.UseCase
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
@@ -30,7 +31,8 @@ class UploadPostUseCase(
         }
 
         val bitmap = (getBitmapResult as Either.Success).a
-        val byteArray = bitmap.getJpegByteArray()
+        val resizedBitmap = bitmap.resizeAndCrop(400, 400)
+        val byteArray = resizedBitmap.getJpegByteArray()
         val randomFileName = UUID.randomUUID().toString()
         val cacheFileResult = postRepository.cacheCompressedImageFile(randomFileName, byteArray)
 

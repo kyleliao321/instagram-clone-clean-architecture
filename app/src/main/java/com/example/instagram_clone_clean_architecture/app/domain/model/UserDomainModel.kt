@@ -15,7 +15,7 @@ data class UserDomainModel(
 
     companion object {
         fun from(dataModel: UserProfileDataModel): UserDomainModel {
-            val fullImageSrc = if (dataModel.imageSrc === "") {
+            val fullImageSrc = if (dataModel.imageSrc === "" || dataModel.imageSrc === null) {
                 null
             } else {
                 val subPath = dataModel.imageSrc

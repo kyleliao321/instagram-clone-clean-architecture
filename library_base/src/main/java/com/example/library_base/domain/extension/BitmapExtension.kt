@@ -13,3 +13,7 @@ fun Bitmap.getJpegByteArray(quality: Int = 100): ByteArray {
 
     return byteArray
 }
+
+fun Bitmap.resizeAndCrop(newWidth: Int, newHeight: Int): Bitmap {
+    return Bitmap.createScaledBitmap(this, newWidth, newHeight, false)
+}

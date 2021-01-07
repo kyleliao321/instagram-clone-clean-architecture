@@ -5,6 +5,8 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
+import com.example.library_base.domain.extension.getJpegByteArray
+import com.example.library_base.domain.extension.resizeAndCrop
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
@@ -33,6 +35,8 @@ class UploadPostUseCaseTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+
+        mockkStatic("com.example.library_base.domain.extension.BitmapExtensionKt")
 
         testUseCase = UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)
     }
@@ -88,9 +92,13 @@ class UploadPostUseCaseTest {
         var result: Either<PostDomainModel, Failure>? = null
 
         // given
-        val mockBitmap = mockk<Bitmap>(relaxed = true)
+        val mockByteArray = ByteArray(10)
+        val mockBitmap = mockk<Bitmap>()
         val post = mockk<PostUploadDomainModel>(relaxed = true)
         val param = mockk<UploadPostUseCase.Param>(relaxed = true)
+
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns mockByteArray
 
         every { param.post } returns post
         every { post.isPostReady } returns true
@@ -114,10 +122,14 @@ class UploadPostUseCaseTest {
         var result: Either<PostDomainModel, Failure>? = null
 
         // given
+        val mockByteArray = ByteArray(10)
         val mockBitmap = mockk<Bitmap>(relaxed = true)
         val cachedFile = mockk<File>(relaxed = true)
         val post = mockk<PostUploadDomainModel>(relaxed = true)
         val param = mockk<UploadPostUseCase.Param>(relaxed = true)
+
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns mockByteArray
 
         every { param.post } returns post
         every { post.isPostReady } returns true
@@ -142,10 +154,14 @@ class UploadPostUseCaseTest {
         var result: Either<PostDomainModel, Failure>? = null
 
         // given
+        val mockByteArray = ByteArray(10)
         val mockBitmap = mockk<Bitmap>(relaxed = true)
         val cachedFile = mockk<File>(relaxed = true)
         val post = mockk<PostUploadDomainModel>(relaxed = true)
         val param = mockk<UploadPostUseCase.Param>(relaxed = true)
+
+        every { any<Bitmap>().resizeAndCrop(any(), any()) } returns mockk()
+        every { any<Bitmap>().getJpegByteArray(any()) } returns mockByteArray
 
         every { param.post } returns post
         every { post.isPostReady } returns true
