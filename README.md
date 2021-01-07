@@ -20,6 +20,26 @@ While it takes longer to setup a project, after setting-up, the workflow is less
 git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
 ```
 
+## Development
+The application come with two flavors: **Local** or **Remote**. The difference is how the application will communicate with server. **Local** flavor mocks the
+behavior to store data in memory. On the other hand, **Remote** flavor will actually send request to remote server.
+
+### Setup Environment for Remote Flavor
+- Open Project in Android Studio
+- Build - Select Build Variant...
+- For app Module, choose **remoteDebug** or **remoteRelease** as its Active Build Variant.
+- Build - Rebuild Project
+
+Now, the application will communicate to the server address that is specified in project-level gradle.properties. By default, it assume that the server is
+running in local host. [(More on How to setup development server for application)](https://github.com/kyleliao321/instagram-clone-server)
+
+### Setup Environment for Local Flavor
+- Open Project in Android Studio
+- Build - Select Build Variant...
+- For app Module, choose **localDebug** or **localRelease** as its Active Build Variant.
+- Build - Rebuild Project
+
+
 ## Demo
 
 - Login process
