@@ -80,6 +80,11 @@ git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
 - [Coroutine context/dispatcher](https://kotlinlang.org/docs/reference/coroutines/coroutine-context-and-dispatchers.html).
 - [Extension function](https://kotlinlang.org/docs/reference/extensions.html).
 
+### Networking
+- Using [Network Security Configuration](https://developer.android.com/training/articles/security-config)
+- Using [OkHttp Interceptor](https://square.github.io/okhttp/interceptors/) for Json-Web-Token authorization
+- Using [Retrofit](https://square.github.io/retrofit/) with complex query
+
 ## Issues
 > Reference projects/articles provides solid foundation for me to build this project, but there are some outdated dependency issues or special scenario that required other approaches. Here are some of the issues that I think is worth mentioning :
 
