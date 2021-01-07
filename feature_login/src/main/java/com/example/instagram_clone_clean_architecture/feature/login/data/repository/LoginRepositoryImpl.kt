@@ -18,8 +18,22 @@ class LoginRepositoryImpl(
     override suspend fun userLogin(
         userName: String,
         password: String
-    ): Either<LoginCredentialDomainModel, Failure> {
-        return remoteDataSource.userLogin(userName, password)
+    ): Either<UserDomainModel, Failure> {
+        val loginResult = remoteDataSource.userLogin(userName, password)
+
+        if (loginResult is Either.Failure) {
+            return loginResult
+        }
+
+        val credential = (loginResult as Either.Success).a
+
+        localDataSource.updateLocalLoginUserName(userName)
+        localDataSource.updateLocalLoginUserPassword(password)
+        localDataSource.updateAuthorizedToken(credential.jwt)
+        cacheDataSource.cacheAuthToken(credential.jwt)
+        cacheDataSource.cacheLoginUserProfile(credential.userProfile)
+
+        return Either.Success(credential.userProfile)
     }
 
     override suspend fun userRegister(

@@ -11,11 +11,8 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_test_utils.runBlockingTest
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
@@ -54,7 +51,7 @@ class LoginViewModelTest {
         MockKAnnotations.init(this)
 
         getLocalLoginUserDataUseCase = GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher)
-        userLoginUseCase = UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher)
+        userLoginUseCase = spyk(UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = LoginViewModel(
             navigationManager,
@@ -90,14 +87,9 @@ class LoginViewModelTest {
         val mockUserName = "1"
         val mockUserPassword = "2"
         val mockProfile = mockk<UserDomainModel>(relaxed = true)
-        val mockLoginCredential = mockk<LoginCredentialDomainModel>(relaxed = true)
 
         // given
-        every { mockLoginCredential.userProfile } returns mockProfile
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
-        every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)
+        coEvery { userLoginUseCase.run(any()) } returns Either.Success(mockProfile)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
@@ -114,7 +106,7 @@ class LoginViewModelTest {
         val mockUserPassword = "2"
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
+        coEvery { userLoginUseCase.run(any()) } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
@@ -132,7 +124,7 @@ class LoginViewModelTest {
         val mockUserPassword = "2"
 
         // given
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+        coEvery { userLoginUseCase.run(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
@@ -149,14 +141,9 @@ class LoginViewModelTest {
         val mockUserName = "1"
         val mockUserPassword = "2"
         val mockProfile = mockk<UserDomainModel>(relaxed = true)
-        val mockLoginCredential = mockk<LoginCredentialDomainModel>(relaxed = true)
 
         // given
-        every { mockLoginCredential.userProfile } returns mockProfile
-        every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
-        every { runBlocking { loginRepository.updateLocalLoginUserPassword(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.updateLocalLoginUserName(any()) } } returns Either.Success(Unit)
-        every { runBlocking { loginRepository.cacheLoginUserProfile(any()) } } returns Either.Success(Unit)
+        every { runBlocking { userLoginUseCase.run(any()) } } returns Either.Success(mockProfile)
         every { runBlocking { loginRepository.getLocalLoginUserName() } } returns Either.Success(mockUserName)
         every { runBlocking { loginRepository.getLocalLoginUserPassword() } } returns Either.Success(mockUserPassword)
 
@@ -196,45 +183,4 @@ class LoginViewModelTest {
             isLocalUserDataLoading = false
         )
     }
-
-    @Test
-    fun `verify view state when userName or password is null`() {
-        // given
-        val mockUserName = null
-        val mockPassword = "1"
-
-        // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockPassword) }
-
-        // expect
-        verify(exactly = 4) { observer.onChanged(any()) } // init, start login, finish login, validation fail
-        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
-            isLoginFail = false,
-            isFormValidateFail = true,
-            isLoginRunning = false,
-            isNetworkError = false,
-            isServerError = false
-        )
-    }
-
-    @Test
-    fun `verify view state when userName or password is blank`() {
-        // given
-        val mockUserName = ""
-        val mockPassword = "1"
-
-        // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockPassword) }
-
-        // expect
-        verify(exactly = 4) { observer.onChanged(any()) } // init, start login, finish login, validation fail
-        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
-            isLoginFail = false,
-            isFormValidateFail = true,
-            isLoginRunning = false,
-            isNetworkError = false,
-            isServerError = false
-        )
-    }
-
 }

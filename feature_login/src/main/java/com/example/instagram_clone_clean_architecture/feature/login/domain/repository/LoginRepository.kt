@@ -7,7 +7,7 @@ import com.example.library_base.domain.utility.Either
 
 interface LoginRepository {
 
-    suspend fun userLogin(userName: String, password: String) : Either<LoginCredentialDomainModel, Failure>
+    suspend fun userLogin(userName: String, password: String) : Either<UserDomainModel, Failure>
 
     suspend fun userRegister(userName: String, password: String) : Either<Unit, Failure>
 

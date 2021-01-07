@@ -8,7 +8,6 @@ import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-// TODO: caching should be done in repository layer
 class UserLoginUseCase(
     private val loginRepository: LoginRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -23,20 +22,7 @@ class UserLoginUseCase(
             return Either.Failure(Failure.FormDataNotComplete)
         }
 
-        val result = loginRepository.userLogin(params.userName, params.password)
-
-        return when (result) {
-            is Either.Failure -> result
-            is Either.Success -> {
-                val credential = result.a
-                loginRepository.updateLocalLoginUserName(params.userName)
-                loginRepository.updateLocalLoginUserPassword(params.password)
-                loginRepository.updateLocalAuthToken(credential.jwt)
-                loginRepository.cacheAuthToken(credential.jwt)
-                loginRepository.cacheLoginUserProfile(credential.userProfile)
-                Either.Success(credential.userProfile)
-            }
-        }
+        return loginRepository.userLogin(params.userName, params.password)
     }
 
     data class Param(val userName: String?, val password: String?)
