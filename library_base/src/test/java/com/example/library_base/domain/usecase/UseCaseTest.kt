@@ -2,7 +2,6 @@ package com.example.library_base.domain.usecase
 
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.usercase.UseCase
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import kotlinx.coroutines.CoroutineDispatcher

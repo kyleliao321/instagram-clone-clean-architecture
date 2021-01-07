@@ -7,8 +7,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.verify
 import org.amshove.kluent.mock
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4

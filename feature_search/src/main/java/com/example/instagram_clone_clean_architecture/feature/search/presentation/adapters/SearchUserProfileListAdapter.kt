@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.search.databinding.FragmentSearchItemViewBinding
-import timber.log.Timber
 
 class SearchUserProfileListAdapter(
     private val onClickListener: SearchUserProfileListAdapter.OnClickListener

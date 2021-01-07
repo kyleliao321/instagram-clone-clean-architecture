@@ -1,7 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.domain.model
 
 import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
-import java.util.*
 
 data class PostDomainModel(
     val id: String,

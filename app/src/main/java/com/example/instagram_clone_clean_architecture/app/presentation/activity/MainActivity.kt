@@ -1,30 +1,20 @@
 package com.example.instagram_clone_clean_architecture.app.presentation.activity
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
-import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.instagram_clone_clean_architecture.R
-import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
 import com.example.instagram_clone_clean_architecture.databinding.ActivityMainBinding
-import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.extension.setupNavControllerWithNavCallback
 import com.example.library_base.presentation.activity.InjectionActivity
 import com.example.library_base.presentation.navigation.NavigationManager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.instance
 import timber.log.Timber
-import java.io.*
 
 class MainActivity: InjectionActivity() {
 

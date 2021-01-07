@@ -125,7 +125,7 @@
             android:text="register"
             android:layout_marginHorizontal="50dp"
             android:enabled="@{!viewModel.stateLiveData.registering}"
-            android:onClick="@{() -> viewModel.userRegister()}"
+            android:onClick="@{() -> viewModel.userRegister(viewModel.stateLiveData.userName, viewModel.stateLiveData.userPassword)}"
             app:layout_constraintTop_toBottomOf="@id/user_password"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton" />

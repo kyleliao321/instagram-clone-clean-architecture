@@ -29,7 +29,6 @@ import androidx.navigation.NavArgsLazy
 import org.kodein.di.DI
 import org.kodein.di.bindings.BindingDI
 import org.kodein.di.bindings.ExternalSource
-import org.kodein.type.jvmType
 import timber.log.Timber
 import kotlin.reflect.KClass
 

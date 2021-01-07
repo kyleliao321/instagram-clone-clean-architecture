@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.app.data
 import com.example.instagram_clone_clean_architecture.app.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.app.data.data_source.CacheDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.LocalDataSourceImpl
-import com.example.instagram_clone_clean_architecture.app.data.data_source.MockRemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.RemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.repository.AppRepositoryImpl
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.intercetors.AuthorizeInterceptor
@@ -12,7 +11,10 @@ import com.example.instagram_clone_clean_architecture.app.domain.data_source.Cac
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
-import org.kodein.di.*
+import org.kodein.di.DI
+import org.kodein.di.bind
+import org.kodein.di.instance
+import org.kodein.di.singleton
 import retrofit2.Retrofit
 
 val dataModule = DI.Module("${MODULE_NAME}DataModule") {

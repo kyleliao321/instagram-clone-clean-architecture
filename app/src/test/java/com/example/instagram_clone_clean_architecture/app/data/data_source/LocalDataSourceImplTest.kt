@@ -1,11 +1,9 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
-import android.app.Application
 import android.content.ContentResolver
 import android.content.SharedPreferences
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations

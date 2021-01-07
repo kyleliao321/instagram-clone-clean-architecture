@@ -1,12 +1,10 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
-import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.instagram_clone_clean_architecture.feature.profile.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.edit.ProfileEditViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.follower.ProfileFollowerViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.following.ProfileFollowingViewModel
-import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainFragmentArgs
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.main.ProfileMainViewModel
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.view.post.ProfilePostViewModel
 import com.example.library_base.domain.utility.KotlinViewModelProvider

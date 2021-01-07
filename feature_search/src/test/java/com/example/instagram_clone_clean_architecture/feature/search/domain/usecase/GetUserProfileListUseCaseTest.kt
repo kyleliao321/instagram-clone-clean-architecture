@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.feature.search.domain.use
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.search.domain.repository.SearchRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations

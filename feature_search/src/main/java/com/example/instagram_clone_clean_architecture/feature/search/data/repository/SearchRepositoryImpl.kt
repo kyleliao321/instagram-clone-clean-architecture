@@ -5,7 +5,6 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.search.domain.repository.SearchRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import kotlinx.coroutines.delay
 
 class SearchRepositoryImpl(
     private val remoteDataSource: RemoteDataSource

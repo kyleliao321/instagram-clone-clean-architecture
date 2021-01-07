@@ -1,7 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.post.presentation
 
 import android.graphics.Bitmap
-import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

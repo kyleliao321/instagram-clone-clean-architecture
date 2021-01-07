@@ -10,8 +10,6 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.extension.asImageMultipartFormData
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException

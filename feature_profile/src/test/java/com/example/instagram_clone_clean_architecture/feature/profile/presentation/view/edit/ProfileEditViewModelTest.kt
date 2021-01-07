@@ -9,10 +9,9 @@ import com.example.instagram_clone_clean_architecture.app.domain.service.IntentS
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.usecase.*
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking

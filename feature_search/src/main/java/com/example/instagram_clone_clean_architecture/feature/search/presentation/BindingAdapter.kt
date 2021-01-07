@@ -9,7 +9,6 @@ import coil.transform.CircleCropTransformation
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.search.R
 import com.example.instagram_clone_clean_architecture.feature.search.presentation.adapters.SearchUserProfileListAdapter
-import timber.log.Timber
 
 /**
  * Fetch user profile image from remote using Coil.

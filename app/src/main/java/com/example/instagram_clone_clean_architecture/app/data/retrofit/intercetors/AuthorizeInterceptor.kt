@@ -1,7 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.data.retrofit.intercetors
 
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
-import com.example.library_base.domain.extension.toBearAuthToken
 import okhttp3.Interceptor
 import okhttp3.Response
 

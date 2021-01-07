@@ -6,11 +6,10 @@ import com.example.instagram_clone_clean_architecture.app.domain.data_source.Cac
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.utility.Either
 import java.io.File
 

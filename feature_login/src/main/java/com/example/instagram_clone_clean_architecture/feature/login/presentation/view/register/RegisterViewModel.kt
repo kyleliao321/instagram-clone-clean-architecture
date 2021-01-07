@@ -2,7 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserRegisterUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
@@ -32,26 +31,21 @@ class RegisterViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    // TODO: register information should be validate inside userRegisterUseCase
-    fun userRegister() = viewModelScope.launch(defaultDispatcher) {
-        if (state.userName != null && state.userPassword != null) {
-            if (state.userName!!.isNotBlank() && state.userPassword!!.isNotBlank()) {
-                sendAction(Action.StartRegister)
-                val param = UserRegisterUseCase.Param(state.userName!!, state.userPassword!!)
+    fun userRegister(userName: String?, password: String?) = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartRegister)
+        val param = UserRegisterUseCase.Param(userName, password)
 
-                userRegisterUseCase(param) {
-                    it.fold(
-                        onSucceed = {
-                            sendAction(Action.FinishRegister)
-                            navigateToLoginFragment()
-                        },
-                        onFail = { failure ->
-                            sendAction(Action.FinishRegister)
-                            onFailure(failure)
-                        }
-                    )
+        userRegisterUseCase(param) {
+            it.fold(
+                onSucceed = {
+                    sendAction(Action.FinishRegister)
+                    navigateToLoginFragment()
+                },
+                onFail = { failure ->
+                    sendAction(Action.FinishRegister)
+                    onFailure(failure)
                 }
-            }
+            )
         }
     }
 
@@ -59,6 +53,7 @@ class RegisterViewModel(
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
         is Failure.DuplicatedUserName -> sendAction(Action.FailOnRegisterData)
+        is Failure.FormDataNotComplete -> sendAction(Action.FailOnFormDataNotComplete)
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
@@ -74,7 +69,8 @@ class RegisterViewModel(
             isRegistering = true,
             isNetworkError = false,
             isServerError = false,
-            isRegisterFail = false
+            isRegisterFail = false,
+            isFormValidateFail = false
         )
         is Action.FailOnNetworkConnection -> state.copy(
             isNetworkError = true
@@ -85,6 +81,9 @@ class RegisterViewModel(
         is Action.FailOnRegisterData -> state.copy(
             isRegisterFail = true
         )
+        is Action.FailOnFormDataNotComplete -> state.copy(
+            isFormValidateFail = true
+        )
     }
 
     data class ViewState(
@@ -92,6 +91,7 @@ class RegisterViewModel(
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isRegisterFail: Boolean = false,
+        val isFormValidateFail: Boolean = false,
         var userName: String? = null,
         var userPassword: String? = null
     ) : BaseViewState
@@ -102,5 +102,6 @@ class RegisterViewModel(
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnRegisterData: Action()
+        object FailOnFormDataNotComplete: Action()
     }
 }

@@ -1,6 +1,5 @@
 package com.example.instagram_clone_clean_architecture.app.data.retrofit.services
 
-import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.AddNewPostResponse
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.GetPostResponse
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.responses.GetPostsResponse

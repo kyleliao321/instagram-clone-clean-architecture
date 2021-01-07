@@ -11,12 +11,10 @@ import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.internal.runners.statements.Fail
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import java.io.File

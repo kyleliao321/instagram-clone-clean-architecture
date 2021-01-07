@@ -18,7 +18,9 @@ package com.example.library_base.domain.usercase
 
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * A abstract class that can be extends to define a use case to run in provided thread.

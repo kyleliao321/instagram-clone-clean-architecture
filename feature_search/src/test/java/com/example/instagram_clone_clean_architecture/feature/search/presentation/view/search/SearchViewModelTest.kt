@@ -6,10 +6,9 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.search.domain.repository.SearchRepository
 import com.example.instagram_clone_clean_architecture.feature.search.domain.usecase.GetUserProfileListUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK

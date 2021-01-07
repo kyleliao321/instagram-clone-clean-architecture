@@ -11,7 +11,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.log
 
 class ProfileFollowerViewModel(
     private val args: ProfileFollowerFragmentArgs,

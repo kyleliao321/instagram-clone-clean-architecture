@@ -1,10 +1,8 @@
 package com.example.instagram_clone_clean_architecture.feature.login.presentation.view.login
 
-import android.view.View
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureLoginNavGraphDirections
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserLoginUseCase
 import com.example.library_base.domain.exception.Failure

@@ -4,7 +4,6 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.LoginCred
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
@@ -43,8 +42,6 @@ class UserLoginUseCaseTest {
     private val blankUserName = ""
 
     private val validPassword = "validPassword"
-    private val nullPassword = null
-    private val blankPassword = ""
 
     @Before
     fun setup() {

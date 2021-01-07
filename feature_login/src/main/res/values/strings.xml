@@ -2,6 +2,7 @@
 <resources>
     <string name="module_name">feature_login</string>
     <string name="register_error_message">user name already exists</string>
+    <string name="register_form_data_not_complete_message">username and password must not be empty</string>
     <string name="login_error_message">user name or password is incorrect</string>
     <string name="login_form_not_complete_message">username and password must not be empty</string>
 </resources>

@@ -2,18 +2,15 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.UserRegisterUseCase
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
-import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -82,15 +79,13 @@ class RegisterViewModelTest {
         val mockUserPassword = "userPassword"
 
         // given
-        testViewModel.stateLiveData.value!!.userName = mockUserName
-        testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(Unit)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userRegister() }
+        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
 
         // expect
-        verify(exactly = 3) { observer.onChanged(any()) } // init, startLogin, finishLogin
+        verify(exactly = 3) { observer.onChanged(any()) } // init, startRegister, finishRegister
         testViewModel.stateLiveData.value shouldBeEqualTo RegisterViewModel.ViewState(
             isRegistering = false,
             isNetworkError = false,
@@ -101,25 +96,44 @@ class RegisterViewModelTest {
     }
 
     @Test
-    fun `verify view state when login fail`() {
+    fun `verify view state when register fail`() {
         val mockUserName = "userName"
         val mockUserPassword = "userPassword"
 
         // given
-        testViewModel.stateLiveData.value!!.userName = mockUserName
-        testViewModel.stateLiveData.value!!.userPassword = mockUserPassword
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Failure(
             Failure.NetworkConnection)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userRegister() }
+        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
 
         // expect
-        verify(exactly = 4) { observer.onChanged(any()) } // init, startLogin, finishLogin, fail
+        verify(exactly = 4) { observer.onChanged(any()) } // init, startRegister, finishRegister, fail
         testViewModel.stateLiveData.value shouldBeEqualTo RegisterViewModel.ViewState(
             isRegistering = false,
             isNetworkError = true,
             isServerError = false,
+            userName = null,
+            userPassword = null
+        )
+    }
+
+    @Test
+    fun `verify view state when userRegisterUseCase return form data not complete failure`() {
+        // given
+        val mockUserName = null
+        val mockUserPassword = null
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
+
+        // expect
+        verify(exactly = 4) { observer.onChanged(any()) } // init, startRegister, finishRegister, fail
+        testViewModel.stateLiveData.value shouldBeEqualTo RegisterViewModel.ViewState(
+            isRegistering = false,
+            isNetworkError = false,
+            isServerError = false,
+            isFormValidateFail = true,
             userName = null,
             userPassword = null
         )

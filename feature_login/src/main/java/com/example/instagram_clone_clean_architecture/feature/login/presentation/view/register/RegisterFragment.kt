@@ -10,10 +10,8 @@ import com.example.instagram_clone_clean_architecture.app.presentation.activity.
 import com.example.instagram_clone_clean_architecture.feature.login.R
 import com.example.instagram_clone_clean_architecture.feature.login.databinding.FragmentRegisterBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
-import com.example.library_base.presentation.navigation.NavigationManager
 import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
-import timber.log.Timber
 
 class RegisterFragment : InjectionFragment() {
 
@@ -26,6 +24,10 @@ class RegisterFragment : InjectionFragment() {
 
         if (it.isNetworkError) {
             showSnackBar(resources.getString(com.example.instagram_clone_clean_architecture.R.string.network_error_message))
+        }
+
+        if (it.isFormValidateFail) {
+            showSnackBar(resources.getString(R.string.register_form_data_not_complete_message))
         }
     }
 

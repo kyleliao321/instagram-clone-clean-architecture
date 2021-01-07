@@ -6,7 +6,8 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
-import com.example.instagram_clone_clean_architecture.app.domain.usecase.*
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
+import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCachedLoginUserUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -15,7 +16,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class MainViewModel(
     private val navManager: NavigationManager,

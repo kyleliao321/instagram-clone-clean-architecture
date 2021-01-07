@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.feature.post.domain.useca
 import android.net.Uri
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations

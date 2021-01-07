@@ -5,9 +5,9 @@ import android.net.Uri
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.service.IntentService
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostUploadDomainModel
 import com.example.instagram_clone_clean_architecture.feature.post.domain.repository.PostRepository
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetBitmapUseCase
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.GetLoginUserUseCase
@@ -15,8 +15,8 @@ import com.example.instagram_clone_clean_architecture.feature.post.domain.usecas
 import com.example.instagram_clone_clean_architecture.feature.post.domain.usecase.UploadPostUseCase
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
-import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
+import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking

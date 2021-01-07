@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.app
 import android.app.Application
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.R
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource

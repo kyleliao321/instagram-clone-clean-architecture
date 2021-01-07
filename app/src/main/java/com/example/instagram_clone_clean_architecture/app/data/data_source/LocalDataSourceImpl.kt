@@ -1,20 +1,16 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
-import android.content.ContentProvider
 import android.content.ContentResolver
-import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import androidx.security.crypto.EncryptedSharedPreferences
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import java.lang.ref.SoftReference
-import java.lang.ref.WeakReference
 
 class LocalDataSourceImpl: LocalDataSource {
 

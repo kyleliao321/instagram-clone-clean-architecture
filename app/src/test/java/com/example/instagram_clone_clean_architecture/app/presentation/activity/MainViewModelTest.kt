@@ -5,8 +5,6 @@ import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.domain.repository.AppRepository
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCachedLoginUserUseCase
-import com.example.library_test_utils.CoroutineTestRule
-import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK

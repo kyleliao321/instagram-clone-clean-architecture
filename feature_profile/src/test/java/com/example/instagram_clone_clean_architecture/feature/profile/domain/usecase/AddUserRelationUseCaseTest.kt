@@ -2,7 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.profile.domain.us
 
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
-import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations

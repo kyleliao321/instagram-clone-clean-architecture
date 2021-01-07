@@ -6,9 +6,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
-import java.io.IOException
 
 class CacheDataSourceImpl : CacheDataSource {
 

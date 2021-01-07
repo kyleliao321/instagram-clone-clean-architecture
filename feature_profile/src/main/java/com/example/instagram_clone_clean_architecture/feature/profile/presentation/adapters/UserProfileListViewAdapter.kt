@@ -1,15 +1,12 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters
 
-import android.provider.ContactsContract
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileFollowUserViewItemBinding
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
-import org.jetbrains.annotations.NotNull
-import timber.log.Timber
+import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileFollowUserViewItemBinding
 
 class UserProfileListViewAdapter(
     private val itemOnClickListener: OnClickListener<DataItem>,
