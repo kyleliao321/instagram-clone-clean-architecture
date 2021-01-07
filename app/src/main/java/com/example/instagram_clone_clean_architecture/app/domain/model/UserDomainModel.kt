@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.domain.model
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.data.model.UserProfileDataModel
 
 data class UserDomainModel(
@@ -19,8 +20,7 @@ data class UserDomainModel(
                 null
             } else {
                 val subPath = dataModel.imageSrc
-                // TODO: should not show the hostname explicitly
-                "http://10.0.2.2:8080/static/${subPath}"
+                "${BuildConfig.GRADLE_API_STATIC_URL}/${subPath}"
             }
 
             return UserDomainModel(

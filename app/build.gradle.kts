@@ -1,3 +1,6 @@
+import kotlin.IllegalArgumentException
+import com.android.build.gradle.internal.dsl.BaseFlavor
+
 plugins {
     id(GradlePluginId.ANDROID_APPLICATION)
     id(GradlePluginId.KOTLIN_ANDROID)
@@ -19,6 +22,8 @@ android {
         versionName = AndroidConfig.VERSION_NAME
         testInstrumentationRunner = AndroidConfig.TEST_INSTRUMENTATION_RUNNER
 
+        buildConfigFieldFromGradleProperty("apiBaseUrl")
+        buildConfigFieldFromGradleProperty("apiStaticUrl")
         buildConfigField("FEATURE_MODULE_NAMES", ModuleDependency.getDynamicFeatureModuleNames())
     }
 
@@ -78,6 +83,19 @@ dependencies {
     testImplementation(TestLibraryDependency.ANDROID_ARCH_CORE_TEST)
     testImplementation(TestLibraryDependency.MOCK_WEB_SERVER)
 }
+
+fun BaseFlavor.buildConfigFieldFromGradleProperty(propertyName: String) {
+    val propertyValue = project.property(propertyName) as? String
+
+    if (propertyValue === null) {
+        throw IllegalArgumentException("Property")
+    }
+
+    val androidResourceName = "GRADLE_${propertyName.toSnakeCase()}".toUpperCase()
+    buildConfigField("String", androidResourceName, propertyValue)
+}
+
+fun String.toSnakeCase() = this.split(Regex("(?=[A-Z])")).joinToString("_") { it.toLowerCase() }
 
 /**
  * Generate new field from String array inside BuildConfig.

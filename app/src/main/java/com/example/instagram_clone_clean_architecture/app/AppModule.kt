@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.data.dataModule
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.intercetors.AuthorizeInterceptor
 import com.example.instagram_clone_clean_architecture.app.domain.domainModule
@@ -48,7 +49,7 @@ val appModule = DI.Module("${MODULE_NAME}Module") {
 
     bind<Retrofit>() with singleton {
         instance<Retrofit.Builder>()
-            .baseUrl("http://10.0.2.2:8080")
+            .baseUrl(BuildConfig.GRADLE_API_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(instance())
             .build()

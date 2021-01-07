@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.domain.model
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.data.model.PostDataModel
 
 data class PostDomainModel(
@@ -12,8 +13,7 @@ data class PostDomainModel(
 ) {
     companion object {
         fun from(dataModel: PostDataModel): PostDomainModel {
-            // TODO: should not show the hostname explicitly
-            val fullImageSrc = "http://10.0.2.2:8080/static/${dataModel.imageSrc}"
+            val fullImageSrc = "${BuildConfig.GRADLE_API_STATIC_URL}/${dataModel.imageSrc}"
             return PostDomainModel(
                 id = dataModel.id,
                 description = dataModel.description,
