@@ -23,6 +23,10 @@ class LoginFragment : InjectionFragment() {
         if (it.isLoginFail) {
             showSnackBar(resources.getString(R.string.login_error_message))
         }
+
+        if (it.isFormValidateFail) {
+            showSnackBar(resources.getString(R.string.login_form_not_complete_message))
+        }
     }
 
     override fun onCreateView(

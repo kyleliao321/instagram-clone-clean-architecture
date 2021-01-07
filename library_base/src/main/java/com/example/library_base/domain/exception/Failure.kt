@@ -60,4 +60,6 @@ sealed class Failure {
 
     object ExternalImageDecodeFail: Failure()
 
+    object FormDataNotComplete: Failure()
+
 }

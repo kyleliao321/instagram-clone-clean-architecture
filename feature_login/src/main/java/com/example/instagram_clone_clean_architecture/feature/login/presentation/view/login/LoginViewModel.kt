@@ -40,27 +40,22 @@ class LoginViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    // TODO: user login information should be validate inside userLoginUserCase
     fun userLogin(userName: String?, userPassword: String?) = viewModelScope.launch(defaultDispatcher) {
-        if (userName != null && userPassword != null) {
-            if (userName!!.isNotBlank() && userPassword!!.isNotBlank()) {
-                sendAction(Action.StartLogin)
-                val loginParam = UserLoginUseCase.Param(userName!!, userPassword!!)
+        sendAction(Action.StartLogin)
+        val loginParam = UserLoginUseCase.Param(userName, userPassword)
 
-                userLoginUseCase(loginParam) {
-                    it.fold(
-                        onSucceed = { userProfile ->
-                            val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userProfile.id)
-                            navManager.onNavEvent(navDir)
-                            sendAction(Action.FinishLogin)
-                        },
-                        onFail = { failure ->
-                            sendAction(Action.FinishLogin)
-                            onFailure(failure)
-                        }
-                    )
+        userLoginUseCase(loginParam) {
+            it.fold(
+                onSucceed = { userProfile ->
+                    val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userProfile.id)
+                    navManager.onNavEvent(navDir)
+                    sendAction(Action.FinishLogin)
+                },
+                onFail = { failure ->
+                    sendAction(Action.FinishLogin)
+                    onFailure(failure)
                 }
-            }
+            )
         }
     }
 
@@ -80,6 +75,7 @@ class LoginViewModel(
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.LoginUserNameOrPasswordNotMatched -> sendAction(Action.FailOnLoginData)
+        is Failure.FormDataNotComplete -> sendAction(Action.FailOnFormValidation)
         else -> throw IllegalStateException("Unknown failure $failure in ${this::class.java}")
     }
 
@@ -93,7 +89,8 @@ class LoginViewModel(
             isLoginRunning = true,
             isLoginFail = false,
             isServerError = false,
-            isNetworkError = false
+            isNetworkError = false,
+            isFormValidateFail = false
         )
         is Action.FinishLogin -> state.copy(
             isLoginRunning = false,
@@ -109,6 +106,9 @@ class LoginViewModel(
         is Action.FailOnLoginData -> state.copy(
             isLoginFail = true
         )
+        is Action.FailOnFormValidation -> state.copy(
+            isFormValidateFail = true
+        )
         is Action.LocalUserDataLoaded -> state.copy(
             isLocalUserDataLoading = false
         )
@@ -121,6 +121,7 @@ class LoginViewModel(
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isLoginFail: Boolean = false,
+        val isFormValidateFail: Boolean = false,
         var userName: String? = null,
         var userPassword: String? = null
     ) : BaseViewState
@@ -131,6 +132,7 @@ class LoginViewModel(
         object FailOnNetworkConnection : Action()
         object FailOnServerError: Action()
         object FailOnLoginData: Action()
+        object FailOnFormValidation: Action()
         object LocalUserDataLoaded: Action()
         object StartDataLoading: Action()
     }

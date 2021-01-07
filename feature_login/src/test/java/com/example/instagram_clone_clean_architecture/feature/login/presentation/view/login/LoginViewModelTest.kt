@@ -79,6 +79,7 @@ class LoginViewModelTest {
             isServerError = false,
             isNetworkError = false,
             isLoginFail = false,
+            isFormValidateFail = false,
             isLoginRunning = false,
             userName = null,
             userPassword = null
@@ -168,6 +169,7 @@ class LoginViewModelTest {
         verify(exactly = 4) { observer.onChanged(any()) } // init, start, finish, loaded
         testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
             isLoginFail = false,
+            isFormValidateFail = false,
             isLoginRunning = false,
             isNetworkError = false,
             isServerError = false,
@@ -188,10 +190,51 @@ class LoginViewModelTest {
         verify(exactly = 2) { observer.onChanged(any()) } // init, loaded
         testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
             isLoginFail = false,
+            isFormValidateFail = false,
             isLoginRunning = false,
             isNetworkError = false,
             isServerError = false,
             isLocalUserDataLoading = false
+        )
+    }
+
+    @Test
+    fun `verify view state when userName or password is null`() {
+        // given
+        val mockUserName = null
+        val mockPassword = "1"
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockPassword) }
+
+        // expect
+        verify(exactly = 4) { observer.onChanged(any()) } // init, start login, finish login, validation fail
+        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
+            isLoginFail = false,
+            isFormValidateFail = true,
+            isLoginRunning = false,
+            isNetworkError = false,
+            isServerError = false
+        )
+    }
+
+    @Test
+    fun `verify view state when userName or password is blank`() {
+        // given
+        val mockUserName = ""
+        val mockPassword = "1"
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockPassword) }
+
+        // expect
+        verify(exactly = 4) { observer.onChanged(any()) } // init, start login, finish login, validation fail
+        testViewModel.stateLiveData.value shouldBeEqualTo LoginViewModel.ViewState(
+            isLoginFail = false,
+            isFormValidateFail = true,
+            isLoginRunning = false,
+            isNetworkError = false,
+            isServerError = false
         )
     }
 

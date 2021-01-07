@@ -38,6 +38,14 @@ class UserLoginUseCaseTest {
         userProfile = mockUserProfile
     )
 
+    private val validUserName = "validUserName"
+    private val nullUserName = null
+    private val blankUserName = ""
+
+    private val validPassword = "validPassword"
+    private val nullPassword = null
+    private val blankPassword = ""
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -46,11 +54,13 @@ class UserLoginUseCaseTest {
     }
 
     @Test
-    fun `should return success and trigger caching, updating when login succeed`() {
+    fun `should return success and trigger caching, updating when userName, password are valid and login succeed`() {
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
+        every { mockParam.userName } returns validUserName
+        every { mockParam.password } returns validPassword
         every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Success(mockLoginCredential)
 
         // when
@@ -70,11 +80,13 @@ class UserLoginUseCaseTest {
     }
 
     @Test
-    fun `should return failure when login failed`() {
+    fun `should return username or password not matched failure when username, password are valid but login failed`() {
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
+        every { mockParam.userName } returns validUserName
+        every { mockParam.password } returns validPassword
         every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
 
         // when
@@ -89,11 +101,13 @@ class UserLoginUseCaseTest {
     }
 
     @Test
-    fun `should return failure when login failed network connection`() {
+    fun `should return network connection failure when username, password are valid but login failed network connection`() {
         val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
+        every { mockParam.userName } returns validUserName
+        every { mockParam.password } returns validPassword
         every { runBlocking { loginRepository.userLogin(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
@@ -105,6 +119,46 @@ class UserLoginUseCaseTest {
 
         // expect
         result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
+    }
+
+    @Test
+    fun `should return form data not complete failure when username or password is null`() {
+        val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
+        var result: Either<UserDomainModel, Failure>? = null
+
+        // given
+        every { mockParam.userName } returns nullUserName
+        every { mockParam.password } returns validPassword
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(mockParam) {
+                result = it
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.FormDataNotComplete)
+    }
+
+    @Test
+    fun `should return form data not complete failure when username or password is blank`() {
+        val mockParam = mockk<UserLoginUseCase.Param>(relaxed = true)
+        var result: Either<UserDomainModel, Failure>? = null
+
+        // given
+        every { mockParam.userName } returns blankUserName
+        every { mockParam.password } returns validPassword
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(mockParam) {
+                result = it
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.FormDataNotComplete)
     }
 
 

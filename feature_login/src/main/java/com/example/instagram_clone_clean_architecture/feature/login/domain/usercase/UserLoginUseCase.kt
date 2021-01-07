@@ -15,6 +15,14 @@ class UserLoginUseCase(
 ) : UseCase<UserDomainModel, UserLoginUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
+        if (params.userName === null || params.password === null) {
+            return Either.Failure(Failure.FormDataNotComplete)
+        }
+
+        if (params.userName.isBlank() || params.password.isBlank()) {
+            return Either.Failure(Failure.FormDataNotComplete)
+        }
+
         val result = loginRepository.userLogin(params.userName, params.password)
 
         return when (result) {
@@ -31,5 +39,5 @@ class UserLoginUseCase(
         }
     }
 
-    data class Param(val userName: String, val password: String)
+    data class Param(val userName: String?, val password: String?)
 }
