@@ -14,6 +14,7 @@ import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
+import org.amshove.kluent.shouldBeInstanceOf
 import org.amshove.kluent.shouldNotBeEqualTo
 import org.junit.Before
 import org.junit.Rule
@@ -21,7 +22,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import retrofit2.Response
+import java.lang.Exception
 import java.net.HttpURLConnection
+import java.net.SocketTimeoutException
 import java.util.*
 
 @RunWith(JUnit4::class)
@@ -173,6 +176,46 @@ class RemoteDataSourceImplTest {
         result shouldNotBeEqualTo null
         result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
+
+    @Test
+    fun `userRegister should return network connection failure when accountService getUserProfileAsync throw SocketTimeoutException`() {
+        var result: Either<Unit, Failure>? = null
+
+        // given
+        coEvery { accountServices.registerNewAccountAsync(any()) } throws SocketTimeoutException()
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = remoteDataSourceImpl.userRegister(mockUserName, mockPassword)
+        }
+
+        // expect
+        result shouldNotBeEqualTo null
+        result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
+    }
+
+    @Test
+    fun `userRegister should throw exception when accountService getUserProfileAsync throw exception that is not SocketTimeoutException`() {
+        var result: Either<Unit, Failure>? = null
+        var exception: Exception? = null
+
+        // given
+        coEvery { accountServices.registerNewAccountAsync(any()) } throws IllegalStateException()
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            try {
+                result = remoteDataSourceImpl.userRegister(mockUserName, mockPassword)
+            } catch (e: Exception) {
+                exception = e
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo null
+        exception shouldBeInstanceOf IllegalStateException::class.java
+    }
+
 
     @Test
     fun `getUserProfileById should return failure when userServices getUserProfileAsync return status HTTP_OK`() {
