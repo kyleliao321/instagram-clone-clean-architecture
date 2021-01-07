@@ -20,13 +20,6 @@ While it takes longer to setup a project, after setting-up, the workflow is less
 git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
 ```
 
-### Usage
-> Currently, there's no actual server for the application. It use MockRemoteDataSource internally to mock the behavior of getting data from remote. 
-
-* To mock how likely the network connection will fail when using application, go to `app/src/main/java/com/example/instagram_clone_clean_architecture/app/data/data_source` and open `MockRemoteDataSource`. Modify the value of `networkFailProbability`. By default, it's 20% chance to fail.
-
-* Pre-existing mock user data can be found inside `MockRemoteDataSource` too. 
-
 ## Demo
 
 - Login process
@@ -101,12 +94,12 @@ As a result, developers have to make sure plugin-version and modules are synchro
 
 **When navigating between features, [safe-args](https://developer.android.com/guide/navigation/navigation-pass-data) navigation is not possible:**
 
-One approach mention in [this article](https://medium.com/google-developer-experts/using-navigation-architecture-component-in-a-large-banking-app-ac84936a42c2) is to use commom-android module to store desination ids, but there are some drawbacks (See more on the article). My approach is to let navigation's action have the id that is the same as its destination. This way, I can use the following code to capture the exception and re-navigate in traditional-way:
+One approach mention in [this article](https://medium.com/google-developer-experts/using-navigation-architecture-component-in-a-large-banking-app-ac84936a42c2) is to use common-android module to store destination ids, but there are some drawbacks (See more on the article). My approach is to let navigation's action have the id that is the same as its destination. This way, I can use the following code to capture the exception and re-navigate in traditional-way:
 ```kotlin
 try {
   navController.navigate(navDir)
 } catch (e: Exception) {
-  if (e is java.lang.IllegalArgumentException {
+  if (e is java.lang.IllegalArgumentException) {
       navController.navigate(navDir.actionId, navDir.arguments)
   } else {
       throw e
@@ -124,7 +117,7 @@ To prevent from memory leak, I use [WeakReference](https://developer.android.com
 
 
 ## TODO
-- Replace MockRemoteDataSource with actual API that get/upload data to/from server.
+- ~~Replace MockRemoteDataSource with actual API that get/upload data to/from server.~~
 - ~~Detect memory leak.~~
 - ~~Encrypt user data in SharedPreference.~~
 - Fix Lint error.
