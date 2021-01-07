@@ -15,11 +15,19 @@ data class UserDomainModel(
 
     companion object {
         fun from(dataModel: UserProfileDataModel): UserDomainModel {
+            val fullImageSrc = if (dataModel.imageSrc === "") {
+                null
+            } else {
+                val subPath = dataModel.imageSrc
+                // TODO: should not show the hostname explicitly
+                "http://10.0.2.2:8080/static/${subPath}"
+            }
+
             return UserDomainModel(
                 id = dataModel.id,
                 userName = dataModel.userName,
                 name = dataModel.alias,
-                imageSrc = if (dataModel.imageSrc === "") null else dataModel.imageSrc,
+                imageSrc = fullImageSrc,
                 description = if (dataModel.description === "") null else dataModel.description,
                 postNum = dataModel.postNum,
                 followerNum = dataModel.followerNum,

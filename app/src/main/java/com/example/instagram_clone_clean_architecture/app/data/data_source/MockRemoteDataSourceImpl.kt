@@ -31,19 +31,19 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     )
 
     private val userPostList = mutableListOf(
-        PostDomainModel(id = "d7347a85-f721-43a0-b3f3-aa08718abdfc", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
+        PostDomainModel(id = "d7347a85-f721-43a0-b3f3-aa08718abdfc", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date().toString(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = "9374acb7-8da8-4344-b040-02742d3d914c", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
+        PostDomainModel(id = "9374acb7-8da8-4344-b040-02742d3d914c", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date().toString(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = "22a5d295-d622-45a6-bf06-47007856aa01", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date(), location = null, description = "village",
+        PostDomainModel(id = "22a5d295-d622-45a6-bf06-47007856aa01", belongUserId = "7375a95e-82b5-4b7a-8cf8-59338f5a8a43", date = Date().toString(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = "8575cdb2-1d95-4c9f-b2ea-5631ec83bc12", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date(), location = null, description = "village",
+        PostDomainModel(id = "8575cdb2-1d95-4c9f-b2ea-5631ec83bc12", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date().toString(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         ),
-        PostDomainModel(id = "289b4b07-f203-4931-9524-8ee06d39e934", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date(), location = null, description = "village",
+        PostDomainModel(id = "289b4b07-f203-4931-9524-8ee06d39e934", belongUserId = "c9dd129f-1922-4a52-b9f5-eaa7e9453c5d", date = Date().toString(), location = null, description = "village",
             imageSrc = mockRemoteImageSrc
         )
     )

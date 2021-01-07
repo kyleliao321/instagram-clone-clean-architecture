@@ -8,17 +8,19 @@ data class PostDomainModel(
     val imageSrc: String,
     val description: String? = null,
     val location: String? = null,
-    val date: Date,
+    val date: String,
     val belongUserId: String
 ) {
     companion object {
         fun from(dataModel: PostDataModel): PostDomainModel {
+            // TODO: should not show the hostname explicitly
+            val fullImageSrc = "http://10.0.2.2:8080/static/${dataModel.imageSrc}"
             return PostDomainModel(
                 id = dataModel.id,
                 description = dataModel.description,
-                date = Date(), // TODO: should parse from dataModel.timestamp
+                date = dataModel.timestamp,
                 location = dataModel.location,
-                imageSrc = dataModel.imageSrc,
+                imageSrc = fullImageSrc,
                 belongUserId = dataModel.postedUserId
             )
         }
