@@ -12,7 +12,7 @@ interface CacheDataSource {
 
     fun getAuthToken() : String?
 
-    fun cacheAuthToken(token: String): Unit
+    fun cacheAuthToken(token: String?): Unit
 
     suspend fun cacheCompressedUploadImage(fileName: String, byteArray: ByteArray) : Either<File, Failure>
 

@@ -16,11 +16,7 @@ interface ProfileRepository {
      */
     suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure>
 
-    suspend fun cleanupCachedLoginUserData(): Either<Unit, Failure>
-
-    suspend fun cleanupLocalLoginUserName(): Either<Unit, Failure>
-
-    suspend fun cleanupLocalLoginUserPassword(): Either<Unit, Failure>
+    suspend fun cleanUserLocalData(): Either<Unit, Failure>
 
     /**
      * getter for view information

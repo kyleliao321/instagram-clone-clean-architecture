@@ -23,15 +23,6 @@ internal class ProfileRepositoryImpl(
         return cacheDataSource.getLoginUser()
     }
 
-    override suspend fun cleanupCachedLoginUserData(): Either<Unit, Failure> =
-        cacheDataSource.cacheLoginUserProfile(null)
-
-    override suspend fun cleanupLocalLoginUserName(): Either<Unit, Failure> =
-        localDataSource.updateLocalLoginUserName(null)
-
-    override suspend fun cleanupLocalLoginUserPassword(): Either<Unit, Failure> =
-        localDataSource.updateLocalLoginUserPassword(null)
-
     override suspend fun getUserProfileById(id: String): Either<UserDomainModel?, Failure> {
         return remoteDataSource.getUserProfileById(id)
     }
@@ -89,6 +80,27 @@ internal class ProfileRepositoryImpl(
         imageByteArray: ByteArray
     ): Either<File, Failure> {
         return cacheDataSource.cacheCompressedUploadImage(fileName, imageByteArray)
+    }
+
+    override suspend fun cleanUserLocalData(): Either<Unit, Failure> {
+        cacheDataSource.cacheAuthToken(null)
+
+        val cleanUserCacheResult = cacheDataSource.cacheLoginUserProfile(null)
+        if (cleanUserCacheResult is Either.Failure) {
+            return cleanUserCacheResult
+        }
+
+        val cleanLocalUserNameResult = localDataSource.updateLocalLoginUserName(null)
+        if (cleanLocalUserNameResult is Either.Failure) {
+            return cleanLocalUserNameResult
+        }
+
+        val cleanLocalPasswordResult = localDataSource.updateLocalLoginUserPassword(null)
+        if (cleanLocalPasswordResult is Either.Failure) {
+            return cleanLocalPasswordResult
+        }
+
+        return Either.Success(Unit)
     }
 
 }

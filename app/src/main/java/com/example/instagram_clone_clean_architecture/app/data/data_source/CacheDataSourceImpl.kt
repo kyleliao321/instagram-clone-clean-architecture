@@ -24,7 +24,7 @@ class CacheDataSourceImpl : CacheDataSource {
 
     override fun getAuthToken(): String? = authToken
 
-    override fun cacheAuthToken(token: String) {
+    override fun cacheAuthToken(token: String?) {
         authToken = token
     }
 
