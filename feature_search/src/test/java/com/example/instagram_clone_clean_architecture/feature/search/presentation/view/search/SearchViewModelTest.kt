@@ -85,11 +85,11 @@ class SearchViewModelTest {
         val searchKeyword = "test"
 
         // given
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(mockReturnList)
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
+        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(mockReturnList)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList() }
+        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
 
         // expect
         verify(exactly = 3) { observer.onChanged(any()) } // init, startSearch, finishSearch
@@ -107,11 +107,11 @@ class SearchViewModelTest {
         val searchKeyword = "test"
 
         // given
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(Failure.NetworkConnection)
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
+        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList() }
+        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
 
         // expect
         verify(exactly = 4) { observer.onChanged(any()) } // init, startSearch, finishSearch, error
@@ -125,21 +125,19 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `verify view state when loadUserProfileList invoke with blank keyword`() {
+    fun `verify view state when getUserProfileListUseCase return form data not complete failure`() {
         val searchKeyword = ""
-
-        // given
-        testViewModel.stateLiveData.value!!.keyword = searchKeyword
-
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList() }
+        testViewModel.stateLiveData.value!!.keyword = searchKeyword
+        mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
 
         // expect
-        verify(exactly = 1) { observer.onChanged(any()) } // init
+        verify(exactly = 4) { observer.onChanged(any()) } // init, start, finsih, fail
         testViewModel.stateLiveData.value shouldBeEqualTo SearchViewModel.ViewState(
             isUserProfileListLoading = false,
             isServerError = false,
             isNetworkError = false,
+            isValidationFail = true,
             userProfileList = listOf(),
             keyword = searchKeyword
         )

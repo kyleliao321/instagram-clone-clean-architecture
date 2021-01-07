@@ -36,6 +36,10 @@ class GetUserProfileListUseCaseTest {
     @MockK(relaxed = true)
     internal lateinit var correctUserProfileList: List<UserDomainModel>
 
+    private val validKeyword = "validKeyword"
+    private val nullKeyword = null
+    private val blankKeyword = ""
+
     @Before
     fun setup() {
         MockKAnnotations.init(this)
@@ -44,10 +48,11 @@ class GetUserProfileListUseCaseTest {
     }
 
     @Test
-    fun `should return correct type when getUserProfileListByKeyword in searchRepository invoke successfully`() {
+    fun `should return correct type when keyword is valid and getUserProfileListByKeyword in searchRepository invoke successfully`() {
         var result: Either<List<UserDomainModel>, Failure>? = null
 
         // given
+        every { mockParam.keyword } returns validKeyword
         every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(correctUserProfileList)
 
         // when
@@ -62,10 +67,11 @@ class GetUserProfileListUseCaseTest {
     }
 
     @Test
-    fun `should return correct type when getUserProfileListByKeyword in searchRepository invoke with failure`() {
+    fun `should return correct type when keyword is valid but getUserProfileListByKeyword in searchRepository invoke with failure`() {
         var result: Either<List<UserDomainModel>, Failure>? = null
 
         // given
+        every { mockParam.keyword } returns validKeyword
         every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
@@ -79,5 +85,39 @@ class GetUserProfileListUseCaseTest {
         result shouldBeEqualTo Either.Failure(Failure.NetworkConnection)
     }
 
+    @Test
+    fun `should return form data not complete failure when keyword is null`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
 
+        // given
+        every { mockParam.keyword } returns nullKeyword
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(mockParam) {
+                result = it
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.FormDataNotComplete)
+    }
+
+    @Test
+    fun `should return form data not complete failure when keyword is blank`() {
+        var result: Either<List<UserDomainModel>, Failure>? = null
+
+        // given
+        every { mockParam.keyword } returns blankKeyword
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            testUseCase(mockParam) {
+                result = it
+            }
+        }
+
+        // expect
+        result shouldBeEqualTo Either.Failure(Failure.FormDataNotComplete)
+    }
 }

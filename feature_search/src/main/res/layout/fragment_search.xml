@@ -49,7 +49,7 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="?attr/colorSurface"
                         android:src="@drawable/search_field_icon"
-                        android:onClick="@{() -> viewModel.loadUserProfileList()}"
+                        android:onClick="@{() -> viewModel.loadUserProfileList(viewModel.stateLiveData.keyword)}"
                         app:layout_constraintTop_toTopOf="@id/search_fragment_app_bar_content"
                         app:layout_constraintEnd_toEndOf="@+id/search_fragment_app_bar_content" />
 

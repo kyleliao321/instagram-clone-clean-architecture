@@ -13,8 +13,13 @@ class GetUserProfileListUseCase(
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<List<UserDomainModel>, GetUserProfileListUseCase.Param>(defaultDispatcher) {
 
-    override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure>
-        = searchRepository.getUserProfileListByKeyword(params.keyword)
+    override suspend fun run(params: Param): Either<List<UserDomainModel>, Failure> {
+        if (params.keyword === null || params.keyword.isBlank()) {
+            return Either.Failure(Failure.FormDataNotComplete)
+        }
 
-    data class Param(val keyword: String)
+        return searchRepository.getUserProfileListByKeyword(params.keyword)
+    }
+
+    data class Param(val keyword: String?)
 }

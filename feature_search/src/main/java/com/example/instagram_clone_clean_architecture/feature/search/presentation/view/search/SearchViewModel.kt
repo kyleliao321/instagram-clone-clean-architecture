@@ -33,32 +33,26 @@ class SearchViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    // TODO: keyword validation should be done inside getUserProfileListUseCase
-    fun loadUserProfileList() = viewModelScope.launch(defaultDispatcher) {
-        state.keyword?.let {
-            if (it.isNotBlank()) {
-                sendAction(Action.StartUserProfileListLoading)
-
-                val param = GetUserProfileListUseCase.Param(it)
-
-                getUserProfileListUseCase(param) { result ->
-                    result.fold(
-                        onSucceed = { userProfileList ->
-                            sendAction(Action.UserProfileListLoaded(userProfileList))
-                        },
-                        onFail = { failure ->
-                            sendAction(Action.UserProfileListLoaded(listOf()))
-                            onFailure(failure)
-                        }
-                    )
+    fun loadUserProfileList(keyword: String?) = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartUserProfileListLoading)
+        val param = GetUserProfileListUseCase.Param(keyword)
+        getUserProfileListUseCase(param) { result ->
+            result.fold(
+                onSucceed = { userProfileList ->
+                    sendAction(Action.UserProfileListLoaded(userProfileList))
+                },
+                onFail = { failure ->
+                    sendAction(Action.UserProfileListLoaded(listOf()))
+                    onFailure(failure)
                 }
-            }
+            )
         }
     }
 
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.FormDataNotComplete -> sendAction(Action.FailOnFormValidation)
         else -> throw IllegalStateException("Unknown failure type in ${this.javaClass} : $failure")
     }
 
@@ -67,6 +61,7 @@ class SearchViewModel(
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.UserProfileListLoaded -> state.copy(
             isUserProfileListLoading = false,
+            isValidationFail = false,
             userProfileList = action.userProfileList,
             isNetworkError = false,
             isServerError = false
@@ -81,12 +76,16 @@ class SearchViewModel(
             isUserProfileListLoading = true,
             userProfileList = listOf()
         )
+        is Action.FailOnFormValidation -> state.copy(
+            isValidationFail = true
+        )
     }
 
     data class ViewState(
         val isUserProfileListLoading: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isValidationFail: Boolean = false,
         val userProfileList: List<UserDomainModel> = listOf(),
         var keyword: String? = null
     ) : BaseViewState
@@ -96,5 +95,6 @@ class SearchViewModel(
         object StartUserProfileListLoading : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
+        object FailOnFormValidation : Action()
     }
 }
