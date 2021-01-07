@@ -1,5 +1,6 @@
 import kotlin.IllegalArgumentException
 import com.android.build.gradle.internal.dsl.BaseFlavor
+import com.android.build.gradle.internal.dsl.ProductFlavor
 
 plugins {
     id(GradlePluginId.ANDROID_APPLICATION)
@@ -42,6 +43,19 @@ android {
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
+        }
+    }
+
+    flavorDimensions(ServerDimension.name)
+    productFlavors {
+        create(FlavorType.LOCAL) {
+            setDimension(LocalFlavor.dimension.name)
+            flavorBuildConfigField("boolean", "remoteServer", "false")
+        }
+
+        create(FlavorType.REMOTE) {
+            setDimension(RemoteFlavor.dimension.name)
+            flavorBuildConfigField("boolean", "remoteServer", "true")
         }
     }
 
@@ -93,6 +107,11 @@ fun BaseFlavor.buildConfigFieldFromGradleProperty(propertyName: String) {
 
     val androidResourceName = "GRADLE_${propertyName.toSnakeCase()}".toUpperCase()
     buildConfigField("String", androidResourceName, propertyValue)
+}
+
+fun ProductFlavor.flavorBuildConfigField(type: String, name: String, value: String) {
+    val androidResourceName = "FLAVOR_${name.toSnakeCase()}".toUpperCase()
+    buildConfigField(type, androidResourceName, value)
 }
 
 fun String.toSnakeCase() = this.split(Regex("(?=[A-Z])")).joinToString("_") { it.toLowerCase() }

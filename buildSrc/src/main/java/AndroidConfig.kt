@@ -31,3 +31,28 @@ object BuildTypeDebug : BuildType {
     override val isMinifyEnabled = false
     override val isDebuggable = true
 }
+
+interface DimensionType {
+    val name: String
+}
+
+object ServerDimension: DimensionType {
+    override val name = "server"
+}
+
+interface FlavorType {
+    companion object {
+        const val LOCAL = "local"
+        const val REMOTE = "remote"
+    }
+
+    val dimension: DimensionType
+}
+
+object LocalFlavor: FlavorType {
+    override val dimension = ServerDimension
+}
+
+object RemoteFlavor: FlavorType {
+    override val dimension = ServerDimension
+}
