@@ -151,7 +151,7 @@ class RemoteDataSourceImpl(
         val userNameField = userProfile.userName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val aliasField = userProfile.name.toRequestBody("multipart/form-data".toMediaTypeOrNull())
         val descriptionField = userProfile.description.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-        val userImage = userProfile.imageByteArray?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+        val userImage = userProfile.cachedImageFile?.asImageMultipartFormData("userImage")
 
         val res = userServices.updateUserProfileAsync(
             userProfile.id,

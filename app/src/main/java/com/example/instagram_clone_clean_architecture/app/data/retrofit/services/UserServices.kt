@@ -32,6 +32,6 @@ interface UserServices {
         @Part("userName") userName: RequestBody? = null,
         @Part("alias") alias: RequestBody? = null,
         @Part("description") description: RequestBody? = null,
-        @Part("userImage") userImage: RequestBody? = null
+        @Part userImage: MultipartBody.Part? = null
     ): Response<UpdateUserProfileResponse>
 }

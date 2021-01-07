@@ -13,10 +13,8 @@ import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
 import com.example.library_base.presentation.navigation.NavigationManager
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
@@ -83,7 +81,7 @@ class ProfileEditViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        updateUserProfileUseCase = UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        updateUserProfileUseCase = spyk(UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher))
         getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
         consumeUserSelectedImageUseCase = ConsumeUserSelectedImageUseCase(profileRepository, mainCoroutineRule.testDispatcher)
@@ -239,10 +237,11 @@ class ProfileEditViewModelTest {
     fun `verify view state when updateUserProfileUseCase succeed`() {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Success(editedUserProfile)
         every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
         every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        coEvery { updateUserProfileUseCase.run(any()) } returns Either.Success(editedUserProfile)
 
         // edit profile
         testViewModel.stateLiveData.value!!.bindingUserProfile!!.userName = editedUserProfile.userName
@@ -269,11 +268,11 @@ class ProfileEditViewModelTest {
     fun `verify view state when updateUserProfileUseCase fail on network connection`() {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.NetworkConnection)
         every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
         every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
+        coEvery { updateUserProfileUseCase.run(any()) } returns Either.Failure(Failure.NetworkConnection)
         // edit profile
         testViewModel.stateLiveData.value!!.bindingUserProfile!!.userName = editedUserProfile.userName
 
@@ -299,11 +298,11 @@ class ProfileEditViewModelTest {
     fun `verify view state when updateUserProfileUseCase fail on server error`() {
         // load data
         every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.updateUserProfile(any()) } } returns Either.Failure(Failure.ServerError)
         every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
         every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
+        coEvery { updateUserProfileUseCase.run(any()) } returns Either.Failure(Failure.ServerError)
         // edit profile
         testViewModel.stateLiveData.value!!.bindingUserProfile!!.userName = editedUserProfile.userName
 

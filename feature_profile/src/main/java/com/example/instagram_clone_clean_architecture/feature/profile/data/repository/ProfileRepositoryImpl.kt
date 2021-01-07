@@ -12,6 +12,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.domain.rep
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.extension.getJpegByteArray
 import com.example.library_base.domain.utility.Either
+import java.io.File
 
 internal class ProfileRepositoryImpl(
     private val localDataSource: LocalDataSource,
@@ -64,22 +65,8 @@ internal class ProfileRepositoryImpl(
         return localDataSource.getBitmap(uri)
     }
 
-    // TODO: get bitmap and put into uploadPost should be done inside UseCase
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
-        return if (userProfile.image !== null) {
-            var bitmap: Bitmap? = null
-            localDataSource.getBitmap(userProfile.image!!).fold(
-                onSucceed = { bitmap = it }
-            )
-
-            val imageByteArray = bitmap?.getJpegByteArray()
-
-            userProfile.imageByteArray = imageByteArray
-
-            remoteDataSource.updateUserProfile(userProfile)
-        } else {
-            remoteDataSource.updateUserProfile(userProfile)
-        }
+        return remoteDataSource.updateUserProfile(userProfile)
     }
 
     override suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure> {
@@ -96,6 +83,13 @@ internal class ProfileRepositoryImpl(
 
     override suspend fun removeLikedPost(userId: String, postId: String): Either<Unit, Failure> {
         return remoteDataSource.removeUserLikePost(userId, postId)
+    }
+
+    override suspend fun cacheCompressedUploadImage(
+        fileName: String,
+        imageByteArray: ByteArray
+    ): Either<File, Failure> {
+        return cacheDataSource.cacheCompressedUploadImage(fileName, imageByteArray)
     }
 
 }

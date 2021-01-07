@@ -71,7 +71,7 @@ class RemoteDataSourceImplTest {
         userName = mockUserName,
         name = "mockAlias",
         description = "mockDes",
-        image = mockk(relaxed = true)
+        imageUri = mockk(relaxed = true)
     )
 
     private val mockSecondUserProfile = UserProfileDataModel(
