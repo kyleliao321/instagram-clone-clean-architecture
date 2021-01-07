@@ -1,8 +1,10 @@
 package com.example.instagram_clone_clean_architecture.app.data
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.MODULE_NAME
 import com.example.instagram_clone_clean_architecture.app.data.data_source.CacheDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.LocalDataSourceImpl
+import com.example.instagram_clone_clean_architecture.app.data.data_source.MockRemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.data_source.RemoteDataSourceImpl
 import com.example.instagram_clone_clean_architecture.app.data.repository.AppRepositoryImpl
 import com.example.instagram_clone_clean_architecture.app.data.retrofit.intercetors.AuthorizeInterceptor
@@ -22,13 +24,17 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind<AppRepository>() with singleton { AppRepositoryImpl(instance()) }
 
     bind<RemoteDataSource>() with singleton {
-        RemoteDataSourceImpl(
-            instance(),
-            instance(),
-            instance(),
-            instance(),
-            instance()
-        )
+        if (BuildConfig.FLAVOR_REMOTE_SERVER) {
+            RemoteDataSourceImpl(
+                instance(),
+                instance(),
+                instance(),
+                instance(),
+                instance()
+            )
+        } else {
+            MockRemoteDataSourceImpl()
+        }
     }
 
     bind<LocalDataSource>() with singleton { LocalDataSourceImpl() }
