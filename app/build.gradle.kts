@@ -25,6 +25,7 @@ android {
 
         buildConfigFieldFromGradleProperty("apiBaseUrl")
         buildConfigFieldFromGradleProperty("apiStaticUrl")
+        buildConfigFieldFromGradleProperty("mockNetworkFailureRate")
         buildConfigField("FEATURE_MODULE_NAMES", ModuleDependency.getDynamicFeatureModuleNames())
     }
 

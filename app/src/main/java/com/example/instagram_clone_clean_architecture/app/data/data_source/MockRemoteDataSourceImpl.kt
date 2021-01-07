@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.app.data.data_source
 
+import com.example.instagram_clone_clean_architecture.BuildConfig
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
@@ -9,7 +10,7 @@ import java.util.*
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
-    private val networkFailProbability = 20
+    private val networkFailureRate: Int = BuildConfig.GRADLE_MOCK_NETWORK_FAILURE_RATE.toInt()
 
     private val mockRemoteImageSrc = "https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/mock-remote-image.jpg"
 
@@ -71,7 +72,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -97,7 +98,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -122,7 +123,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun getUserProfileById(userId: String): Either<UserDomainModel, Failure> {
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -140,7 +141,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getUserProfileListByUserName(userName: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -154,7 +155,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -176,7 +177,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getFollowerUsersById(userId: String): Either<List<UserDomainModel>, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -198,7 +199,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -221,7 +222,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure> {
         var result = mutableListOf<UserDomainModel>()
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -241,7 +242,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -278,7 +279,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun addUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -305,7 +306,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun removeUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
         delay(1000)
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -336,7 +337,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -352,7 +353,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun removeUserLikePost(userId: String, postId: String): Either<Unit, Failure> {
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -373,7 +374,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     override suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure> {
 
-        if (randomBoolean()) {
+        if (isNetworkFail()) {
             return Either.Failure(Failure.NetworkConnection)
         }
 
@@ -382,8 +383,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(mockNewPost)
     }
 
-    private fun randomBoolean(): Boolean =
-        (0..10).random() < (networkFailProbability/10)
+    private fun isNetworkFail(): Boolean {
+        val randomNumber = (0..100).random()
+        return randomNumber < networkFailureRate
+    }
 
     private fun generateId(): String =
         UUID.randomUUID().toString()
