@@ -8,6 +8,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCach
 import com.example.library_base.presentation.navigation.NavigationManager
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
+import io.mockk.spyk
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
 import org.junit.Before
@@ -44,8 +45,8 @@ class MainViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        cacheUserSelectedImageUseCase = CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher)
-        getCachedLoginUserUseCase = GetCachedLoginUserUseCase(appRepository, mainCoroutineRule.testDispatcher)
+        cacheUserSelectedImageUseCase = spyk(CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher))
+        getCachedLoginUserUseCase = spyk(GetCachedLoginUserUseCase(appRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = MainViewModel(
             navManager,

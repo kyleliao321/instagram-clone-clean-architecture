@@ -81,10 +81,10 @@ class ProfileEditViewModelTest {
         MockKAnnotations.init(this)
 
         updateUserProfileUseCase = spyk(UpdateUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        navigationUseCase = NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher)
-        consumeUserSelectedImageUseCase = ConsumeUserSelectedImageUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        getBitmapUseCase = GetBitmapUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getUserProfileUseCase = spyk(GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        navigationUseCase = spyk(NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher))
+        consumeUserSelectedImageUseCase = spyk(ConsumeUserSelectedImageUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        getBitmapUseCase = spyk(GetBitmapUseCase(profileRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel =
             ProfileEditViewModel(
@@ -140,9 +140,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when all UseCase succeed`() {
         // given
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -164,9 +164,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -188,9 +188,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase fail on server error`() {
         // given
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(null) // this should be interpreted as server error
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -212,8 +212,8 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when only consumeUserSelectedImageUseCase fail`() {
         // given
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Failure(Failure.CacheNotFound)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Failure(Failure.CacheNotFound)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -235,9 +235,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when updateUserProfileUseCase succeed`() {
         // load data
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         coEvery { updateUserProfileUseCase.run(any()) } returns Either.Success(editedUserProfile)
@@ -266,9 +266,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when updateUserProfileUseCase fail on network connection`() {
         // load data
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         coEvery { updateUserProfileUseCase.run(any()) } returns Either.Failure(Failure.NetworkConnection)
@@ -296,9 +296,9 @@ class ProfileEditViewModelTest {
     @Test
     fun `verify view state when updateUserProfileUseCase fail on server error`() {
         // load data
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.consumeUserSelectedImageUri() } } returns Either.Success(mockUri)
-        every { runBlocking { profileRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
 
         coEvery { updateUserProfileUseCase.run(any()) } returns Either.Failure(Failure.ServerError)
