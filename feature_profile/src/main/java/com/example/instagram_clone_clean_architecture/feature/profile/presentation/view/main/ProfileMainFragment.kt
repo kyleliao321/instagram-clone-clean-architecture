@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
+import com.example.instagram_clone_clean_architecture.feature.profile.R
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileMainBinding
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
+import com.example.instagram_clone_clean_architecture.feature.profile.presentation.decorators.UserPostGridViewItemDecorator
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
@@ -25,6 +27,7 @@ class ProfileMainFragment: InjectionFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        setupUserPostListItemDecorator(binding)
         setupUserPostListAdapter(binding)
         setSupportAppBar(binding.mainProfileAppBar)
         return binding.root
@@ -50,5 +53,11 @@ class ProfileMainFragment: InjectionFragment() {
                 UserPostGridViewAdapter.OnClickListener {
                     viewModel.onNavigateToPostDetail(it)
                 })
+    }
+
+    private fun setupUserPostListItemDecorator(binding: FragmentProfileMainBinding) {
+        val space = resources.getInteger(R.integer.user_posts_item_view_spacing)
+        val itemDecorator = UserPostGridViewItemDecorator(space)
+        binding.userPostContainer.addItemDecoration(itemDecorator)
     }
 }

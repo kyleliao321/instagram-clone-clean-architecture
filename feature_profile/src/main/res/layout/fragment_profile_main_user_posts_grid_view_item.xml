@@ -10,14 +10,21 @@
     </data>
 
 
-
-    <ImageView
-        android:id="@+id/user_post_image_preview"
-        android:layout_width="@dimen/user_post_item_size"
-        android:layout_height="@dimen/user_post_item_size"
-        android:layout_margin="@dimen/user_post_item_margin"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        app:postImage="@{post.imageSrc}"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/user_post_image_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:postImage="@{post.imageSrc}"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

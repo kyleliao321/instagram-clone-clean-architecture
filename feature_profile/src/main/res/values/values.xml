@@ -2,4 +2,6 @@
 <resources>
     <!-- Layout Guide line dimension -->
     <item name="user_profile_and_post_guide_line_percent" type="integer" format="float">.4</item>
+    <!-- Layout Posts Grid View Item Spacing -->
+    <item name="user_posts_item_view_spacing" type="integer" format="integer">2</item>
 </resources>
