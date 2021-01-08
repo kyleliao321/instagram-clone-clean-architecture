@@ -9,11 +9,8 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_test_utils.runBlockingTest
-import io.mockk.MockKAnnotations
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
-import io.mockk.mockk
-import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.After
@@ -50,7 +47,7 @@ class SearchViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getUserProfileListUseCase = GetUserProfileListUseCase(searchRepository, mainCoroutineRule.testDispatcher)
+        getUserProfileListUseCase = spyk(GetUserProfileListUseCase(searchRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = SearchViewModel(
             navManager,
@@ -80,13 +77,13 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `verify view state when loadUserProfileList invoke with non-blank keyword and repository return successfully`() {
+    fun `verify view state when getUserProfileListUseCase return with success`() {
         val mockReturnList = mockk<List<UserDomainModel>>()
         val searchKeyword = "test"
 
         // given
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(mockReturnList)
+        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Success(mockReturnList)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
@@ -103,12 +100,12 @@ class SearchViewModelTest {
     }
 
     @Test
-    fun `verify view state when loadUserProfileList invoke with non-blank keyword and repository return with failure`() {
+    fun `verify view state when getUserProfileListUseCase return with network connection failure`() {
         val searchKeyword = "test"
 
         // given
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
