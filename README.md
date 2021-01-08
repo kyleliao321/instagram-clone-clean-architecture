@@ -39,6 +39,9 @@ running in local host. [(More on How to setup development server for application
 - For app Module, choose **localDebug** or **localRelease** as its Active Build Variant.
 - Build - Rebuild Project
 
+Now, whenever the application has to make a network request, it will use internal mocks services and store data in memory. That is to say, all the data created 
+during this time on **Local** flavor will be gone after device shut down the application. Also, inside project-level gradle.properties, you can adjust `mockNetworkFailureRate`
+ranging from 0 to 100, to mock how likely the service will lose network connection on each request.
 
 ## Demo
 
@@ -78,6 +81,7 @@ running in local host. [(More on How to setup development server for application
 ### Build System
 - Using [Gradle-Kotlin-DSL](https://docs.gradle.org/current/userguide/kotlin_dsl.html).
 - Using buildSrc to organize library/plugin dependency and android configuration.
+- Configure build variant through build types and flavors.
 
 ### Unit Test
 - Using [Mockk](https://mockk.io/). (kotlin-version of [Mockito](https://site.mockito.org/))
