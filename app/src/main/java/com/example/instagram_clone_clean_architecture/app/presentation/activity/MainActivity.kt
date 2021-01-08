@@ -53,12 +53,12 @@ class MainActivity: InjectionActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             IntentService.PHOTO_GALLERY_SERVICE_CODE -> {
-                val uriString = data!!.dataString
+                val uriString = data?.dataString
                 val uri = Uri.parse(uriString)
                 viewModel.cacheUserSelectedImage(uri)
             }
             IntentService.CAMERA_SERVICE_CODE -> {
-                val uriString = data!!.dataString
+                val uriString = data?.dataString
                 val uri = Uri.parse(uriString)
                 viewModel.cacheUserSelectedImage(uri)
             }
