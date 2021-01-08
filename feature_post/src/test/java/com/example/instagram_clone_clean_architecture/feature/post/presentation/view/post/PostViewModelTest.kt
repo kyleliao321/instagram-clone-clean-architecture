@@ -65,11 +65,11 @@ class PostViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLoginUserUseCase = GetLoginUserUseCase(postRepository, mainCoroutineRule.testDispatcher)
-        getUserSelectedImageUseCase = GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher)
-        uploadPostUseCase = UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)
-        getBitmapUseCase = GetBitmapUseCase(postRepository, mainCoroutineRule.testDispatcher)
-        mockPostUseCase = spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        getLoginUserUseCase = spyk(GetLoginUserUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        getUserSelectedImageUseCase = spyk(GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        uploadPostUseCase = spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        getBitmapUseCase = spyk(GetBitmapUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        mockPostUseCase = spyk(spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)))
 
         viewModel = PostViewModel(
             intentService,
@@ -132,9 +132,9 @@ class PostViewModelTest {
         val mockBitmap = mockk<Bitmap>()
 
         // given
-        every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
-        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockImage)
-        every { runBlocking { postRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(mockLoginUser)
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockImage)
+        every { runBlocking { getBitmapUseCase.run(any()) }} returns Either.Success(mockBitmap)
         every { mockLoginUser.id } returns "mockId"
 
         // when
@@ -169,9 +169,9 @@ class PostViewModelTest {
         val mockBitmap = mockk<Bitmap>()
 
         // given
-        every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
-        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockImage)
-        every { runBlocking { postRepository.getBitmap(any()) } } returns Either.Success(mockBitmap)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockImage)
+        every { runBlocking { getBitmapUseCase.run(any()) }} returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
@@ -203,8 +203,8 @@ class PostViewModelTest {
         val mockLoginUser = mockk<UserDomainModel>()
 
         // given
-        every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Success(mockLoginUser)
-        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(null)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(mockLoginUser)
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(null)
         every { mockLoginUser.id } returns "mockId"
 
         // when
@@ -236,8 +236,8 @@ class PostViewModelTest {
     @Test
     fun `verify view state when getUserSelectedImageUseCase return null and getLoginUseUseCase fail during loadData`() {
         // given
-        every { runBlocking { postRepository.getLoginUserProfile() } } returns Either.Failure(Failure.LocalAccountNotFound)
-        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(null)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(null)
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
