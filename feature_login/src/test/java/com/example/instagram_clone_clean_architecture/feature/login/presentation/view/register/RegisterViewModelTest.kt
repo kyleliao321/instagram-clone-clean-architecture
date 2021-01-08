@@ -11,6 +11,7 @@ import com.example.library_test_utils.runBlockingTest
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.runBlocking
 import org.amshove.kluent.shouldBeEqualTo
@@ -47,7 +48,7 @@ class RegisterViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        userRegisterUseCase = UserRegisterUseCase(loginRepository, mainCoroutineRule.testDispatcher)
+        userRegisterUseCase = spyk(UserRegisterUseCase(loginRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = RegisterViewModel(navManager, userRegisterUseCase, mainCoroutineRule.testDispatcher)
 
@@ -79,7 +80,7 @@ class RegisterViewModelTest {
         val mockUserPassword = "userPassword"
 
         // given
-        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(Unit)
+        every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Success(Unit)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
@@ -96,13 +97,12 @@ class RegisterViewModelTest {
     }
 
     @Test
-    fun `verify view state when register fail`() {
+    fun `verify view state when register fail on network connection`() {
         val mockUserName = "userName"
         val mockUserPassword = "userPassword"
 
         // given
-        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Failure(
-            Failure.NetworkConnection)
+        every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
@@ -123,6 +123,8 @@ class RegisterViewModelTest {
         // given
         val mockUserName = null
         val mockUserPassword = null
+
+        every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Failure(Failure.FormDataNotComplete)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }

@@ -50,7 +50,7 @@ class LoginViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLocalLoginUserDataUseCase = GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher)
+        getLocalLoginUserDataUseCase = spyk(GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher))
         userLoginUseCase = spyk(UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = LoginViewModel(
@@ -141,11 +141,13 @@ class LoginViewModelTest {
         val mockUserName = "1"
         val mockUserPassword = "2"
         val mockProfile = mockk<UserDomainModel>(relaxed = true)
+        val mockLocalUserData = mockk<GetLocalLoginUserDataUseCase.Result>(relaxed = true)
 
         // given
+        every { mockLocalUserData.userName } returns mockUserName
+        every { mockLocalUserData.userPassword } returns mockUserPassword
         every { runBlocking { userLoginUseCase.run(any()) } } returns Either.Success(mockProfile)
-        every { runBlocking { loginRepository.getLocalLoginUserName() } } returns Either.Success(mockUserName)
-        every { runBlocking { loginRepository.getLocalLoginUserPassword() } } returns Either.Success(mockUserPassword)
+        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Success(mockLocalUserData)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -166,8 +168,7 @@ class LoginViewModelTest {
     @Test
     fun `verify view state if local user data not exist`() {
         // given
-        every { runBlocking { loginRepository.getLocalLoginUserName() } } returns Either.Failure(Failure.LocalAccountNotFound)
-        every { runBlocking { loginRepository.getLocalLoginUserPassword() } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
