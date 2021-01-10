@@ -113,7 +113,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:oldUserImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}"
-                    app:newUserImage="@{viewModel.stateLiveData.cacheImage}"/>
+                    app:newUserImage="@{viewModel.stateLiveData.cacheImageUri}"/>
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/user_image_name_divider"

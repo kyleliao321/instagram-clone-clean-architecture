@@ -1,6 +1,7 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -12,6 +13,7 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.R
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
+import timber.log.Timber
 
 /**
  * Submit the list of post to recycler view's adapter
@@ -94,7 +96,7 @@ fun loadUserImage(imageView: ImageView, data: String?) = when (data) {
  * Load user profile image for EditFragment.
  */
 @BindingAdapter("app:oldUserImage", "app:newUserImage")
-fun loadEditingImage(imageView: ImageView, original: String?, new: Bitmap?) {
+fun loadEditingImage(imageView: ImageView, original: String?, new: Uri?) {
     if (new == null) {
         when (original) {
             null -> imageView.load(R.drawable.user_profile_default_image)
@@ -103,7 +105,6 @@ fun loadEditingImage(imageView: ImageView, original: String?, new: Bitmap?) {
             }
         }
     } else {
-        // TODO: Fail to load bitmap
         imageView.load(new) {
             transformations(CircleCropTransformation())
         }
