@@ -56,7 +56,18 @@ internal class ProfileRepositoryImpl(
     }
 
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
-        return remoteDataSource.updateUserProfile(userProfile)
+        val updateUserProfileResult = remoteDataSource.updateUserProfile(userProfile)
+
+        if (updateUserProfileResult is Either.Success) {
+            val updatedUserProfile = updateUserProfileResult.a
+            val cacheResult = cacheDataSource.cacheLoginUserProfile(updatedUserProfile)
+
+            if (cacheResult is Either.Failure) {
+                return cacheResult
+            }
+        }
+
+        return updateUserProfileResult
     }
 
     override suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure> {

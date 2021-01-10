@@ -3,14 +3,13 @@ package com.example.instagram_clone_clean_architecture.feature.profile.data.repo
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
+import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.profile.domain.repository.ProfileRepository
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.CoroutineTestRule
 import com.example.library_test_utils.runBlockingTest
-import io.mockk.MockKAnnotations
-import io.mockk.coEvery
-import io.mockk.every
+import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Assert.*
@@ -36,6 +35,17 @@ class ProfileRepositoryImplTest {
     internal lateinit var cacheDataSource: CacheDataSource
 
     private lateinit var profileRepositoryImpl: ProfileRepository
+
+    private val mockUserProfile = UserDomainModel(
+        id = "mockUserId",
+        userName = "mockUserName",
+        name = "mockName",
+        description = "mockDes",
+        imageSrc = null,
+        postNum = 0,
+        followerNum = 0,
+        followingNum = 0
+    )
 
     @Before
     fun setup() {
@@ -101,5 +111,42 @@ class ProfileRepositoryImplTest {
         // expect
         result shouldBeEqualTo Either.Failure(Failure.LocalAccountNotFound)
     }
+
+    @Test
+    fun `updateUserProfile should call cacheDataSource cacheLoginUserProfile and return correct result when remoteDataSource updateUserProfile return success`() {
+        // given
+        var result: Either<UserDomainModel, Failure>? = null
+
+        coEvery { remoteDataSource.updateUserProfile(any()) } returns Either.Success(mockUserProfile)
+        coEvery { cacheDataSource.cacheLoginUserProfile(any()) } returns Either.Success(Unit)
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = profileRepositoryImpl.updateUserProfile(mockk())
+        }
+
+        // expect
+        coVerify(exactly = 1) { cacheDataSource.cacheLoginUserProfile(any()) }
+        result shouldBeEqualTo Either.Success(mockUserProfile)
+    }
+
+    @Test
+    fun `updateUserProfile should return whatever cacheDataSource cacheLoginUserProfile return when it return failure`() {
+        // given
+        var result: Either<UserDomainModel, Failure>? = null
+
+        coEvery { remoteDataSource.updateUserProfile(any()) } returns Either.Success(mockUserProfile)
+        coEvery { cacheDataSource.cacheLoginUserProfile(any()) } returns Either.Failure(Failure.CacheNotFound)
+
+        // when
+        mainCoroutineRule.runBlockingTest {
+            result = profileRepositoryImpl.updateUserProfile(mockk())
+        }
+
+        // expect
+        coVerify(exactly = 1) { cacheDataSource.cacheLoginUserProfile(any()) }
+        result shouldBeEqualTo Either.Failure(Failure.CacheNotFound)
+    }
+
 
 }
