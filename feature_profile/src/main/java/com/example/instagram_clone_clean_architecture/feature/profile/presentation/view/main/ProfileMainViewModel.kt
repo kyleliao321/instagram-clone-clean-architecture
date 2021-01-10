@@ -30,7 +30,7 @@ class ProfileMainViewModel(
 ) {
 
     val isDataLoading = Transformations.map(stateLiveData) {
-        return@map it.isLoginFollowingListLoading || it.isLoginUserLoading || it.isPostLoading || it.isProfileLoading
+        return@map it.isLoginFollowingListLoading || it.isLoginUserLoading || it.isPostLoading || it.isProfileLoading || it.isFollowingProcessing
     }
 
     val errorMessage = Transformations.map(stateLiveData) {
@@ -94,28 +94,38 @@ class ProfileMainViewModel(
     }
 
     fun addUserRelation() = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartFollowingProcessing)
         val param = AddUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
 
         addUserRelationUseCase(param) {
             it.fold(
                 onSucceed = {
+                    sendAction(Action.FinishFollowingProcessing)
                     loadData()
                 },
-                onFail = ::onFailure
+                onFail = { failure ->
+                    sendAction(Action.FinishFollowingProcessing)
+                    onFailure(failure)
+                }
             )
         }
     }
 
     fun removeUserRelation() = viewModelScope.launch(defaultDispatcher) {
+        sendAction(Action.StartFollowingProcessing)
         val param = RemoveUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
 
         removeUserRelationUseCase(param) {
             it.fold(
                 onSucceed = {
+                    sendAction(Action.FinishFollowingProcessing)
                     sendAction(Action.ReloadData)
                     loadData()
                 },
-                onFail = ::onFailure
+                onFail = { failure -> {
+                    sendAction(Action.FinishFollowingProcessing)
+                    onFailure(failure)
+                }}
             )
         }
     }
@@ -232,6 +242,12 @@ class ProfileMainViewModel(
         is Action.FailOnLocalAccountError -> state.copy(
             isLocalAccountError = true
         )
+        is Action.StartFollowingProcessing -> state.copy(
+            isFollowingProcessing = true
+        )
+        is Action.FinishFollowingProcessing -> state.copy(
+            isFollowingProcessing = false
+        )
         is Action.ReloadData -> ViewState()
     }
 
@@ -244,6 +260,7 @@ class ProfileMainViewModel(
         val isLoginUserLoading: Boolean = true,
         val isProfileLoading: Boolean = true,
         val isPostLoading: Boolean = true,
+        val isFollowingProcessing: Boolean = false,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
         val isLocalAccountError: Boolean = false
@@ -254,6 +271,8 @@ class ProfileMainViewModel(
         class LoginUserFollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
         class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class UserPostLoaded(val userPost: List<PostDomainModel>) : Action()
+        object StartFollowingProcessing: Action()
+        object FinishFollowingProcessing: Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnLocalAccountError : Action()

@@ -162,6 +162,7 @@ class ProfileMainViewModelTest {
             isPostLoading = true,
             isNetworkError = false,
             isServerError = false,
+            isFollowingProcessing = false,
             isLocalAccountError = false,
             loginUserProfile = null,
             loginUserFollowingList = listOf(),
@@ -189,6 +190,7 @@ class ProfileMainViewModelTest {
             isPostLoading = false,
             isProfileLoading = false,
             isLoginUserLoading = false,
+            isFollowingProcessing = false,
             isLoginFollowingListLoading = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
@@ -216,6 +218,7 @@ class ProfileMainViewModelTest {
             isNetworkError = true,
             isPostLoading = false,
             isProfileLoading = false,
+            isFollowingProcessing = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
             loginUserProfile = correctUserProfile,
@@ -242,6 +245,7 @@ class ProfileMainViewModelTest {
             isServerError = false,
             isNetworkError = true,
             isPostLoading = false,
+            isFollowingProcessing = false,
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
@@ -272,6 +276,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = null,
             loginUserFollowingList = listOf(),
             userPosts = correctUserPost,
@@ -299,6 +304,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = listOf(),
@@ -326,6 +332,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = correctUserPost,
@@ -353,6 +360,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = listOf(),
@@ -380,6 +388,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = listOf(),
@@ -398,8 +407,8 @@ class ProfileMainViewModelTest {
         mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation() }
 
         // expect
-        verify(exactly = 10) { observer.onChanged(any()) }
-        // init, loadUser, loadLoginUser, loadLoginFollowing, loadPost, reload,
+        verify(exactly = 12) { observer.onChanged(any()) }
+        // init, loadUser, loadLoginUser, loadLoginFollowing, loadPost, startFollow, finishFollow, reload,
         // loadUser, loadLoginUser, loadLoginFollowing, loadPost
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
             isLoginUserLoading = false,
@@ -409,6 +418,7 @@ class ProfileMainViewModelTest {
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userProfile = correctUserProfile,
@@ -427,9 +437,9 @@ class ProfileMainViewModelTest {
         mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation() }
 
         // expect
-        verify(exactly = 10) { observer.onChanged(any()) }
+        verify(exactly = 12) { observer.onChanged(any()) }
         // init, loadUser, loadLoginUser, loadLoginFollowing,
-        // loadPost, reload, loadUser, loadLoginUser, loadLoginFollowing, loadPost
+        // loadPost, startFollow, finishFollow, reload, loadUser, loadLoginUser, loadLoginFollowing, loadPost
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileMainViewModel.ViewState(
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
@@ -438,6 +448,7 @@ class ProfileMainViewModelTest {
             isNetworkError = false,
             isServerError = false,
             isLocalAccountError = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userProfile = correctUserProfile,
@@ -468,6 +479,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = listOf(),
@@ -495,6 +507,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = correctUserProfile,
             loginUserFollowingList = correctFollowingList,
             userPosts = listOf(),
@@ -522,6 +535,7 @@ class ProfileMainViewModelTest {
             isProfileLoading = false,
             isLoginUserLoading = false,
             isLoginFollowingListLoading = false,
+            isFollowingProcessing = false,
             loginUserProfile = null,
             loginUserFollowingList = listOf(),
             userPosts = listOf(),
