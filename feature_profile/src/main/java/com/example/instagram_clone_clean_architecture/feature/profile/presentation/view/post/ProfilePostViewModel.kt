@@ -13,6 +13,7 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ProfilePostViewModel(
     private val args: ProfilePostFragmentArgs,
@@ -27,10 +28,10 @@ class ProfilePostViewModel(
     ViewState()
 ) {
 
-    // TODO: potentially fail
     val isLoginUserLikedPost = Transformations.map(stateLiveData) {
         if (it.loginUserProfile != null && !it.isLikedUsersLoading) {
-            return@map it.loginUserProfile in it.likedUsers
+            val likedUsersIds = it.likedUsers.map { user -> user.id }
+            return@map it.loginUserProfile.id in likedUsersIds
         } else {
             return@map false
         }
