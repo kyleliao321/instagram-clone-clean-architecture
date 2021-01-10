@@ -130,6 +130,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = true,
             isNetworkError = false,
             isServerError = false,
+            isUserNameConflict = false,
             originalUserProfile = null,
             bindingUserProfile = null,
             cacheImage = null,
@@ -154,6 +155,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isServerError = false,
             isNetworkError = false,
+            isUserNameConflict = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,
             cacheImage = mockBitmap,
@@ -178,6 +180,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isServerError = false,
             isNetworkError = true,
+            isUserNameConflict = false,
             originalUserProfile = null,
             bindingUserProfile = null,
             cacheImage = mockBitmap,
@@ -202,6 +205,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isServerError = true,
             isNetworkError = false,
+            isUserNameConflict = false,
             originalUserProfile = null,
             bindingUserProfile = null,
             cacheImage = mockBitmap,
@@ -225,6 +229,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isServerError = false,
             isNetworkError = false,
+            isUserNameConflict = false,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,
             cacheImage = null,
@@ -256,6 +261,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isNetworkError = false,
             isServerError = false,
+            isUserNameConflict = false,
             originalUserProfile = editedUserProfile,
             bindingUserProfile = editedUserProfile,
             cacheImage = mockBitmap,
@@ -286,6 +292,7 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isNetworkError = true,
             isServerError = false,
+            isUserNameConflict = false,
             cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,
@@ -308,7 +315,7 @@ class ProfileEditViewModelTest {
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
 
-        // expect liveData updated four times: init, loadProfile, loadImage, updating, updated, failOnServerError
+        // expect liveData updated six times: init, loadProfile, loadImage, updating, updated, failOnServerError
         verify(exactly = 6) { observer.onChanged(any()) }
         testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
             isUserProfileLoading = false,
@@ -316,6 +323,38 @@ class ProfileEditViewModelTest {
             isCachedImageLoading = false,
             isNetworkError = false,
             isServerError = true,
+            isUserNameConflict = false,
+            cacheImage = mockBitmap,
+            originalUserProfile = correctUserProfile,
+            bindingUserProfile = correctUserProfile,
+            cacheImageUri = mockUri
+        )
+    }
+
+    @Test
+    fun `verify view state when updateUserProfileUseCase fail on duplicated username`() {
+        // given
+        every { runBlocking { getUserProfileUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { consumeUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockUri)
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
+        mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
+
+        coEvery { updateUserProfileUseCase.run(any()) } returns Either.Failure(Failure.DuplicatedUserName)
+        // edit profile
+        testViewModel.stateLiveData.value!!.bindingUserProfile!!.userName = editedUserProfile.userName
+
+        // when
+        mainCoroutineRule.runBlockingTest { testViewModel.onUpdateUserProfile() }
+
+        // expect liveData updated six times:init, loadProfile, loadImage, updating, updated, failOnDuplicatedUserName
+        verify(exactly = 6) { observer.onChanged(any()) }
+        testViewModel.stateLiveData.value shouldBeEqualTo ProfileEditViewModel.ViewState(
+            isUserProfileLoading = false,
+            isUserProfileUpdating = false,
+            isCachedImageLoading = false,
+            isNetworkError = false,
+            isServerError = false,
+            isUserNameConflict = true,
             cacheImage = mockBitmap,
             originalUserProfile = correctUserProfile,
             bindingUserProfile = correctUserProfile,

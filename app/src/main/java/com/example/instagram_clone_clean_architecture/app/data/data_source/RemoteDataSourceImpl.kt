@@ -202,6 +202,8 @@ class RemoteDataSourceImpl(
 
             if (status == HttpURLConnection.HTTP_OK && data != null) {
                 getUserProfileById(data)
+            } else if (status == HttpURLConnection.HTTP_CONFLICT) {
+                Either.Failure(Failure.DuplicatedUserName)
             } else {
                 Either.Failure(Failure.ServerError)
             }

@@ -5,12 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.Observer
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
+import com.example.instagram_clone_clean_architecture.feature.profile.R
 import com.example.instagram_clone_clean_architecture.feature.profile.databinding.FragmentProfileEditBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
+import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
 
 class ProfileEditFragment: InjectionFragment() {
+
+    private val observer = Observer<ProfileEditViewModel.ViewState>() {
+        if (it.isUserNameConflict) {
+            showSnackBar(resources.getString(R.string.update_user_profile_username_conflict_message))
+        }
+    }
 
     private val viewModel: ProfileEditViewModel by instance()
 
@@ -31,6 +40,7 @@ class ProfileEditFragment: InjectionFragment() {
 
     override fun onStart() {
         super.onStart()
+        viewModel.stateLiveData.observe(viewLifecycleOwner, observer)
         viewModel.loadData()
     }
 
@@ -41,5 +51,11 @@ class ProfileEditFragment: InjectionFragment() {
 
     private fun setSupportAppBar(appBar: Toolbar?) {
         (requireActivity() as MainActivity).setSupportActionBar(appBar)
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar
+            .make(requireView(), message, Snackbar.LENGTH_SHORT)
+            .show()
     }
 }

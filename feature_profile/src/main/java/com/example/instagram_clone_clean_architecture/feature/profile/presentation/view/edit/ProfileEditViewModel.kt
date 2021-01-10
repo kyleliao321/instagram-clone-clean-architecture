@@ -129,6 +129,7 @@ class ProfileEditViewModel(
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
         is Failure.ServerError -> sendAction(Action.FailOnServerError)
+        is Failure.DuplicatedUserName -> sendAction(Action.FailOnUserNameConflict)
         else -> throw Exception("Unknown failure type in ${this.javaClass} : $failure")
     }
 
@@ -157,12 +158,16 @@ class ProfileEditViewModel(
             isServerError = true
         )
         is Action.StartUpdatingUserProfile -> state.copy(
+            isUserNameConflict = false,
             isUserProfileUpdating = true
         )
         is Action.FinishUpdatingUserProfile -> state.copy(
             isUserProfileUpdating = false,
             originalUserProfile = action.userProfile,
             bindingUserProfile = action.userProfile.copy()
+        )
+        is Action.FailOnUserNameConflict -> state.copy(
+            isUserNameConflict = true
         )
         is Action.Reload -> ViewState()
     }
@@ -173,6 +178,7 @@ class ProfileEditViewModel(
         val isCachedImageLoading: Boolean = true,
         val isNetworkError: Boolean = false,
         val isServerError: Boolean = false,
+        val isUserNameConflict: Boolean = false,
         val originalUserProfile: UserDomainModel? = null,
         val bindingUserProfile: UserDomainModel? = null,
         val cacheImageUri: Uri? = null,
@@ -186,6 +192,7 @@ class ProfileEditViewModel(
         object StartUpdatingUserProfile : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
+        object FailOnUserNameConflict : Action()
         object Reload: Action()
     }
 }

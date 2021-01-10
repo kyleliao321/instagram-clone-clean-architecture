@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="module_name">feature_profile</string>
+    <string name="update_user_profile_username_conflict_message">username is already existed</string>
 </resources>
