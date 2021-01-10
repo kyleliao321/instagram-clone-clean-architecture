@@ -11,6 +11,7 @@ import com.example.library_base.domain.extension.asImageMultipartFormData
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
+import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 
@@ -199,7 +200,7 @@ class RemoteDataSourceImpl(
             val status = res.code()
             val data = res.body()?.userId
 
-            if (status == HttpURLConnection.HTTP_CREATED && data != null) {
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
                 getUserProfileById(data)
             } else {
                 Either.Failure(Failure.ServerError)

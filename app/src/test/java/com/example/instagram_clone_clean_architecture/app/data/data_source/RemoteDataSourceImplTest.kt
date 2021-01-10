@@ -792,7 +792,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `updateUserProfile should return correct result when userService updateUserProfile return with HTTP_CREATED`() {
+    fun `updateUserProfile should return correct result when userService updateUserProfile return with HTTP_OK`() {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
@@ -800,7 +800,7 @@ class RemoteDataSourceImplTest {
         val mockRes = mockk<Response<UpdateUserProfileResponse>>(relaxed = true)
 
         every { mockResBody.userId } returns mockUserId
-        every { mockRes.code() } returns HttpURLConnection.HTTP_CREATED
+        every { mockRes.code() } returns HttpURLConnection.HTTP_OK
         every { mockRes.body() } returns mockResBody
 
         val mockGetResBody = mockk<GetUserProfileResponse>(relaxed = true)
@@ -823,7 +823,7 @@ class RemoteDataSourceImplTest {
     }
 
     @Test
-    fun `updateUserProfile should return server error failure when userService updateUserProfile return other than HTTP_CREATED`() {
+    fun `updateUserProfile should return server error failure when userService updateUserProfile return other than HTTP_OK`() {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
