@@ -50,6 +50,10 @@ abstract class DIAwareTestRule<F: Fragment>: ActivityTestRule<FragmentActivity>(
     abstract fun getModule(): DI.Module
 }
 
+fun <F: Fragment> DIAwareTestRule<F>.runOnUiThread(block: () -> Unit) = activity.run {
+    block()
+}
+
 fun <F: Fragment> makeDIAwareTestRule(fragment: F, module: DI.Module): DIAwareTestRule<F> = object: DIAwareTestRule<F>() {
     override fun createFragment(): F = fragment
     override fun getModule(): DI.Module = module

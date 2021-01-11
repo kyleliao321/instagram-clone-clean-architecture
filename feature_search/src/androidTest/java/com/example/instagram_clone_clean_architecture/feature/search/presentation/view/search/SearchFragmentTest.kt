@@ -1,5 +1,6 @@
 package com.example.instagram_clone_clean_architecture.feature.search.presentation.view.search
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.agoda.kakao.edit.KEditText
@@ -7,13 +8,9 @@ import com.agoda.kakao.screen.Screen
 import com.agoda.kakao.screen.Screen.Companion.onScreen
 import com.agoda.kakao.text.KButton
 import com.example.instagram_clone_clean_architecture.feature.search.R
-import com.example.instagram_clone_clean_architecture.feature.search.domain.usecase.GetUserProfileListUseCase
-import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_test_utils.makeDIAwareTestRule
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.spyk
-import io.mockk.verify
+import io.mockk.*
+
 import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
@@ -25,14 +22,13 @@ import org.kodein.di.singleton
 @RunWith(AndroidJUnit4ClassRunner::class)
 class SearchFragmentTest {
 
+    private val _state = MutableLiveData<SearchViewModel.ViewState>(SearchViewModel.ViewState())
+    private val stateLiveData: LiveData<SearchViewModel.ViewState> = _state
 
-    private val navManger: NavigationManager = mockk(relaxed = true)
-    private val getUserProfileListUseCase: GetUserProfileListUseCase = mockk(relaxed = true)
+    private val _errorMessage = MutableLiveData<String?>(null)
+    private val errorMessageLiveData = _errorMessage
 
-    private val viewModel: SearchViewModel = spyk(SearchViewModel(
-        navManger,
-        getUserProfileListUseCase
-    ))
+    private val viewModel: SearchViewModel = mockk(relaxed = true)
 
     private val fragment = SearchFragment()
 
@@ -40,7 +36,11 @@ class SearchFragmentTest {
     val diAwareTestRule = makeDIAwareTestRule(
         fragment,
         DI.Module("SEARCH_FRAGMENT_TEST_MODULE") {
-        bind<SearchViewModel>() with  singleton { viewModel }
+        bind<SearchViewModel>() with  singleton {
+            every { viewModel.stateLiveData } returns stateLiveData
+            every { viewModel.errorMessage } returns errorMessageLiveData
+            viewModel
+        }
     })
 
     @Test
@@ -55,11 +55,10 @@ class SearchFragmentTest {
 
             verify(exactly = 1) { viewModel.loadUserProfileList(searchKeyword) }
         }
-   }
+    }
 
     class SearchScreen: Screen<SearchScreen>() {
         val searchField = KEditText { withId(R.id.search_field) }
         val searchButton = KButton { withId(R.id.search_button) }
     }
-
 }
