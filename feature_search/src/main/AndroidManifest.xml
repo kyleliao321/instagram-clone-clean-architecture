@@ -5,9 +5,7 @@
         dist:instant="false"
         dist:title="@string/title_feature_search">
         <dist:delivery>
-            <dist:install-time>
-                <dist:removable value="false" />
-            </dist:install-time>
+            <dist:install-time />
         </dist:delivery>
         <dist:fusing dist:include="true" />
     </dist:module>

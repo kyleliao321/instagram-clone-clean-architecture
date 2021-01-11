@@ -81,7 +81,7 @@ dependencies {
     testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
     testImplementation(TestLibraryDependency.JUNIT)
     testImplementation(TestLibraryDependency.MOCKK)
-    testImplementation(TestLibraryDependency.MOCKK_CO)
+    testImplementation(TestLibraryDependency.KOTLIN_CO_CORE)
     testImplementation(TestLibraryDependency.KLUENT)
     testImplementation(TestLibraryDependency.KOTLIN_CO_TEST)
     testImplementation(TestLibraryDependency.ANDROID_ARCH_CORE_TEST)

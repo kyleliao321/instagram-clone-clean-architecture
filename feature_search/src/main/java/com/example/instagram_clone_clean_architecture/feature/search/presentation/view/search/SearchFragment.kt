@@ -36,7 +36,10 @@ class SearchFragment : InjectionFragment() {
     }
 
     private fun setSupportAppBar(appBar: Toolbar?) {
-        (requireActivity() as MainActivity).setSupportActionBar(appBar)
+        val parentActivity = requireActivity() as? MainActivity
+        parentActivity?.let {
+            it.setSupportActionBar(appBar)
+        }
     }
 
     private fun setupRecyclerViewAdapter(binding: FragmentSearchBinding) {

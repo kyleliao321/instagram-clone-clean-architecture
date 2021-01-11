@@ -72,6 +72,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -80,8 +84,14 @@ dependencies {
 
     testImplementation(TestLibraryDependency.JUNIT)
     testImplementation(TestLibraryDependency.MOCKK)
-    testImplementation(TestLibraryDependency.MOCKK_CO)
+    testImplementation(TestLibraryDependency.KOTLIN_CO_CORE)
     testImplementation(TestLibraryDependency.KLUENT)
     testImplementation(TestLibraryDependency.KOTLIN_CO_TEST)
     testImplementation(TestLibraryDependency.ANDROID_ARCH_CORE_TEST)
+
+    androidTestImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
+    androidTestImplementation(TestLibraryDependency.MOCKK_ANDROID)
+    androidTestImplementation(TestLibraryDependency.KOTLIN_CO_CORE)
+    androidTestImplementation(TestLibraryDependency.KAKAO)
+    androidTestImplementation(TestLibraryDependency.ESPRESSO)
 }

@@ -57,4 +57,10 @@ dependencies {
     implementation(TestLibraryDependency.JUNIT)
     implementation(LibraryDependency.KOTLIN_REFLECTION)
     implementation(TestLibraryDependency.KOTLIN_CO_TEST)
+
+    implementation(LibraryDependency.KODEIN_ANDROID_X)
+    implementation(LibraryDependency.KODEIN_DI)
+    implementation(TestLibraryDependency.ANDROID_TEST_RULES)
+    implementation(TestLibraryDependency.ANDROID_TEST_RUNNER)
+    implementation(LibraryDependency.APP_COMPAT)
 }
