@@ -35,7 +35,7 @@ import org.kodein.di.diContext
  * Allowing all fragment classes to use DI module inside its scope.
  * (i.e: val viewModel: ExampleViewModel by instance() )
  */
-abstract class InjectionFragment: Fragment(), DIAware {
+abstract class InjectionFragment : Fragment(), DIAware {
 
     final override val di by closestDI()
 

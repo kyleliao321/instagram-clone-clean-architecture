@@ -1,4 +1,3 @@
-
 object TestLibraryVersion {
     const val KOTLIN_CO_TEST = "1.3.6"
     const val JUNIT = "4.12"
@@ -12,13 +11,17 @@ object TestLibraryVersion {
 }
 
 object TestLibraryDependency {
-    const val KOTLIN_CO_TEST = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestLibraryVersion.KOTLIN_CO_TEST}"
+    const val KOTLIN_CO_TEST =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestLibraryVersion.KOTLIN_CO_TEST}"
     const val JUNIT = "junit:junit:${TestLibraryVersion.JUNIT}"
     const val MOCKK = "io.mockk:mockk:${TestLibraryVersion.MOCKK}"
-    const val KOTLIN_CO_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${TestLibraryVersion.KOTLIN_CO_TEST}"
+    const val KOTLIN_CO_CORE =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${TestLibraryVersion.KOTLIN_CO_TEST}"
     const val KLUENT = "org.amshove.kluent:kluent:${TestLibraryVersion.KLUENT}"
-    const val ANDROID_ARCH_CORE_TEST = "androidx.arch.core:core-testing:${TestLibraryVersion.ANDROIDX_ARCH_CORE_TEST}"
-    const val MOCK_WEB_SERVER = "com.squareup.okhttp3:mockwebserver:${TestLibraryVersion.MOCK_WEB_SERVER}"
+    const val ANDROID_ARCH_CORE_TEST =
+        "androidx.arch.core:core-testing:${TestLibraryVersion.ANDROIDX_ARCH_CORE_TEST}"
+    const val MOCK_WEB_SERVER =
+        "com.squareup.okhttp3:mockwebserver:${TestLibraryVersion.MOCK_WEB_SERVER}"
 
     const val ANDROID_TEST_RUNNER = "androidx.test:runner:${TestLibraryVersion.ANDROID_TEST}"
     const val ANDROID_TEST_RULES = "androidx.test:rules:${TestLibraryVersion.ANDROID_TEST}"

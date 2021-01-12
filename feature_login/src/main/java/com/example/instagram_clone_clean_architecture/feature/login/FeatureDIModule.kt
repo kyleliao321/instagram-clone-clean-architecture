@@ -8,7 +8,7 @@ import org.kodein.di.DI
 
 internal const val MODULE_NAME = "Login"
 
-object FeatureDIModule: DIModuleProvider {
+object FeatureDIModule : DIModuleProvider {
 
     override val diModule = DI.Module("${MODULE_NAME}Module") {
         import(dataModule)

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -62,7 +62,7 @@
             android:scaleType="fitXY"
             app:layout_constraintDimensionRatio="4:3"
             app:layout_constraintTop_toBottomOf="@id/post_info_container"
-            app:postImage="@{viewModel.stateLiveData.post.imageSrc}"/>
+            app:postImage="@{viewModel.stateLiveData.post.imageSrc}" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/post_action_container"

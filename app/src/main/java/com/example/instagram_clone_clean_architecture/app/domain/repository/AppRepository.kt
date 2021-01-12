@@ -7,10 +7,10 @@ import com.example.library_base.domain.utility.Either
 
 interface AppRepository {
 
-    suspend fun cacheUserSelectedImage(imageUri: Uri) : Either<Unit, Failure>
+    suspend fun cacheUserSelectedImage(imageUri: Uri): Either<Unit, Failure>
 
-    suspend fun cacheLoginUser(userProfile: UserDomainModel) : Either<Unit, Failure>
+    suspend fun cacheLoginUser(userProfile: UserDomainModel): Either<Unit, Failure>
 
-    suspend fun getLoginUser() : Either<UserDomainModel, Failure>
+    suspend fun getLoginUser(): Either<UserDomainModel, Failure>
 
 }

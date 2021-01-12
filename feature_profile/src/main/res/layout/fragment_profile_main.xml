@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
+
         <import type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel.Type" />
 
         <variable
@@ -30,6 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintTop_toTopOf="parent">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/main_profile_app_bar_content"
                     android:layout_width="match_parent"
@@ -55,7 +57,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/main_profile_app_bar_content"
                         style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:text="logout"
-                        android:onClick="@{() -> viewModel.logout()}"/>
+                        android:onClick="@{() -> viewModel.logout()}" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -101,7 +103,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/user_profile_post_list_divider"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                bind:viewModel="@{viewModel}"/>
+                bind:viewModel="@{viewModel}" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/user_profile_post_list_divider"
@@ -124,7 +126,7 @@
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="3"
                 app:userPostData="@{viewModel.stateLiveData.userPosts}"
-                tools:listitem="@layout/fragment_profile_main_user_posts_grid_view_item"/>
+                tools:listitem="@layout/fragment_profile_main_user_posts_grid_view_item" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/add_post_button"

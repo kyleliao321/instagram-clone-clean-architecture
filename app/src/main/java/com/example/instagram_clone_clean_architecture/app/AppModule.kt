@@ -23,7 +23,7 @@ val appModule = DI.Module("${MODULE_NAME}Module") {
     import(presentationModule)
 
     bind<HttpLoggingInterceptor>() with singleton {
-        HttpLoggingInterceptor(object: HttpLoggingInterceptor.Logger {
+        HttpLoggingInterceptor(object : HttpLoggingInterceptor.Logger {
             override fun log(message: String) {
                 Timber.tag("HTTP").d(message)
             }

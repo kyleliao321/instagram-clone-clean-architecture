@@ -38,24 +38,26 @@ class LoginViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    fun userLogin(userName: String?, userPassword: String?) = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartLogin)
-        val loginParam = UserLoginUseCase.Param(userName, userPassword)
+    fun userLogin(userName: String?, userPassword: String?) =
+        viewModelScope.launch(defaultDispatcher) {
+            sendAction(Action.StartLogin)
+            val loginParam = UserLoginUseCase.Param(userName, userPassword)
 
-        userLoginUseCase(loginParam) {
-            it.fold(
-                onSucceed = { userProfile ->
-                    val navDir = FeatureLoginNavGraphDirections.featureProfileNavGraph(userProfile.id)
-                    navManager.onNavEvent(navDir)
-                    sendAction(Action.FinishLogin)
-                },
-                onFail = { failure ->
-                    sendAction(Action.FinishLogin)
-                    onFailure(failure)
-                }
-            )
+            userLoginUseCase(loginParam) {
+                it.fold(
+                    onSucceed = { userProfile ->
+                        val navDir =
+                            FeatureLoginNavGraphDirections.featureProfileNavGraph(userProfile.id)
+                        navManager.onNavEvent(navDir)
+                        sendAction(Action.FinishLogin)
+                    },
+                    onFail = { failure ->
+                        sendAction(Action.FinishLogin)
+                        onFailure(failure)
+                    }
+                )
+            }
         }
-    }
 
     private fun loadLocalUserData() = viewModelScope.launch(defaultDispatcher) {
         getLocalLoginUserDataUseCase(Unit) {
@@ -128,11 +130,11 @@ class LoginViewModel(
         object StartLogin : Action()
         object FinishLogin : Action()
         object FailOnNetworkConnection : Action()
-        object FailOnServerError: Action()
-        object FailOnLoginData: Action()
-        object FailOnFormValidation: Action()
-        object LocalUserDataLoaded: Action()
-        object StartDataLoading: Action()
+        object FailOnServerError : Action()
+        object FailOnLoginData : Action()
+        object FailOnFormValidation : Action()
+        object LocalUserDataLoaded : Action()
+        object StartDataLoading : Action()
     }
 
 }

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <import type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel.Type" />
 
         <variable
@@ -24,7 +26,7 @@
             app:layout_constraintBottom_toTopOf="@+id/user_profile_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/user_image_number_text_divider"
-            app:userImage="@{viewModel.stateLiveData.userProfile.imageSrc}"/>
+            app:userImage="@{viewModel.stateLiveData.userProfile.imageSrc}" />
 
         <TextView
             android:id="@+id/user_profile_name"
@@ -36,7 +38,7 @@
             app:layout_constraintBottom_toTopOf="@+id/user_name_description_divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/user_image_number_text_divider"
-            android:text="@{viewModel.stateLiveData.userProfile.name}"/>
+            android:text="@{viewModel.stateLiveData.userProfile.name}" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/user_image_number_text_divider"
@@ -53,6 +55,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@id/user_image_number_text_divider"
             app:layout_constraintEnd_toStartOf="@+id/user_follower_number_container">
+
             <TextView
                 android:id="@+id/user_post_number"
                 android:layout_width="match_parent"
@@ -60,6 +63,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.postNum)}" />
+
             <TextView
                 android:id="@+id/user_post_number_info"
                 android:layout_width="match_parent"
@@ -77,6 +81,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@+id/user_post_number_container"
             app:layout_constraintEnd_toStartOf="@+id/user_following_number_container">
+
             <TextView
                 android:id="@+id/user_follower_number"
                 android:layout_width="match_parent"
@@ -84,7 +89,8 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.followerNum)}"
-                android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}"/>
+                android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}" />
+
             <TextView
                 android:id="@+id/user_follower_number_info"
                 android:layout_width="match_parent"
@@ -92,7 +98,7 @@
                 android:layout_below="@+id/user_follower_number"
                 android:gravity="center_horizontal"
                 android:text="follower"
-                android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}"/>
+                android:onClick="@{() -> viewModel.onNavigateToFollowerProfile()}" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -103,6 +109,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@id/user_follower_number_container"
             app:layout_constraintEnd_toEndOf="parent">
+
             <TextView
                 android:id="@+id/user_following_number"
                 android:layout_width="match_parent"
@@ -110,7 +117,8 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:text="@{Integer.toString(viewModel.stateLiveData.userProfile.followingNum)}"
-                android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}"/>
+                android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}" />
+
             <TextView
                 android:id="@+id/user_following_number_info"
                 android:layout_width="match_parent"
@@ -118,7 +126,7 @@
                 android:layout_below="@+id/user_following_number"
                 android:gravity="center_horizontal"
                 android:text="following"
-                android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}"/>
+                android:onClick="@{() -> viewModel.onNavigateToFollowingProfile()}" />
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.Guideline

@@ -10,7 +10,7 @@ import com.example.instagram_clone_clean_architecture.feature.post.databinding.F
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
-class PostFragment: InjectionFragment() {
+class PostFragment : InjectionFragment() {
 
     private val viewModel: PostViewModel by instance()
 

@@ -48,9 +48,11 @@ class RegisterViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        userRegisterUseCase = spyk(UserRegisterUseCase(loginRepository, mainCoroutineRule.testDispatcher))
+        userRegisterUseCase =
+            spyk(UserRegisterUseCase(loginRepository, mainCoroutineRule.testDispatcher))
 
-        testViewModel = RegisterViewModel(navManager, userRegisterUseCase, mainCoroutineRule.testDispatcher)
+        testViewModel =
+            RegisterViewModel(navManager, userRegisterUseCase, mainCoroutineRule.testDispatcher)
 
         testViewModel.stateLiveData.observeForever(observer)
     }
@@ -65,7 +67,7 @@ class RegisterViewModelTest {
      */
     @Test
     fun `registerViewModel should initialize with correct view state`() {
-        testViewModel.stateLiveData.value shouldBeEqualTo  RegisterViewModel.ViewState(
+        testViewModel.stateLiveData.value shouldBeEqualTo RegisterViewModel.ViewState(
             isRegistering = false,
             isServerError = false,
             isNetworkError = false,
@@ -83,7 +85,12 @@ class RegisterViewModelTest {
         every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Success(Unit)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userRegister(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify(exactly = 3) { observer.onChanged(any()) } // init, startRegister, finishRegister
@@ -105,7 +112,12 @@ class RegisterViewModelTest {
         every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userRegister(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify(exactly = 4) { observer.onChanged(any()) } // init, startRegister, finishRegister, fail
@@ -127,7 +139,12 @@ class RegisterViewModelTest {
         every { runBlocking { userRegisterUseCase.run(any()) } } returns Either.Failure(Failure.FormDataNotComplete)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userRegister(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userRegister(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify(exactly = 4) { observer.onChanged(any()) } // init, startRegister, finishRegister, fail

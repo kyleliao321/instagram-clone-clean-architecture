@@ -53,7 +53,9 @@ class GetUserProfileListUseCaseTest {
 
         // given
         every { mockParam.keyword } returns validKeyword
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(correctUserProfileList)
+        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Success(
+            correctUserProfileList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -72,7 +74,9 @@ class GetUserProfileListUseCaseTest {
 
         // given
         every { mockParam.keyword } returns validKeyword
-        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { searchRepository.getUserProfileListByKeyword(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

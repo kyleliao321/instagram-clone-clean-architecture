@@ -10,7 +10,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.databindin
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
-class ProfilePostFragment: InjectionFragment() {
+class ProfilePostFragment : InjectionFragment() {
 
     private val viewModel: ProfilePostViewModel by instance()
 

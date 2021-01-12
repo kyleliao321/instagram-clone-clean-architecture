@@ -29,7 +29,6 @@ import androidx.navigation.NavArgsLazy
 import org.kodein.di.DI
 import org.kodein.di.bindings.BindingDI
 import org.kodein.di.bindings.ExternalSource
-import timber.log.Timber
 import kotlin.reflect.KClass
 
 /**
@@ -45,8 +44,6 @@ class FragmentArgsExternalSource : ExternalSource {
             // The pattern is always the canonicalName of the class with "Args" in the end.
             val deductedArgsName = fragment.javaClass.canonicalName + "Args"
 
-            Timber.d("Deducted argument class : $deductedArgsName")
-            Timber.d("Actual java class canonical name : ${key.type}")
             if (deductedArgsName == key.type.toString()) {
                 val navArgsInstance = getNavArgsInstance(fragment)
 

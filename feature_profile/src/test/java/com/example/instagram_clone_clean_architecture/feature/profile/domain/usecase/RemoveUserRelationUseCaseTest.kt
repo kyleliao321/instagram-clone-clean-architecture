@@ -41,7 +41,14 @@ class RemoveUserRelationUseCaseTest {
         var result: Either<Unit, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.removeUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every {
+            runBlocking {
+                profileRepository.removeUserRelation(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Success(Unit)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -59,8 +66,16 @@ class RemoveUserRelationUseCaseTest {
         var result: Either<Unit, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.removeUserRelation(any(), any()) } } returns Either.Failure(
-            Failure.NetworkConnection)
+        every {
+            runBlocking {
+                profileRepository.removeUserRelation(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Failure(
+            Failure.NetworkConnection
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

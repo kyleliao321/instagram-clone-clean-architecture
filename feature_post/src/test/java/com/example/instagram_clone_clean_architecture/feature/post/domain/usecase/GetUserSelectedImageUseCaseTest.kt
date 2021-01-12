@@ -41,7 +41,9 @@ class GetUserSelectedImageUseCaseTest {
         val mockFile = mockk<Uri>()
 
         // given
-        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(mockFile)
+        every { runBlocking { postRepository.getUserSelectedImage() } } returns Either.Success(
+            mockFile
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

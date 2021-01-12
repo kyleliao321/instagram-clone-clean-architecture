@@ -12,7 +12,6 @@ import com.example.library_test_utils.runBlockingTest
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -101,7 +100,9 @@ class ProfileRepositoryImplTest {
         every { cacheDataSource.cacheAuthToken(any()) } returns Unit
         coEvery { cacheDataSource.cacheLoginUserProfile(any()) } returns Either.Success(Unit)
         coEvery { localDataSource.updateLocalLoginUserName(any()) } returns Either.Success(Unit)
-        coEvery { localDataSource.updateLocalLoginUserPassword(any()) } returns Either.Failure(Failure.LocalAccountNotFound)
+        coEvery { localDataSource.updateLocalLoginUserPassword(any()) } returns Either.Failure(
+            Failure.LocalAccountNotFound
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

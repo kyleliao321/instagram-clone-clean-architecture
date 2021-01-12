@@ -31,23 +31,24 @@ class RegisterViewModel(
         navManager.onNavEvent(navDir)
     }
 
-    fun userRegister(userName: String?, password: String?) = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartRegister)
-        val param = UserRegisterUseCase.Param(userName, password)
+    fun userRegister(userName: String?, password: String?) =
+        viewModelScope.launch(defaultDispatcher) {
+            sendAction(Action.StartRegister)
+            val param = UserRegisterUseCase.Param(userName, password)
 
-        userRegisterUseCase(param) {
-            it.fold(
-                onSucceed = {
-                    sendAction(Action.FinishRegister)
-                    navigateToLoginFragment()
-                },
-                onFail = { failure ->
-                    sendAction(Action.FinishRegister)
-                    onFailure(failure)
-                }
-            )
+            userRegisterUseCase(param) {
+                it.fold(
+                    onSucceed = {
+                        sendAction(Action.FinishRegister)
+                        navigateToLoginFragment()
+                    },
+                    onFail = { failure ->
+                        sendAction(Action.FinishRegister)
+                        onFailure(failure)
+                    }
+                )
+            }
         }
-    }
 
     private fun onFailure(failure: Failure) = when (failure) {
         is Failure.NetworkConnection -> sendAction(Action.FailOnNetworkConnection)
@@ -101,7 +102,7 @@ class RegisterViewModel(
         object StartRegister : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
-        object FailOnRegisterData: Action()
-        object FailOnFormDataNotComplete: Action()
+        object FailOnRegisterData : Action()
+        object FailOnFormDataNotComplete : Action()
     }
 }

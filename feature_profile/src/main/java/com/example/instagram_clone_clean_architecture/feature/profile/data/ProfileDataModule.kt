@@ -10,6 +10,12 @@ import org.kodein.di.singleton
 
 internal val dataModule = DI.Module("${MODULE_NAME}DataModule") {
 
-    bind<ProfileRepository>() with singleton { ProfileRepositoryImpl(instance(), instance(), instance()) }
+    bind<ProfileRepository>() with singleton {
+        ProfileRepositoryImpl(
+            instance(),
+            instance(),
+            instance()
+        )
+    }
 
 }

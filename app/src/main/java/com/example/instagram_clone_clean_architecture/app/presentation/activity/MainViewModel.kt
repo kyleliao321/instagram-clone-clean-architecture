@@ -96,7 +96,7 @@ class MainViewModel(
     ) : BaseViewState
 
     sealed class Action : BaseAction {
-        class LocalUserDataLoaded(val userId: String?): Action()
+        class LocalUserDataLoaded(val userId: String?) : Action()
         object FailOnLocalAccountError : Action()
         object ReloadData : Action()
     }

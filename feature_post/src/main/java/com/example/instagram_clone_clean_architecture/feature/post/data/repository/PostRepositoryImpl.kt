@@ -19,7 +19,10 @@ class PostRepositoryImpl(
     private val cacheDataSource: CacheDataSource
 ) : PostRepository {
 
-    override suspend fun cacheCompressedImageFile(fileName: String, byteArray: ByteArray): Either<File, Failure> {
+    override suspend fun cacheCompressedImageFile(
+        fileName: String,
+        byteArray: ByteArray
+    ): Either<File, Failure> {
         return cacheDataSource.cacheCompressedUploadImage(fileName, byteArray)
     }
 

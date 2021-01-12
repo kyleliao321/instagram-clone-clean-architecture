@@ -9,7 +9,7 @@ import org.kodein.di.DI
 import org.kodein.di.DIAware
 import org.kodein.di.android.x.androidXModule
 
-class DIAwareTestApplication: Application(), DIAware {
+class DIAwareTestApplication : Application(), DIAware {
 
     private lateinit var injectedModule: DI.Module
 
@@ -23,7 +23,8 @@ class DIAwareTestApplication: Application(), DIAware {
     }
 }
 
-abstract class DIAwareTestRule<F: Fragment>: ActivityTestRule<FragmentActivity>(FragmentActivity::class.java, true) {
+abstract class DIAwareTestRule<F : Fragment> :
+    ActivityTestRule<FragmentActivity>(FragmentActivity::class.java, true) {
 
     override fun afterActivityLaunched() {
         super.afterActivityLaunched()
@@ -50,11 +51,12 @@ abstract class DIAwareTestRule<F: Fragment>: ActivityTestRule<FragmentActivity>(
     abstract fun getModule(): DI.Module
 }
 
-fun <F: Fragment> DIAwareTestRule<F>.runOnUiThread(block: () -> Unit) = activity.run {
+fun <F : Fragment> DIAwareTestRule<F>.runOnUiThread(block: () -> Unit) = activity.run {
     block()
 }
 
-fun <F: Fragment> makeDIAwareTestRule(fragment: F, module: DI.Module): DIAwareTestRule<F> = object: DIAwareTestRule<F>() {
-    override fun createFragment(): F = fragment
-    override fun getModule(): DI.Module = module
-}
+fun <F : Fragment> makeDIAwareTestRule(fragment: F, module: DI.Module): DIAwareTestRule<F> =
+    object : DIAwareTestRule<F>() {
+        override fun createFragment(): F = fragment
+        override fun getModule(): DI.Module = module
+    }

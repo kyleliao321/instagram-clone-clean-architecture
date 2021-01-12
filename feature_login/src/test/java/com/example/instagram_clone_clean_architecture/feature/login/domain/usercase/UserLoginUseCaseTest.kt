@@ -6,9 +6,11 @@ import com.example.instagram_clone_clean_architecture.feature.login.domain.repos
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import com.example.library_test_utils.runBlockingTest
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
-import kotlinx.coroutines.runBlocking
+import io.mockk.mockk
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.Before
 import org.junit.Rule

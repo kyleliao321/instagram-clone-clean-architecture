@@ -102,7 +102,9 @@ class UploadPostUseCaseTest {
         every { post.isPostReady } returns true
         every { post.imageUri } returns mockk()
         coEvery { postRepository.getBitmap(any()) } returns Either.Success(mockBitmap)
-        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Failure(Failure.ExternalImageDecodeFail)
+        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Failure(
+            Failure.ExternalImageDecodeFail
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -133,7 +135,9 @@ class UploadPostUseCaseTest {
         every { post.isPostReady } returns true
         every { post.imageUri } returns mockk()
         coEvery { postRepository.getBitmap(any()) } returns Either.Success(mockBitmap)
-        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Success(cachedFile)
+        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Success(
+            cachedFile
+        )
         coEvery { postRepository.uploadPost(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when
@@ -165,7 +169,9 @@ class UploadPostUseCaseTest {
         every { post.isPostReady } returns true
         every { post.imageUri } returns mockk()
         coEvery { postRepository.getBitmap(any()) } returns Either.Success(mockBitmap)
-        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Success(cachedFile)
+        coEvery { postRepository.cacheCompressedImageFile(any(), any()) } returns Either.Success(
+            cachedFile
+        )
         coEvery { postRepository.uploadPost(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when

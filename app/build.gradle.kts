@@ -1,4 +1,3 @@
-import kotlin.IllegalArgumentException
 import com.android.build.gradle.internal.dsl.BaseFlavor
 import com.android.build.gradle.internal.dsl.ProductFlavor
 
@@ -123,7 +122,11 @@ fun String.toSnakeCase() = this.split(Regex("(?=[A-Z])")).joinToString("_") { it
  * @param name Name of the field.
  * @param value Array of String, which will be transform into format like ["test", "test1"].
  */
-fun com.android.build.gradle.internal.dsl.DefaultConfig.buildConfigField(name: String, value: Set<String>) {
-    val formattedStringArray = value.joinToString(prefix = "{", postfix = "}", separator = ",", transform = { "\"$it\"" })
+fun com.android.build.gradle.internal.dsl.DefaultConfig.buildConfigField(
+    name: String,
+    value: Set<String>
+) {
+    val formattedStringArray =
+        value.joinToString(prefix = "{", postfix = "}", separator = ",", transform = { "\"$it\"" })
     buildConfigField("String[]", name, formattedStringArray)
 }

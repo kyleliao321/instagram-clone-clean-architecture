@@ -25,5 +25,5 @@ interface LocalDataSource {
 
     suspend fun updateAuthorizedToken(token: String?): Either<Unit, Failure>
 
-    suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
+    suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure>
 }

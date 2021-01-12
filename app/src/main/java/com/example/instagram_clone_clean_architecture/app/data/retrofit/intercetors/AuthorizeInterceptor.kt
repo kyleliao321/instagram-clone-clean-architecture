@@ -6,7 +6,7 @@ import okhttp3.Response
 
 class AuthorizeInterceptor(
     private val cacheDataSource: CacheDataSource
-): Interceptor {
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response = chain.request().let {
         val authToken = cacheDataSource.getAuthToken()

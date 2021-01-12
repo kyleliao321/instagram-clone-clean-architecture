@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.instagram_clone_clean_architecture.feature.post.presentation.view.post.PostViewModel" />
@@ -17,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/post_app_bar_content"
                 android:layout_width="match_parent"
@@ -42,7 +44,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/post_app_bar_content"
                     android:onClick="@{() -> viewModel.uploadPost(viewModel.stateLiveData.post, viewModel.stateLiveData.loginUser)}"
                     android:enabled="@{viewModel.stateLiveData.post.postReady}"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                    style="@style/Widget.MaterialComponents.Button.TextButton" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -68,7 +70,7 @@
             app:layout_constraintDimensionRatio="4:3"
             app:visibleCondition="@{viewModel.stateLiveData.bitmap == null}"
             android:src="@drawable/upload_post_action_icon"
-            android:onClick="@{() -> viewModel.promptToGetPhotoFromGallery()}"/>
+            android:onClick="@{() -> viewModel.promptToGetPhotoFromGallery()}" />
 
         <ImageView
             android:id="@+id/post_image"
@@ -98,8 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={viewModel.stateLiveData.post.description}"
-                android:enabled="@{!viewModel.stateLiveData.uploading}"
-                />
+                android:enabled="@{!viewModel.stateLiveData.uploading}" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,8 +120,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@={viewModel.stateLiveData.post.location}"
-                android:enabled="@{!viewModel.stateLiveData.uploading}"
-                />
+                android:enabled="@{!viewModel.stateLiveData.uploading}" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

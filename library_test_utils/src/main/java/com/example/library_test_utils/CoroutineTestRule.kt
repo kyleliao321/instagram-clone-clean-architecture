@@ -33,7 +33,7 @@ class CoroutineTestRule(
  * Run suspend function inside test dispatcher block
  */
 @ExperimentalCoroutinesApi
-fun CoroutineTestRule.runBlockingTest(block : suspend () -> Unit) =
+fun CoroutineTestRule.runBlockingTest(block: suspend () -> Unit) =
     this.testDispatcher.runBlockingTest {
         block()
     }

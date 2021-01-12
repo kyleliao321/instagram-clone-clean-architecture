@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="userProfile"
             type="com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel" />
@@ -43,7 +44,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/user_profile_description"
             app:layout_constraintStart_toEndOf="@+id/image_content_divider"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/user_profile_description"
@@ -56,7 +57,7 @@
             app:layout_constraintTop_toBottomOf="@+id/user_profile_user_name"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/image_content_divider"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

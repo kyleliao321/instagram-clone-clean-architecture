@@ -9,9 +9,9 @@ import com.agoda.kakao.screen.Screen.Companion.onScreen
 import com.agoda.kakao.text.KButton
 import com.example.instagram_clone_clean_architecture.feature.search.R
 import com.example.library_test_utils.makeDIAwareTestRule
-import io.mockk.*
-
-import org.junit.Assert.*
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,12 +36,12 @@ class SearchFragmentTest {
     val diAwareTestRule = makeDIAwareTestRule(
         fragment,
         DI.Module("SEARCH_FRAGMENT_TEST_MODULE") {
-        bind<SearchViewModel>() with  singleton {
-            every { viewModel.stateLiveData } returns stateLiveData
-            every { viewModel.errorMessage } returns errorMessageLiveData
-            viewModel
-        }
-    })
+            bind<SearchViewModel>() with singleton {
+                every { viewModel.stateLiveData } returns stateLiveData
+                every { viewModel.errorMessage } returns errorMessageLiveData
+                viewModel
+            }
+        })
 
     @Test
     fun shouldTriggerViewModelLoadUserProfileListWhenSearchButtonClicked() {
@@ -57,7 +57,7 @@ class SearchFragmentTest {
         }
     }
 
-    class SearchScreen: Screen<SearchScreen>() {
+    class SearchScreen : Screen<SearchScreen>() {
         val searchField = KEditText { withId(R.id.search_field) }
         val searchButton = KButton { withId(R.id.search_button) }
     }

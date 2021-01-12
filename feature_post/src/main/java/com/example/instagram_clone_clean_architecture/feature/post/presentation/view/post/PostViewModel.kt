@@ -51,23 +51,25 @@ class PostViewModel(
         intentService.openPhotoGallery()
     }
 
-    fun uploadPost(post: PostUploadDomainModel, belongUser: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartUploading)
-        val param = UploadPostUseCase.Param(post)
-        uploadPostUseCase(param) {
-            it.fold(
-                onSucceed = {
-                    sendAction(Action.FinishUploading)
-                    val navDir = FeaturePostNavGraphDirections.featureProfileNavGraph(belongUser.id)
-                    navManager.onNavEvent(navDir)
-                },
-                onFail = { failure ->
-                    sendAction(Action.FinishUploading)
-                    onFailure(failure)
-                }
-            )
+    fun uploadPost(post: PostUploadDomainModel, belongUser: UserDomainModel) =
+        viewModelScope.launch(defaultDispatcher) {
+            sendAction(Action.StartUploading)
+            val param = UploadPostUseCase.Param(post)
+            uploadPostUseCase(param) {
+                it.fold(
+                    onSucceed = {
+                        sendAction(Action.FinishUploading)
+                        val navDir =
+                            FeaturePostNavGraphDirections.featureProfileNavGraph(belongUser.id)
+                        navManager.onNavEvent(navDir)
+                    },
+                    onFail = { failure ->
+                        sendAction(Action.FinishUploading)
+                        onFailure(failure)
+                    }
+                )
+            }
         }
-    }
 
     private fun loadLoginUser() = viewModelScope.launch(defaultDispatcher) {
         getLoginUserUseCase(Unit) {

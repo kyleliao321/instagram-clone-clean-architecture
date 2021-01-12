@@ -70,12 +70,18 @@ class ProfileFollowerViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLoginUserUseCase = spyk(GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        getFollowerUserUseCase = spyk(GetFollowerUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        getFollowingUserUseCase = spyk(GetFollowingUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        addUserRelationUseCase = spyk(AddUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        removeUserRelationUseCase = spyk(RemoveUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher))
-        navigationUseCase = spyk(NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher))
+        getLoginUserUseCase =
+            spyk(GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        getFollowerUserUseCase =
+            spyk(GetFollowerUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        getFollowingUserUseCase =
+            spyk(GetFollowingUserUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        addUserRelationUseCase =
+            spyk(AddUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        removeUserRelationUseCase =
+            spyk(RemoveUserRelationUseCase(profileRepository, mainCoroutineRule.testDispatcher))
+        navigationUseCase =
+            spyk(NavigationUseCase(navigationManager, mainCoroutineRule.testDispatcher))
 
         testViewModel =
             ProfileFollowerViewModel(
@@ -130,9 +136,15 @@ class ProfileFollowerViewModelTest {
     @Test
     fun `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`() {
         // given
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(correctFollowerList)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowerList
+        )
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -154,9 +166,13 @@ class ProfileFollowerViewModelTest {
     @Test
     fun `verify view state when only getFollowerUserUseCase fail on network connection`() {
         // given
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            correctUserProfile
+        )
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -179,8 +195,12 @@ class ProfileFollowerViewModelTest {
     fun `verify view state when only getLoginUserUseCase fail on local account error`() {
         // given
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
-        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(correctFollowerList)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowerList
+        )
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -202,9 +222,13 @@ class ProfileFollowerViewModelTest {
     @Test
     fun `verify view state when only getFollowerUserUseCase fail on server error`() {
         // given
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(correctUserProfile)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            correctUserProfile
+        )
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -229,9 +253,15 @@ class ProfileFollowerViewModelTest {
 
         // given
         every { runBlocking { addUserRelationUseCase.run(any()) } } returns Either.Success(Unit)
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(correctFollowerList)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowerList
+        )
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation(correctUserProfile) }
@@ -281,9 +311,15 @@ class ProfileFollowerViewModelTest {
 
         // given
         every { runBlocking { removeUserRelationUseCase.run(any()) } } returns Either.Success(Unit)
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(correctFollowerList)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowerList
+        )
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }
@@ -308,7 +344,9 @@ class ProfileFollowerViewModelTest {
         `verify view state when getFollowingUserUseCase, getFollowerUserUseCase and getLoginUserUseCase succeed`()
 
         // given
-        every { runBlocking { removeUserRelationUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { removeUserRelationUseCase.run(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }
 
@@ -335,7 +373,9 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -359,7 +399,9 @@ class ProfileFollowerViewModelTest {
         // given
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Success(correctFollowingList)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Success(
+            correctFollowingList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -386,7 +428,7 @@ class ProfileFollowerViewModelTest {
         every { runBlocking { addUserRelationUseCase.run(any()) } } returns Either.Success(Unit)
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.addUserRelation(correctUserProfile) }
@@ -414,7 +456,7 @@ class ProfileFollowerViewModelTest {
         every { runBlocking { removeUserRelationUseCase.run(any()) } } returns Either.Success(Unit)
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
         every { runBlocking { getFollowerUserUseCase.run(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { getFollowingUserUseCase.run(any()) }} returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { getFollowingUserUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.removeUserRelation(correctUserProfile) }

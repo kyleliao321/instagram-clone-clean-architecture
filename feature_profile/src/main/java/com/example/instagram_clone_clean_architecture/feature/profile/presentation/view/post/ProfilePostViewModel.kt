@@ -13,7 +13,6 @@ import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 class ProfilePostViewModel(
     private val args: ProfilePostFragmentArgs,
@@ -205,7 +204,7 @@ class ProfilePostViewModel(
         class LikedUsersLoaded(val likedUsers: List<UserDomainModel>) : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
-        object FailOnLocalAccountError: Action()
+        object FailOnLocalAccountError : Action()
         object Reload : Action()
     }
 }

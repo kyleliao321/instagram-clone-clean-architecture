@@ -11,7 +11,6 @@ import com.example.library_base.domain.extension.asImageMultipartFormData
 import com.example.library_base.domain.utility.Either
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody.Companion.toRequestBody
-import timber.log.Timber
 import java.net.HttpURLConnection
 import java.net.SocketTimeoutException
 
@@ -21,7 +20,7 @@ class RemoteDataSourceImpl(
     private val postServices: PostServices,
     private val relationServices: RelationServices,
     private val likeServices: LikeServices
-): RemoteDataSource {
+) : RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
         password: String
@@ -35,10 +34,12 @@ class RemoteDataSourceImpl(
             return if (status == HttpURLConnection.HTTP_OK && data != null) {
                 val userProfile = getUserProfileById(data.userId)
                 return when (userProfile) {
-                    is Either.Success -> Either.Success(LoginCredentialDomainModel(
-                        data.jwt,
-                        userProfile.a
-                    ))
+                    is Either.Success -> Either.Success(
+                        LoginCredentialDomainModel(
+                            data.jwt,
+                            userProfile.a
+                        )
+                    )
                     is Either.Failure -> Either.Failure(userProfile.b)
                 }
             } else if (status == HttpURLConnection.HTTP_UNAUTHORIZED) {
@@ -184,9 +185,12 @@ class RemoteDataSourceImpl(
     override suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure> {
         return try {
             val idField = userProfile.id.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val userNameField = userProfile.userName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val aliasField = userProfile.name.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val descriptionField = userProfile.description.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val userNameField =
+                userProfile.userName.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val aliasField =
+                userProfile.name.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val descriptionField =
+                userProfile.description.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val userImage = userProfile.cachedImageFile?.asImageMultipartFormData("userImage")
 
             val res = userServices.updateUserProfileAsync(
@@ -290,10 +294,14 @@ class RemoteDataSourceImpl(
                 return Either.Failure(Failure.PostNotComplete)
             }
 
-            val descriptionField = post.description?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val locationField = post.location?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val timestampField = post.date!!.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val postedUserIdField = post.belongUserId!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val descriptionField =
+                post.description?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val locationField =
+                post.location?.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val timestampField =
+                post.date!!.toString().toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val postedUserIdField =
+                post.belongUserId!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val postImageField = post.cachedImageFile!!.asImageMultipartFormData("postImage")
 
             val res = postServices.addNewPostAsync(

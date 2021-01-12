@@ -50,5 +50,8 @@ interface ProfileRepository {
 
     suspend fun removeLikedPost(userId: String, postId: String): Either<Unit, Failure>
 
-    suspend fun cacheCompressedUploadImage(fileName: String, imageByteArray: ByteArray): Either<File, Failure>
+    suspend fun cacheCompressedUploadImage(
+        fileName: String,
+        imageByteArray: ByteArray
+    ): Either<File, Failure>
 }

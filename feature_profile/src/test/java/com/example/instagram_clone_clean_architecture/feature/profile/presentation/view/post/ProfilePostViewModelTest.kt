@@ -67,12 +67,17 @@ class ProfilePostViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLoginUserUseCase = GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getLoginUserUseCase =
+            GetLoginUserUseCase(profileRepository, mainCoroutineRule.testDispatcher)
         getPostUseCase = GetPostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        getUserProfileUseCase = GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        getLikedUsersUseCase = GetLikedUsersUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        userLikedUsersUseCase = UserLikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
-        userUnlikePostUseCase = UserUnlikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getUserProfileUseCase =
+            GetUserProfileUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        getLikedUsersUseCase =
+            GetLikedUsersUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        userLikedUsersUseCase =
+            UserLikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
+        userUnlikePostUseCase =
+            UserUnlikePostUseCase(profileRepository, mainCoroutineRule.testDispatcher)
 
         testViewModel =
             ProfilePostViewModel(
@@ -117,10 +122,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when all usecases invoke successfully`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(
+            correctPost
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -144,10 +157,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getPostUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -171,10 +192,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getPostUseCase fail on server error`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -198,10 +227,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getLoginUserUseCase fail on local account error`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(null)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            null
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(
+            correctPost
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -225,10 +262,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(
+            correctPost
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -252,10 +297,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getLikedUsersUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(
+            correctPost
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -279,10 +332,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when only getUserProfileUseCase fail on server error`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(correctPost)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Success(
+            correctPost
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -306,10 +367,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when both getUserProfileUseCase and getPostUseCase fail on server error`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -333,10 +402,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when both getUserProfileUseCase and getPostUseCase fail on network connection`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -363,10 +440,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase failed on network connection but getPostUseCase failed on server error`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -390,10 +475,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when getUserProfileUseCase failed on server error but getPostUseCase failed on network connection`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -417,10 +510,18 @@ class ProfilePostViewModelTest {
     @Test
     fun `verify view state when three use cases all failed on different failure type`() {
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(null)
-        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(Failure.ServerError)
-        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(Failure.NetworkConnection)
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(correctLikedUsers)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            null
+        )
+        every { runBlocking { profileRepository.getPostByPostId(any()) } } returns Either.Failure(
+            Failure.ServerError
+        )
+        every { runBlocking { profileRepository.getUserProfileById(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            correctLikedUsers
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }

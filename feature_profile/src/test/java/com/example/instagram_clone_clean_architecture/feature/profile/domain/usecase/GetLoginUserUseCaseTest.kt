@@ -45,7 +45,9 @@ class GetLoginUserUseCaseTest {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(correctUserProfile)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            correctUserProfile
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -63,7 +65,9 @@ class GetLoginUserUseCaseTest {
         var result: Either<UserDomainModel, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(null)
+        every { runBlocking { profileRepository.getLoginUserProfile() } } returns Either.Success(
+            null
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

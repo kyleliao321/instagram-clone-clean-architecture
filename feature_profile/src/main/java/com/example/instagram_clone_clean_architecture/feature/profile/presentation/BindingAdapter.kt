@@ -1,6 +1,5 @@
 package com.example.instagram_clone_clean_architecture.feature.profile.presentation
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.view.View
 import android.widget.ImageView
@@ -13,7 +12,6 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomai
 import com.example.instagram_clone_clean_architecture.feature.profile.R
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserPostGridViewAdapter
 import com.example.instagram_clone_clean_architecture.feature.profile.presentation.adapters.UserProfileListViewAdapter
-import timber.log.Timber
 
 /**
  * Submit the list of post to recycler view's adapter
@@ -42,7 +40,12 @@ fun bindPostRecyclerView(recyclerView: RecyclerView, data: List<PostDomainModel>
  * @param loginUser Currently login user, to check whether the item of @{data} is user it-self.
  */
 @BindingAdapter("app:followUserList", "app:compareList", "app:loginUser")
-fun bindFollowUserWithCompareList(recyclerView: RecyclerView, data: List<UserDomainModel>, compare: List<UserDomainModel>, loginUser: UserDomainModel?) {
+fun bindFollowUserWithCompareList(
+    recyclerView: RecyclerView,
+    data: List<UserDomainModel>,
+    compare: List<UserDomainModel>,
+    loginUser: UserDomainModel?
+) {
     val adapter = recyclerView.adapter as? UserProfileListViewAdapter
     val dataItems = data
         .map {

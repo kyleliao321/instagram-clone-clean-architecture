@@ -23,7 +23,7 @@ sealed class Failure {
      * It can be used in the following scenario:
      *      1. Fail to connect to server.
      */
-    object NetworkConnection: Failure()
+    object NetworkConnection : Failure()
 
     /**
      * Indicate that the failure is caused by the invalid action,
@@ -33,33 +33,33 @@ sealed class Failure {
      *      1. Server responded with unexpected value.
      *      2. Server request is invalid.
      */
-    object ServerError: Failure()
+    object ServerError : Failure()
 
     /**
      * Indicate that the failure is caused by application has no login-user
      */
-    object LocalAccountNotFound: Failure()
+    object LocalAccountNotFound : Failure()
 
     /**
      * Indicate that the failure is caused by duplicated user name when register
      */
-    object DuplicatedUserName: Failure()
+    object DuplicatedUserName : Failure()
 
     /**
      * Indicate that the failure is caused by incorrect user name or password
      */
-    object LoginUserNameOrPasswordNotMatched: Failure()
+    object LoginUserNameOrPasswordNotMatched : Failure()
 
-    object CameraServiceFail: Failure()
+    object CameraServiceFail : Failure()
 
-    object PhotoGalleryServiceFail: Failure()
+    object PhotoGalleryServiceFail : Failure()
 
-    object PostNotComplete: Failure()
+    object PostNotComplete : Failure()
 
-    object CacheNotFound: Failure()
+    object CacheNotFound : Failure()
 
-    object ExternalImageDecodeFail: Failure()
+    object ExternalImageDecodeFail : Failure()
 
-    object FormDataNotComplete: Failure()
+    object FormDataNotComplete : Failure()
 
 }

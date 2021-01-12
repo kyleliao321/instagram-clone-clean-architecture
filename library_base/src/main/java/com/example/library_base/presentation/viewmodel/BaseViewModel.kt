@@ -36,7 +36,8 @@ import kotlin.properties.Delegates
  *        Then, it should override onReduceState function to indicate how the state should updated based
  *        on Action. When there's a need to update the state, using sendAction with Action argument.
  */
-abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initialState: ViewState): ViewModel() {
+abstract class BaseViewModel<ViewState : BaseViewState, Action : BaseAction>(initialState: ViewState) :
+    ViewModel() {
 
     private val _state = MutableLiveData<ViewState>(initialState)
     val stateLiveData: LiveData<ViewState>
@@ -58,5 +59,5 @@ abstract class BaseViewModel<ViewState: BaseViewState, Action: BaseAction>(initi
 
     protected abstract fun onLoadData()
 
-    protected abstract fun onReduceState(action: Action) : ViewState
+    protected abstract fun onReduceState(action: Action): ViewState
 }

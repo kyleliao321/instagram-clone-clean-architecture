@@ -9,39 +9,42 @@ interface RemoteDataSource {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Authentication operations ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    suspend fun userLogin(userName: String, password: String) : Either<LoginCredentialDomainModel, Failure>
+    suspend fun userLogin(
+        userName: String,
+        password: String
+    ): Either<LoginCredentialDomainModel, Failure>
 
-    suspend fun userRegister(userName: String, password: String) : Either<Unit, Failure>
+    suspend fun userRegister(userName: String, password: String): Either<Unit, Failure>
 
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Remote database operations ///////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    suspend fun getUserProfileById(userId: String) : Either<UserDomainModel, Failure>
+    suspend fun getUserProfileById(userId: String): Either<UserDomainModel, Failure>
 
-    suspend fun getUserProfileListByUserName(userName: String) : Either<List<UserDomainModel>, Failure>
+    suspend fun getUserProfileListByUserName(userName: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun getFollowingUsersById(userId: String) : Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowingUsersById(userId: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun getFollowerUsersById(userId: String) : Either<List<UserDomainModel>, Failure>
+    suspend fun getFollowerUsersById(userId: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun getPostByPostId(postId: String) : Either<PostDomainModel, Failure>
+    suspend fun getPostByPostId(postId: String): Either<PostDomainModel, Failure>
 
-    suspend fun getPostListByUserId(userId: String) : Either<List<PostDomainModel>, Failure>
+    suspend fun getPostListByUserId(userId: String): Either<List<PostDomainModel>, Failure>
 
-    suspend fun getLikedUsersByPostId(postId: String) : Either<List<UserDomainModel>, Failure>
+    suspend fun getLikedUsersByPostId(postId: String): Either<List<UserDomainModel>, Failure>
 
-    suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel) : Either<UserDomainModel, Failure>
+    suspend fun updateUserProfile(userProfile: UserProfileUploadDomainModel): Either<UserDomainModel, Failure>
 
-    suspend fun addUserRelation(followerId: String, followingId: String) : Either<Unit, Failure>
+    suspend fun addUserRelation(followerId: String, followingId: String): Either<Unit, Failure>
 
-    suspend fun removeUserRelation(followerId: String, followingId: String) : Either<Unit, Failure>
+    suspend fun removeUserRelation(followerId: String, followingId: String): Either<Unit, Failure>
 
-    suspend fun addUserLikePost(userId: String, postId: String) : Either<Unit, Failure>
+    suspend fun addUserLikePost(userId: String, postId: String): Either<Unit, Failure>
 
-    suspend fun removeUserLikePost(userId: String, postId: String) : Either<Unit, Failure>
+    suspend fun removeUserLikePost(userId: String, postId: String): Either<Unit, Failure>
 
-    suspend fun uploadPost(post: PostUploadDomainModel) : Either<PostDomainModel, Failure>
+    suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure>
 
 }

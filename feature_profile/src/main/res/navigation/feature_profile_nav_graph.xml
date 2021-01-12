@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:moduleName="@string/module_name"
     app:startDestination="@id/profileMainFragment">
@@ -38,7 +37,7 @@
         app:moduleName="@string/module_name">
         <action
             android:id="@+id/action_profileEditFragment_to_profileMainFragment"
-            app:destination="@id/profileMainFragment"/>
+            app:destination="@id/profileMainFragment" />
 
         <argument
             android:name="userId"
@@ -53,7 +52,7 @@
 
         <action
             android:id="@+id/action_profileFollowerFragment_to_profileMainFragment"
-            app:destination="@+id/profileMainFragment"/>
+            app:destination="@+id/profileMainFragment" />
 
         <argument
             android:name="userId"
@@ -68,7 +67,7 @@
 
         <action
             android:id="@+id/action_profileFollowingFragment_to_profileMainFragment"
-            app:destination="@+id/profileMainFragment"/>
+            app:destination="@+id/profileMainFragment" />
 
         <argument
             android:name="userId"

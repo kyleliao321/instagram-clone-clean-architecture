@@ -15,7 +15,7 @@ import org.kodein.di.android.x.androidXModule
 import org.kodein.di.instance
 import timber.log.Timber
 
-class InstagramCloneApplication: Application(), DIAware {
+class InstagramCloneApplication : Application(), DIAware {
 
     private val localDataSource: LocalDataSource by instance()
 
@@ -41,8 +41,6 @@ class InstagramCloneApplication: Application(), DIAware {
         initEncryptedSharedPreference()
         initCacheDir()
         initTimber()
-
-        Timber.i("Application context is created!")
     }
 
     private fun initTimber() {

@@ -2,7 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.login.presentatio
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.example.instagram_clone_clean_architecture.app.domain.model.LoginCredentialDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.instagram_clone_clean_architecture.feature.login.domain.usercase.GetLocalLoginUserDataUseCase
@@ -50,7 +49,8 @@ class LoginViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLocalLoginUserDataUseCase = spyk(GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher))
+        getLocalLoginUserDataUseCase =
+            spyk(GetLocalLoginUserDataUseCase(loginRepository, mainCoroutineRule.testDispatcher))
         userLoginUseCase = spyk(UserLoginUseCase(loginRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = LoginViewModel(
@@ -92,7 +92,12 @@ class LoginViewModelTest {
         coEvery { userLoginUseCase.run(any()) } returns Either.Success(mockProfile)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userLogin(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify(exactly = 1) { navigationManager.onNavEvent(any()) }
@@ -109,7 +114,12 @@ class LoginViewModelTest {
         coEvery { userLoginUseCase.run(any()) } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userLogin(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify(exactly = 4) { observer.onChanged(any()) } // init, start, finish, fail
@@ -127,7 +137,12 @@ class LoginViewModelTest {
         coEvery { userLoginUseCase.run(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when
-        mainCoroutineRule.runBlockingTest { testViewModel.userLogin(mockUserName, mockUserPassword) }
+        mainCoroutineRule.runBlockingTest {
+            testViewModel.userLogin(
+                mockUserName,
+                mockUserPassword
+            )
+        }
 
         // expect
         verify { observer.onChanged(any()) } // init, start, finish, fail
@@ -147,7 +162,9 @@ class LoginViewModelTest {
         every { mockLocalUserData.userName } returns mockUserName
         every { mockLocalUserData.userPassword } returns mockUserPassword
         every { runBlocking { userLoginUseCase.run(any()) } } returns Either.Success(mockProfile)
-        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Success(mockLocalUserData)
+        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Success(
+            mockLocalUserData
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }
@@ -168,7 +185,9 @@ class LoginViewModelTest {
     @Test
     fun `verify view state if local user data not exist`() {
         // given
-        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
+        every { runBlocking { getLocalLoginUserDataUseCase.run(any()) } } returns Either.Failure(
+            Failure.LocalAccountNotFound
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadData() }

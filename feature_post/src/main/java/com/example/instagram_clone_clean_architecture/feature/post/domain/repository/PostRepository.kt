@@ -11,7 +11,10 @@ import java.io.File
 
 interface PostRepository {
 
-    suspend fun cacheCompressedImageFile(fileName: String, byteArray: ByteArray): Either<File, Failure>
+    suspend fun cacheCompressedImageFile(
+        fileName: String,
+        byteArray: ByteArray
+    ): Either<File, Failure>
 
     suspend fun getLoginUserProfile(): Either<UserDomainModel, Failure>
 
@@ -19,6 +22,6 @@ interface PostRepository {
 
     suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure>
 
-    suspend fun getBitmap(uri: Uri) : Either<Bitmap, Failure>
+    suspend fun getBitmap(uri: Uri): Either<Bitmap, Failure>
 
 }

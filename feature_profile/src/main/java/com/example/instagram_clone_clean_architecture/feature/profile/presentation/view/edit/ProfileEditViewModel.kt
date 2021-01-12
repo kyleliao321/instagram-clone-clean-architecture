@@ -60,7 +60,8 @@ class ProfileEditViewModel(
             // Start updating animation
             sendAction(Action.StartUpdatingUserProfile)
             // forward update action to UseCase
-            val uploadProfile = UserProfileUploadDomainModel.from(updatedUserProfile, state!!.cacheImageUri)
+            val uploadProfile =
+                UserProfileUploadDomainModel.from(updatedUserProfile, state!!.cacheImageUri)
             val params = UpdateUserProfileUseCase.Param(uploadProfile)
             updateUserProfileUseCase(params) { result ->
                 result.fold(
@@ -120,7 +121,7 @@ class ProfileEditViewModel(
                     sendAction(Action.CachedImageLoaded(uri, bitmap))
                 },
                 onFail = { _ ->
-                    sendAction(Action.CachedImageLoaded(null,null))
+                    sendAction(Action.CachedImageLoaded(null, null))
                 }
             )
         }
@@ -193,6 +194,6 @@ class ProfileEditViewModel(
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnUserNameConflict : Action()
-        object Reload: Action()
+        object Reload : Action()
     }
 }

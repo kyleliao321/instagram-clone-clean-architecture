@@ -42,7 +42,9 @@ class GetLikedUsersUseCaseTest {
         var result: Either<List<UserDomainModel>, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(mockResult)
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Success(
+            mockResult
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -61,7 +63,9 @@ class GetLikedUsersUseCaseTest {
         var result: Either<List<UserDomainModel>, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { profileRepository.getLikedUsersByPostId(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

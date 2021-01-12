@@ -41,7 +41,14 @@ class AddUserRelationUseCaseTest {
         var result: Either<Unit, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.addUserRelation(any(), any()) } } returns Either.Success(Unit)
+        every {
+            runBlocking {
+                profileRepository.addUserRelation(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Success(Unit)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -59,7 +66,14 @@ class AddUserRelationUseCaseTest {
         var result: Either<Unit, Failure>? = null
 
         // given
-        every { runBlocking { profileRepository.addUserRelation(any(), any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every {
+            runBlocking {
+                profileRepository.addUserRelation(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Failure(Failure.NetworkConnection)
 
         // when
         mainCoroutineRule.runBlockingTest {

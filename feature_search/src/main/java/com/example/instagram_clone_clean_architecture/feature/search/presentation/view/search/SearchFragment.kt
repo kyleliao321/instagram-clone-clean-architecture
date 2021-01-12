@@ -13,7 +13,7 @@ import org.kodein.di.instance
 
 class SearchFragment : InjectionFragment() {
 
-    private val viewModel : SearchViewModel by instance()
+    private val viewModel: SearchViewModel by instance()
 
     override fun onCreateView(
         inflater: LayoutInflater,

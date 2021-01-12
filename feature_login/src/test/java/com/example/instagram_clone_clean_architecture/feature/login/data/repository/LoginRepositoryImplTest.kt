@@ -13,7 +13,6 @@ import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.MockK
 import org.amshove.kluent.shouldBeEqualTo
-import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -56,7 +55,12 @@ class LoginRepositoryImplTest {
         // given
         var result: Either<UserDomainModel, Failure>? = null
 
-        coEvery { remoteDataSource.userLogin(any(), any()) } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
+        coEvery {
+            remoteDataSource.userLogin(
+                any(),
+                any()
+            )
+        } returns Either.Failure(Failure.LoginUserNameOrPasswordNotMatched)
 
         // when
         mainCoroutineRule.runBlockingTest {

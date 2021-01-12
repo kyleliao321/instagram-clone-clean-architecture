@@ -25,20 +25,21 @@ class SearchUserProfileListAdapter(
         return ViewHolder.from(parent)
     }
 
-    class ViewHolder private constructor(private val binding: FragmentSearchItemViewBinding): RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(private val binding: FragmentSearchItemViewBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(userProfile: UserDomainModel) {
             binding.userProfile = userProfile
         }
 
         companion object {
-            fun from(parent: ViewGroup) : ViewHolder {
+            fun from(parent: ViewGroup): ViewHolder {
                 return ViewHolder(FragmentSearchItemViewBinding.inflate(LayoutInflater.from(parent.context)))
             }
         }
     }
 
-    class DiffCallback: DiffUtil.ItemCallback<UserDomainModel>() {
+    class DiffCallback : DiffUtil.ItemCallback<UserDomainModel>() {
         override fun areContentsTheSame(
             oldItem: UserDomainModel,
             newItem: UserDomainModel

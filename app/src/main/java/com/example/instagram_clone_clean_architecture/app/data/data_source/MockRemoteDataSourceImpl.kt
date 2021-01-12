@@ -12,7 +12,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private val networkFailureRate: Int = BuildConfig.GRADLE_MOCK_NETWORK_FAILURE_RATE.toInt()
 
-    private val mockRemoteImageSrc = "https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/mock-remote-image.jpg"
+    private val mockRemoteImageSrc =
+        "https://raw.githubusercontent.com/kyleliao321/instagram-clone-clean-architecture/master/assets/mock-remote-image.jpg"
 
     private val userLoginDataList = mutableListOf<Pair<String, String>>()
 
@@ -74,7 +75,12 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         // first, create a user profile in database
         val newUserProfile = UserDomainModel(
-            id = generateId(), name = userName, userName = userName, postNum = 0, followingNum = 0, followerNum = 0
+            id = generateId(),
+            name = userName,
+            userName = userName,
+            postNum = 0,
+            followingNum = 0,
+            followerNum = 0
         )
         userProfileList.add(newUserProfile)
 
@@ -239,7 +245,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         }
     }
 
-    override suspend fun addUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
+    override suspend fun addUserRelation(
+        followerId: String,
+        followingId: String
+    ): Either<Unit, Failure> {
         delay(1000)
 
         if (isNetworkFail()) {
@@ -266,7 +275,10 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(Unit)
     }
 
-    override suspend fun removeUserRelation(followerId: String, followingId: String): Either<Unit, Failure> {
+    override suspend fun removeUserRelation(
+        followerId: String,
+        followingId: String
+    ): Either<Unit, Failure> {
         delay(1000)
 
         if (isNetworkFail()) {

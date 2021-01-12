@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -19,6 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_constraintTop_toTopOf="parent">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/register_app_bar_content"
                 android:layout_width="match_parent"
@@ -50,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:SpinKit_Color="?attr/colorPrimary"
-            style="@style/SpinKitView.Large.Circle"/>
+            style="@style/SpinKitView.Large.Circle" />
 
         <TextView
             android:id="@+id/network_error_message"
@@ -93,11 +95,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:enabled="@{!viewModel.stateLiveData.registering}"
-                android:text="@={viewModel.stateLiveData.userName}"/>
+                android:text="@={viewModel.stateLiveData.userName}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -110,12 +113,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:enabled="@{!viewModel.stateLiveData.registering}"
-                android:text="@={viewModel.stateLiveData.userPassword}"/>
+                android:text="@={viewModel.stateLiveData.userPassword}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button

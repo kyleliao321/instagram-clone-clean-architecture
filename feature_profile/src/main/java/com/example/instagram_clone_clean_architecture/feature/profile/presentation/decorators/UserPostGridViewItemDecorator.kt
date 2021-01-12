@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class UserPostGridViewItemDecorator(
     private val space: Int
-): RecyclerView.ItemDecoration() {
+) : RecyclerView.ItemDecoration() {
 
     override fun getItemOffsets(
         outRect: Rect,

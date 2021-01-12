@@ -17,8 +17,8 @@ internal class ProfileRepositoryImpl(
     private val localDataSource: LocalDataSource,
     private val remoteDataSource: RemoteDataSource,
     private val cacheDataSource: CacheDataSource
-): ProfileRepository {
-    
+) : ProfileRepository {
+
     override suspend fun getLoginUserProfile(): Either<UserDomainModel?, Failure> {
         return cacheDataSource.getLoginUser()
     }
@@ -70,11 +70,17 @@ internal class ProfileRepositoryImpl(
         return updateUserProfileResult
     }
 
-    override suspend fun addUserRelation(follower: String, following: String): Either<Unit, Failure> {
+    override suspend fun addUserRelation(
+        follower: String,
+        following: String
+    ): Either<Unit, Failure> {
         return remoteDataSource.addUserRelation(follower, following)
     }
 
-    override suspend fun removeUserRelation(follower: String, following: String): Either<Unit, Failure> {
+    override suspend fun removeUserRelation(
+        follower: String,
+        following: String
+    ): Either<Unit, Failure> {
         return remoteDataSource.removeUserRelation(follower, following)
     }
 

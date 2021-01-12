@@ -56,7 +56,7 @@ class SearchViewModel(
         else -> throw IllegalStateException("Unknown failure type in ${this.javaClass} : $failure")
     }
 
-    override fun onLoadData() { }
+    override fun onLoadData() {}
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.UserProfileListLoaded -> state.copy(

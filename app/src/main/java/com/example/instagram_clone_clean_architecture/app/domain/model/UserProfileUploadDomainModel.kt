@@ -13,7 +13,7 @@ data class UserProfileUploadDomainModel(
     var cachedImageFile: File? = null
 ) {
     companion object {
-        fun from(domainModel: UserDomainModel, uri: Uri?):UserProfileUploadDomainModel {
+        fun from(domainModel: UserDomainModel, uri: Uri?): UserProfileUploadDomainModel {
             return UserProfileUploadDomainModel(
                 imageUri = uri,
                 id = domainModel.id,

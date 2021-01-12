@@ -6,6 +6,6 @@ import com.example.library_base.domain.utility.Either
 
 interface SearchRepository {
 
-    suspend fun getUserProfileListByKeyword(keyword: String) : Either<List<UserDomainModel>, Failure>
+    suspend fun getUserProfileListByKeyword(keyword: String): Either<List<UserDomainModel>, Failure>
 
 }

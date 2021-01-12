@@ -12,17 +12,20 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import java.lang.ref.SoftReference
 
-class LocalDataSourceImpl: LocalDataSource {
+class LocalDataSourceImpl : LocalDataSource {
 
     private lateinit var sharedPrefsRefer: SoftReference<SharedPreferences>
 
     private lateinit var contentResolverRefer: SoftReference<ContentResolver>
 
-    private val LOCAL_LOGIN_USER_NAME_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_name"
+    private val LOCAL_LOGIN_USER_NAME_KEY =
+        "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_name"
 
-    private val LOCAL_LOGIN_USER_PASSWORD_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_password"
+    private val LOCAL_LOGIN_USER_PASSWORD_KEY =
+        "com.example.instagram_clone_clean_architecture.shared_preference.local_login_user_password"
 
-    private val LOCAL_TOKEN_KEY = "com.example.instagram_clone_clean_architecture.shared_preference.local_token"
+    private val LOCAL_TOKEN_KEY =
+        "com.example.instagram_clone_clean_architecture.shared_preference.local_token"
 
     private val ERROR_STRING = ""
 
@@ -51,7 +54,8 @@ class LocalDataSourceImpl: LocalDataSource {
         val sharedPrefs = sharedPrefsRefer.get()
             ?: throw IllegalStateException("Cannot get EncryptedSharedPreferences object")
 
-        val localLoginUserPassword = sharedPrefs.getString(LOCAL_LOGIN_USER_PASSWORD_KEY, ERROR_STRING)
+        val localLoginUserPassword =
+            sharedPrefs.getString(LOCAL_LOGIN_USER_PASSWORD_KEY, ERROR_STRING)
 
         return if (localLoginUserPassword == ERROR_STRING) {
             Either.Failure(Failure.LocalAccountNotFound)

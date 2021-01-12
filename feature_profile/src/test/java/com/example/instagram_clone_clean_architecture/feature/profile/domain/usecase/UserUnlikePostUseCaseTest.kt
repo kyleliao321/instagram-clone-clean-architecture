@@ -40,11 +40,18 @@ class UserUnlikePostUseCaseTest {
         val mockParam = mockk<UserUnlikePostUseCase.Param>(relaxed = true)
 
         // given
-        every { runBlocking { profileRepository.removeLikedPost(any(), any()) } } returns Either.Success(Unit)
+        every {
+            runBlocking {
+                profileRepository.removeLikedPost(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Success(Unit)
 
         // when
         mainCoroutineRule.runBlockingTest {
-            testUseCase(mockParam) { result = it}
+            testUseCase(mockParam) { result = it }
         }
 
         // expect
@@ -57,12 +64,20 @@ class UserUnlikePostUseCaseTest {
         val mockParam = mockk<UserUnlikePostUseCase.Param>(relaxed = true)
 
         // given
-        every { runBlocking { profileRepository.removeLikedPost(any(), any()) } } returns Either.Failure(
-            Failure.ServerError)
+        every {
+            runBlocking {
+                profileRepository.removeLikedPost(
+                    any(),
+                    any()
+                )
+            }
+        } returns Either.Failure(
+            Failure.ServerError
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
-            testUseCase(mockParam) { result = it}
+            testUseCase(mockParam) { result = it }
         }
 
         // expect

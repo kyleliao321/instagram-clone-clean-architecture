@@ -11,7 +11,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.presentati
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
-class ProfileFollowerFragment: InjectionFragment() {
+class ProfileFollowerFragment : InjectionFragment() {
 
     private val viewModel: ProfileFollowerViewModel by instance()
 

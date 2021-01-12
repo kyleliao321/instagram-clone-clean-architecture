@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import org.kodein.di.instance
 import timber.log.Timber
 
-class MainActivity: InjectionActivity() {
+class MainActivity : InjectionActivity() {
 
     private val navController get() = appNavGraph.findNavController()
 
@@ -34,7 +34,8 @@ class MainActivity: InjectionActivity() {
         super.onCreate(savedInstanceState)
         Timber.i("Main Activity is created!")
 
-        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        val binding: ActivityMainBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 

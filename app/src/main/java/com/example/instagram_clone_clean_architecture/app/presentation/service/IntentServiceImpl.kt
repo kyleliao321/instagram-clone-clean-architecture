@@ -8,7 +8,7 @@ import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import java.lang.ref.WeakReference
 
-class IntentServiceImpl: IntentService {
+class IntentServiceImpl : IntentService {
 
     private lateinit var activityContext: WeakReference<AppCompatActivity>
 
@@ -16,7 +16,7 @@ class IntentServiceImpl: IntentService {
         activityContext = WeakReference(activity)
     }
 
-    override fun openCamera() : Either<Unit, Failure> {
+    override fun openCamera(): Either<Unit, Failure> {
         val context = activityContext.get()
             ?: throw IllegalStateException("$activityContext cannot be resolved")
 
@@ -31,7 +31,7 @@ class IntentServiceImpl: IntentService {
         return Either.Success(Unit)
     }
 
-    override fun openPhotoGallery() : Either<Unit, Failure> {
+    override fun openPhotoGallery(): Either<Unit, Failure> {
         val context = activityContext.get()
             ?: throw IllegalStateException("$activityContext cannot be resolved")
 

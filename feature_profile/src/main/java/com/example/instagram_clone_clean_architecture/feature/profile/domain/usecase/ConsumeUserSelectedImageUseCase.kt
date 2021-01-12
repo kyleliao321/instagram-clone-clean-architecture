@@ -8,7 +8,7 @@ import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
-class ConsumeUserSelectedImageUseCase (
+class ConsumeUserSelectedImageUseCase(
     private val profileRepository: ProfileRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : UseCase<Uri, Unit>(defaultDispatcher) {

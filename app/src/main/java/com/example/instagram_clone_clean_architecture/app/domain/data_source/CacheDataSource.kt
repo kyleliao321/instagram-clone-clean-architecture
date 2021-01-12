@@ -10,15 +10,18 @@ interface CacheDataSource {
 
     fun init(cacheDir: File): Unit
 
-    fun getAuthToken() : String?
+    fun getAuthToken(): String?
 
     fun cacheAuthToken(token: String?): Unit
 
-    suspend fun cacheCompressedUploadImage(fileName: String, byteArray: ByteArray) : Either<File, Failure>
+    suspend fun cacheCompressedUploadImage(
+        fileName: String,
+        byteArray: ByteArray
+    ): Either<File, Failure>
 
-    suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?) : Either<Unit, Failure>
+    suspend fun cacheLoginUserProfile(userProfile: UserDomainModel?): Either<Unit, Failure>
 
-    suspend fun getLoginUser() : Either<UserDomainModel, Failure>
+    suspend fun getLoginUser(): Either<UserDomainModel, Failure>
 
     // When prompt user to choose image either for avatar or post, the activity/fragment will
     // paused and await for result. So, in order to provide user a select-and-return-experience,
@@ -31,8 +34,8 @@ interface CacheDataSource {
     //         dedicated UseCase in `onStart` can return cache image in LocalDataSource.
     //         (If there's no loaded-image, just allow user to select again.)
 
-    suspend fun cacheUserSelectedImageUri(uri: Uri) : Either<Unit, Failure>
+    suspend fun cacheUserSelectedImageUri(uri: Uri): Either<Unit, Failure>
 
-    suspend fun consumeCachedSelectedImageUri() : Either<Uri, Failure>
+    suspend fun consumeCachedSelectedImageUri(): Either<Uri, Failure>
 
 }

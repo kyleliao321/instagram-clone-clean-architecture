@@ -47,7 +47,8 @@ class SearchViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getUserProfileListUseCase = spyk(GetUserProfileListUseCase(searchRepository, mainCoroutineRule.testDispatcher))
+        getUserProfileListUseCase =
+            spyk(GetUserProfileListUseCase(searchRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = SearchViewModel(
             navManager,
@@ -83,7 +84,9 @@ class SearchViewModelTest {
 
         // given
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
-        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Success(mockReturnList)
+        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Success(
+            mockReturnList
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }
@@ -105,7 +108,9 @@ class SearchViewModelTest {
 
         // given
         testViewModel.stateLiveData.value!!.keyword = searchKeyword
-        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Failure(Failure.NetworkConnection)
+        every { runBlocking { getUserProfileListUseCase.run(any()) } } returns Either.Failure(
+            Failure.NetworkConnection
+        )
 
         // when
         mainCoroutineRule.runBlockingTest { testViewModel.loadUserProfileList(searchKeyword) }

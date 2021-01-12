@@ -59,7 +59,7 @@ class CacheDataSourceImpl : CacheDataSource {
     }
 
     override suspend fun cacheUserSelectedImageUri(uri: Uri): Either<Unit, Failure> {
-        userSelectedImageUri =  uri
+        userSelectedImageUri = uri
         return Either.Success(Unit)
     }
 

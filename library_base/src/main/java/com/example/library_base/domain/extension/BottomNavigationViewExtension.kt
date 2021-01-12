@@ -13,7 +13,10 @@ import java.lang.ref.WeakReference
  *
  * @param navHandler Handle the logic of navigation when menu-item is selected.
  */
-fun BottomNavigationView.setupNavControllerWithNavCallback(navController: NavController, navHandler: (menuItem: MenuItem) -> Boolean) {
+fun BottomNavigationView.setupNavControllerWithNavCallback(
+    navController: NavController,
+    navHandler: (menuItem: MenuItem) -> Boolean
+) {
     this.setOnNavigationItemSelectedListener {
         navHandler(it)
     }
@@ -47,7 +50,7 @@ fun BottomNavigationView.setupNavControllerWithNavCallback(navController: NavCon
 /**
  * Determine whether destination is or nested inside given destination id.
  */
-inline fun matchDestination(destination: NavDestination, destId: Int) : Boolean {
+inline fun matchDestination(destination: NavDestination, destId: Int): Boolean {
     var currentDest = destination
     while (currentDest.id != destId && currentDest.parent != null) {
         currentDest = currentDest.parent!!

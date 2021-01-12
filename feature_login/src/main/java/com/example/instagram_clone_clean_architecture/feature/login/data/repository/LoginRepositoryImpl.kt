@@ -3,7 +3,6 @@ package com.example.instagram_clone_clean_architecture.feature.login.data.reposi
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.CacheDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.LocalDataSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.LoginCredentialDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.UserDomainModel
 import com.example.instagram_clone_clean_architecture.feature.login.domain.repository.LoginRepository
 import com.example.library_base.domain.exception.Failure

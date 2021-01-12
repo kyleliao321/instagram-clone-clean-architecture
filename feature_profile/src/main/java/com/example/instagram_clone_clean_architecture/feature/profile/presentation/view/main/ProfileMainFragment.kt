@@ -13,7 +13,7 @@ import com.example.instagram_clone_clean_architecture.feature.profile.presentati
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
-class ProfileMainFragment: InjectionFragment() {
+class ProfileMainFragment : InjectionFragment() {
 
     private val viewModel: ProfileMainViewModel by instance()
 

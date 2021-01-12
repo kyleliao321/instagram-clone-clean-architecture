@@ -48,7 +48,7 @@ class UserPostGridViewAdapter(
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<PostDomainModel>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<PostDomainModel>() {
         override fun areContentsTheSame(
             oldItem: PostDomainModel,
             newItem: PostDomainModel

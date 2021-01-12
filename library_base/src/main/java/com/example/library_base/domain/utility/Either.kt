@@ -24,9 +24,9 @@ package com.example.library_base.domain.utility
  */
 sealed class Either<out SuccessParam, out FailureParam> {
 
-    data class Success<out SuccessParam>(val a: SuccessParam): Either<SuccessParam, Nothing>()
+    data class Success<out SuccessParam>(val a: SuccessParam) : Either<SuccessParam, Nothing>()
 
-    data class Failure<out FailureParam>(val b: FailureParam): Either<Nothing, FailureParam>()
+    data class Failure<out FailureParam>(val b: FailureParam) : Either<Nothing, FailureParam>()
 
     val isSuccess: Boolean get() = this is Success
 

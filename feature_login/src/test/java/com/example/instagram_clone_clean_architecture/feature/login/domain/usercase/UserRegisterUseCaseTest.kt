@@ -50,7 +50,9 @@ class UserRegisterUseCaseTest {
         // given
         every { mockParam.userName } returns validUserName
         every { mockParam.password } returns validPassword
-        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(mockReturnData)
+        every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Success(
+            mockReturnData
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -73,7 +75,8 @@ class UserRegisterUseCaseTest {
         every { mockParam.userName } returns validUserName
         every { mockParam.password } returns validPassword
         every { runBlocking { loginRepository.userRegister(any(), any()) } } returns Either.Failure(
-            Failure.DuplicatedUserName)
+            Failure.DuplicatedUserName
+        )
 
         // when
         mainCoroutineRule.runBlockingTest {

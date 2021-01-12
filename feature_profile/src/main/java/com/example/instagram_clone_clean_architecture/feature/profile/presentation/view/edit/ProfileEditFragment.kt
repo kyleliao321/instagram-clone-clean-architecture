@@ -13,7 +13,7 @@ import com.example.library_base.presentation.fragment.InjectionFragment
 import com.google.android.material.snackbar.Snackbar
 import org.kodein.di.instance
 
-class ProfileEditFragment: InjectionFragment() {
+class ProfileEditFragment : InjectionFragment() {
 
     private val observer = Observer<ProfileEditViewModel.ViewState>() {
         if (it.isUserNameConflict) {

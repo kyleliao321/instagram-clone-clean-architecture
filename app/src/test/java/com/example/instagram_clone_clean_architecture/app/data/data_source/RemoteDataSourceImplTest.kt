@@ -116,7 +116,13 @@ class RemoteDataSourceImplTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        remoteDataSourceImpl = RemoteDataSourceImpl(accountServices, userServices, postServices, relationServices, likeServices)
+        remoteDataSourceImpl = RemoteDataSourceImpl(
+            accountServices,
+            userServices,
+            postServices,
+            relationServices,
+            likeServices
+        )
     }
 
     @Test
@@ -336,9 +342,9 @@ class RemoteDataSourceImplTest {
         // expect
         result shouldBeEqualTo Either.Success(
             LoginCredentialDomainModel(
-            mockLoginCredential.jwt,
-            UserDomainModel.from(mockUserProfile)
-        )
+                mockLoginCredential.jwt,
+                UserDomainModel.from(mockUserProfile)
+            )
         )
     }
 
@@ -496,7 +502,11 @@ class RemoteDataSourceImplTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map { UserDomainModel.from(it) })
+        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map {
+            UserDomainModel.from(
+                it
+            )
+        })
     }
 
     @Test
@@ -541,7 +551,11 @@ class RemoteDataSourceImplTest {
         }
 
         // expect
-        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map { UserDomainModel.from(it) })
+        result shouldBeEqualTo Either.Success(listOf(mockSecondUserProfile).map {
+            UserDomainModel.from(
+                it
+            )
+        })
     }
 
     @Test
@@ -810,7 +824,16 @@ class RemoteDataSourceImplTest {
         every { mockGetRes.code() } returns HttpURLConnection.HTTP_OK
         every { mockGetRes.body() } returns mockGetResBody
 
-        coEvery { userServices.updateUserProfileAsync(any(), any(), any(), any(), any(), any()) } returns mockRes
+        coEvery {
+            userServices.updateUserProfileAsync(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns mockRes
         coEvery { userServices.getUserProfileAsync(any()) } returns mockGetRes
 
         // when
@@ -832,7 +855,16 @@ class RemoteDataSourceImplTest {
         every { mockRes.code() } returns HttpURLConnection.HTTP_UNAUTHORIZED
         every { mockRes.body() } returns null
 
-        coEvery { userServices.updateUserProfileAsync(any(), any(), any(), any(), any(), any()) } returns mockRes
+        coEvery {
+            userServices.updateUserProfileAsync(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns mockRes
 
         // when
         mainCoroutineRule.runBlockingTest {

@@ -36,8 +36,8 @@ class EitherTest {
         val result = Either.Failure(param)
 
         result shouldBeInstanceOf Either::class.java
-        result shouldBeInstanceOf  Either.Failure::class.java
-        result shouldNotBeInstanceOf  Either.Success::class.java
+        result shouldBeInstanceOf Either.Failure::class.java
+        result shouldNotBeInstanceOf Either.Success::class.java
 
         result.fold(
             // Handle Success

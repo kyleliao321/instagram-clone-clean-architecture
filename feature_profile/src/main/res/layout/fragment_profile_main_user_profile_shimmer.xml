@@ -2,8 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <data>
-    </data>
+    <data></data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -47,6 +46,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@id/user_image_number_text_divider"
             app:layout_constraintEnd_toStartOf="@+id/user_follower_number_container">
+
             <TextView
                 android:id="@+id/user_post_number"
                 android:layout_width="match_parent"
@@ -54,6 +54,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:background="?attr/backgroundColor" />
+
             <TextView
                 android:id="@+id/user_post_number_info"
                 android:layout_width="match_parent"
@@ -71,6 +72,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@+id/user_post_number_container"
             app:layout_constraintEnd_toStartOf="@+id/user_following_number_container">
+
             <TextView
                 android:id="@+id/user_follower_number"
                 android:layout_width="match_parent"
@@ -78,6 +80,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:background="?attr/backgroundColor" />
+
             <TextView
                 android:id="@+id/user_follower_number_info"
                 android:layout_width="match_parent"
@@ -95,6 +98,7 @@
             app:layout_constraintBottom_toTopOf="@id/user_name_description_divider"
             app:layout_constraintStart_toEndOf="@id/user_follower_number_container"
             app:layout_constraintEnd_toEndOf="parent">
+
             <TextView
                 android:id="@+id/user_following_number"
                 android:layout_width="match_parent"
@@ -102,6 +106,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_horizontal"
                 android:background="?attr/backgroundColor" />
+
             <TextView
                 android:id="@+id/user_following_number_info"
                 android:layout_width="match_parent"

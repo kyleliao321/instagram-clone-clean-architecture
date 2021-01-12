@@ -69,6 +69,7 @@ class GetPostUseCaseTest {
         result shouldBeInstanceOf Either.Failure::class.java
         result shouldBeEqualTo Either.Failure(Failure.ServerError)
     }
+
     @Test
 
     fun `should return Failure when repository return failure`() {

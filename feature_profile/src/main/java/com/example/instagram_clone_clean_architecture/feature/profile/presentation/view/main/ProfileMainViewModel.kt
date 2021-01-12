@@ -25,7 +25,7 @@ class ProfileMainViewModel(
     private val navigationUseCase: NavigationUseCase,
     private val logoutUseCase: LogoutUseCase,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
-): BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(
+) : BaseViewModel<ProfileMainViewModel.ViewState, ProfileMainViewModel.Action>(
     ViewState()
 ) {
 
@@ -57,7 +57,10 @@ class ProfileMainViewModel(
     }
 
     fun onNavigateToPostDetail(post: PostDomainModel) = viewModelScope.launch(defaultDispatcher) {
-        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfilePostFragment(post.belongUserId, post.id)
+        val navDir = ProfileMainFragmentDirections.actionProfileMainFragmentToProfilePostFragment(
+            post.belongUserId,
+            post.id
+        )
         val params = NavigationUseCase.Param(navDir)
 
         navigationUseCase(params)
@@ -95,7 +98,8 @@ class ProfileMainViewModel(
 
     fun addUserRelation() = viewModelScope.launch(defaultDispatcher) {
         sendAction(Action.StartFollowingProcessing)
-        val param = AddUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
+        val param =
+            AddUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
 
         addUserRelationUseCase(param) {
             it.fold(
@@ -113,7 +117,8 @@ class ProfileMainViewModel(
 
     fun removeUserRelation() = viewModelScope.launch(defaultDispatcher) {
         sendAction(Action.StartFollowingProcessing)
-        val param = RemoveUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
+        val param =
+            RemoveUserRelationUseCase.Param(state.loginUserProfile!!.id, state.userProfile!!.id)
 
         removeUserRelationUseCase(param) {
             it.fold(
@@ -122,10 +127,12 @@ class ProfileMainViewModel(
                     sendAction(Action.ReloadData)
                     loadData()
                 },
-                onFail = { failure -> {
-                    sendAction(Action.FinishFollowingProcessing)
-                    onFailure(failure)
-                }}
+                onFail = { failure ->
+                    {
+                        sendAction(Action.FinishFollowingProcessing)
+                        onFailure(failure)
+                    }
+                }
             )
         }
     }
@@ -183,7 +190,7 @@ class ProfileMainViewModel(
         }
     }
 
-    private fun loadUserPost() = viewModelScope.launch(defaultDispatcher)  {
+    private fun loadUserPost() = viewModelScope.launch(defaultDispatcher) {
         val params = GetUserPostUseCase.Param(args.userId)
         getUserPostUseCase(params) {
             it.fold(
@@ -271,8 +278,8 @@ class ProfileMainViewModel(
         class LoginUserFollowingListLoaded(val followingList: List<UserDomainModel>) : Action()
         class UserProfileLoaded(val userProfile: UserDomainModel?) : Action()
         class UserPostLoaded(val userPost: List<PostDomainModel>) : Action()
-        object StartFollowingProcessing: Action()
-        object FinishFollowingProcessing: Action()
+        object StartFollowingProcessing : Action()
+        object FinishFollowingProcessing : Action()
         object FailOnNetworkConnection : Action()
         object FailOnServerError : Action()
         object FailOnLocalAccountError : Action()

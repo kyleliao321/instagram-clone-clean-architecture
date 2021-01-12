@@ -45,8 +45,10 @@ class MainViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        cacheUserSelectedImageUseCase = spyk(CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher))
-        getCachedLoginUserUseCase = spyk(GetCachedLoginUserUseCase(appRepository, mainCoroutineRule.testDispatcher))
+        cacheUserSelectedImageUseCase =
+            spyk(CacheUserSelectedImageUseCase(appRepository, mainCoroutineRule.testDispatcher))
+        getCachedLoginUserUseCase =
+            spyk(GetCachedLoginUserUseCase(appRepository, mainCoroutineRule.testDispatcher))
 
         testViewModel = MainViewModel(
             navManager,

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <import type="android.view.View" />
 
         <variable
@@ -14,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:onRefreshListener="@{() -> viewModel.loadData()}"
-        app:refreshing="@{viewModel.isDataLoading()}" >
+        app:refreshing="@{viewModel.isDataLoading()}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,6 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintTop_toTopOf="parent">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/edit_profile_app_bar_content"
                     android:layout_width="match_parent"
@@ -50,7 +52,7 @@
                         app:layout_constraintEnd_toEndOf="@+id/edit_profile_app_bar_content"
                         android:onClick="@{() -> viewModel.onUpdateUserProfile()}"
                         android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                        style="@style/Widget.MaterialComponents.Button.TextButton" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.appcompat.widget.Toolbar>
@@ -79,14 +81,15 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:SpinKit_Color="?attr/colorPrimary"
-                style="@style/SpinKitView.Large.Circle"/>
+                style="@style/SpinKitView.Large.Circle" />
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/edit_profile_app_bar"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:visibleCondition="@{viewModel.stateLiveData.userProfileLoading || viewModel.stateLiveData.cachedImageLoading}" >
+                app:visibleCondition="@{viewModel.stateLiveData.userProfileLoading || viewModel.stateLiveData.cachedImageLoading}">
+
                 <include
                     layout="@layout/fragment_profile_edit_shimmer"
                     android:layout_width="match_parent"
@@ -113,7 +116,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:oldUserImage="@{viewModel.stateLiveData.bindingUserProfile.imageSrc}"
-                    app:newUserImage="@{viewModel.stateLiveData.cacheImageUri}"/>
+                    app:newUserImage="@{viewModel.stateLiveData.cacheImageUri}" />
 
                 <androidx.constraintlayout.widget.Guideline
                     android:id="@+id/user_image_name_divider"
@@ -139,8 +142,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@={viewModel.stateLiveData.bindingUserProfile.name}"
-                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
-                        />
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -168,8 +170,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@={viewModel.stateLiveData.bindingUserProfile.userName}"
-                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
-                        />
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -197,8 +198,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@={viewModel.stateLiveData.bindingUserProfile.description}"
-                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}"
-                        />
+                        android:enabled="@{!(viewModel.stateLiveData.userProfileUpdating || viewModel.isDataLoading() || viewModel.stateLiveData.networkError)}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

@@ -27,22 +27,22 @@
         app:graphResName="feature_search_nav_graph">
         <action
             android:id="@id/featureProfileNavGraph"
-            app:destination="@id/featureProfileNavGraph"/>
+            app:destination="@id/featureProfileNavGraph" />
     </include-dynamic>
 
     <include-dynamic
         android:id="@+id/featureLoginNavGraph"
         app:moduleName="feature_login"
-        app:graphResName="feature_login_nav_graph" >
+        app:graphResName="feature_login_nav_graph">
         <action
             android:id="@id/featureProfileNavGraph"
-            app:destination="@id/featureProfileNavGraph"/>
+            app:destination="@id/featureProfileNavGraph" />
     </include-dynamic>
 
     <include-dynamic
         android:id="@+id/featurePostNavGraph"
         app:moduleName="feature_post"
-        app:graphResName="feature_post_nav_graph" >
+        app:graphResName="feature_post_nav_graph">
         <action
             android:id="@id/featureProfileNavGraph"
             app:destination="@id/featureProfileNavGraph" />

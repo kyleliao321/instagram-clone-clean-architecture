@@ -37,15 +37,16 @@ class ProfileFollowerViewModel(
         return@map null
     }
 
-    fun onNavigateToUserProfile(userProfile: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
-        val navDir =
-            ProfileFollowerFragmentDirections.actionProfileFollowerFragmentToProfileMainFragment(
-                userProfile.id
-            )
-        val params = NavigationUseCase.Param(navDir)
+    fun onNavigateToUserProfile(userProfile: UserDomainModel) =
+        viewModelScope.launch(defaultDispatcher) {
+            val navDir =
+                ProfileFollowerFragmentDirections.actionProfileFollowerFragmentToProfileMainFragment(
+                    userProfile.id
+                )
+            val params = NavigationUseCase.Param(navDir)
 
-        navigationUseCase(params)
-    }
+            navigationUseCase(params)
+        }
 
     fun addUserRelation(following: UserDomainModel) = viewModelScope.launch(defaultDispatcher) {
         val params = AddUserRelationUseCase.Param(state.loginUser!!.id, following.id)

@@ -82,7 +82,12 @@ class UpdateUserProfileUseCaseTest {
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)
-        coEvery { profileRepository.cacheCompressedUploadImage(any(), any()) } returns Either.Failure(Failure.ExternalImageDecodeFail)
+        coEvery {
+            profileRepository.cacheCompressedUploadImage(
+                any(),
+                any()
+            )
+        } returns Either.Failure(Failure.ExternalImageDecodeFail)
 
         // when
         mainCoroutineRule.runBlockingTest {
@@ -112,7 +117,12 @@ class UpdateUserProfileUseCaseTest {
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)
-        coEvery { profileRepository.cacheCompressedUploadImage(any(), any()) } returns Either.Success(cachedFile)
+        coEvery {
+            profileRepository.cacheCompressedUploadImage(
+                any(),
+                any()
+            )
+        } returns Either.Success(cachedFile)
         coEvery { profileRepository.updateUserProfile(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when
@@ -166,7 +176,12 @@ class UpdateUserProfileUseCaseTest {
         every { user.imageUri } returns mockk()
         every { param.userProfile } returns user
         coEvery { profileRepository.getBitmap(any()) } returns Either.Success(imageBitmap)
-        coEvery { profileRepository.cacheCompressedUploadImage(any(), any()) } returns Either.Success(cachedFile)
+        coEvery {
+            profileRepository.cacheCompressedUploadImage(
+                any(),
+                any()
+            )
+        } returns Either.Success(cachedFile)
         coEvery { profileRepository.updateUserProfile(any()) } returns Either.Failure(Failure.NetworkConnection)
 
         // when

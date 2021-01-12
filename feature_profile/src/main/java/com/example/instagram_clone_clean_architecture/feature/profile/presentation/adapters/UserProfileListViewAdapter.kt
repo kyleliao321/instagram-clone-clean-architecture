@@ -12,7 +12,9 @@ class UserProfileListViewAdapter(
     private val itemOnClickListener: OnClickListener<DataItem>,
     private val followButtonClickListener: OnClickListener<DataItem>,
     private val removeButtonClickListener: OnClickListener<DataItem>
-) : ListAdapter<UserProfileListViewAdapter.DataItem, UserProfileListViewAdapter.UserProfileViewHolder>(DiffCallback)  {
+) : ListAdapter<UserProfileListViewAdapter.DataItem, UserProfileListViewAdapter.UserProfileViewHolder>(
+    DiffCallback
+) {
 
     override fun onBindViewHolder(holder: UserProfileViewHolder, position: Int) {
         val dataItem = getItem(position)
@@ -46,14 +48,15 @@ class UserProfileListViewAdapter(
         }
 
         companion object {
-            fun from(parent: ViewGroup) : UserProfileViewHolder {
-                val binding = FragmentProfileFollowUserViewItemBinding.inflate(LayoutInflater.from(parent.context))
+            fun from(parent: ViewGroup): UserProfileViewHolder {
+                val binding =
+                    FragmentProfileFollowUserViewItemBinding.inflate(LayoutInflater.from(parent.context))
                 return UserProfileViewHolder(binding)
             }
         }
     }
 
-    companion object DiffCallback: DiffUtil.ItemCallback<DataItem>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<DataItem>() {
         override fun areContentsTheSame(
             oldItem: DataItem,
             newItem: DataItem
@@ -80,7 +83,7 @@ class UserProfileListViewAdapter(
             FOLLOWING, CANCELING, GONE
         }
 
-        abstract val userProfile : UserDomainModel
+        abstract val userProfile: UserDomainModel
         abstract val type: Type
 
         data class FollowingItem(override val userProfile: UserDomainModel) : DataItem() {

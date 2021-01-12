@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.example.instagram_clone_clean_architecture.feature.search.presentation.view.search.SearchViewModel" />
@@ -24,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorSurface">
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/search_fragment_app_bar_content"
                     android:layout_width="match_parent"
@@ -87,17 +89,29 @@
                 android:orientation="vertical">
 
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
+
                 <include layout="@layout/fragment_search_item_view_shimmer" />
 
             </LinearLayout>
@@ -118,7 +132,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:searchResultList="@{viewModel.stateLiveData.userProfileList}"
             app:visibleCondition="@{!viewModel.stateLiveData.userProfileListLoading}"
-            tools:listitem="@layout/fragment_search_item_view"/>
+            tools:listitem="@layout/fragment_search_item_view" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

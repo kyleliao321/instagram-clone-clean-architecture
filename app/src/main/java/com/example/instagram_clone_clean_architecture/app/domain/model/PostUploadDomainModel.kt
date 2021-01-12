@@ -14,10 +14,12 @@ data class PostUploadDomainModel(
     var cachedImageFile: File? = null
 ) {
 
-    val isPostReady get() =
-        imageUri != null && belongUserId != null
+    val isPostReady
+        get() =
+            imageUri != null && belongUserId != null
 
-    val isPostUploadReady get() =
-        cachedImageFile != null && belongUserId != null && date != null
+    val isPostUploadReady
+        get() =
+            cachedImageFile != null && belongUserId != null && date != null
 
 }

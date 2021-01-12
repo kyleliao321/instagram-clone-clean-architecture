@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 class GetUserProfileUseCase(
     private val profileRepository: ProfileRepository,
     defaultDispatcher: CoroutineDispatcher = Dispatchers.IO
-): UseCase<UserDomainModel, GetUserProfileUseCase.Param>(defaultDispatcher) {
+) : UseCase<UserDomainModel, GetUserProfileUseCase.Param>(defaultDispatcher) {
 
     override suspend fun run(params: Param): Either<UserDomainModel, Failure> {
         var result: Either<UserDomainModel, Failure>? = null

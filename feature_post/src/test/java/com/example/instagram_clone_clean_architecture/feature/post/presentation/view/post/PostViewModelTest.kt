@@ -65,11 +65,15 @@ class PostViewModelTest {
     fun setup() {
         MockKAnnotations.init(this)
 
-        getLoginUserUseCase = spyk(GetLoginUserUseCase(postRepository, mainCoroutineRule.testDispatcher))
-        getUserSelectedImageUseCase = spyk(GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher))
-        uploadPostUseCase = spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        getLoginUserUseCase =
+            spyk(GetLoginUserUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        getUserSelectedImageUseCase =
+            spyk(GetUserSelectedImageUseCase(postRepository, mainCoroutineRule.testDispatcher))
+        uploadPostUseCase =
+            spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher))
         getBitmapUseCase = spyk(GetBitmapUseCase(postRepository, mainCoroutineRule.testDispatcher))
-        mockPostUseCase = spyk(spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)))
+        mockPostUseCase =
+            spyk(spyk(UploadPostUseCase(postRepository, mainCoroutineRule.testDispatcher)))
 
         viewModel = PostViewModel(
             intentService,
@@ -132,9 +136,13 @@ class PostViewModelTest {
         val mockBitmap = mockk<Bitmap>()
 
         // given
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(mockLoginUser)
-        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockImage)
-        every { runBlocking { getBitmapUseCase.run(any()) }} returns Either.Success(mockBitmap)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            mockLoginUser
+        )
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(
+            mockImage
+        )
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
         every { mockLoginUser.id } returns "mockId"
 
         // when
@@ -170,8 +178,10 @@ class PostViewModelTest {
 
         // given
         every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Failure(Failure.LocalAccountNotFound)
-        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(mockImage)
-        every { runBlocking { getBitmapUseCase.run(any()) }} returns Either.Success(mockBitmap)
+        every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(
+            mockImage
+        )
+        every { runBlocking { getBitmapUseCase.run(any()) } } returns Either.Success(mockBitmap)
 
         // when
         mainCoroutineRule.runBlockingTest { viewModel.loadData() }
@@ -203,7 +213,9 @@ class PostViewModelTest {
         val mockLoginUser = mockk<UserDomainModel>()
 
         // given
-        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(mockLoginUser)
+        every { runBlocking { getLoginUserUseCase.run(any()) } } returns Either.Success(
+            mockLoginUser
+        )
         every { runBlocking { getUserSelectedImageUseCase.run(any()) } } returns Either.Success(null)
         every { mockLoginUser.id } returns "mockId"
 
