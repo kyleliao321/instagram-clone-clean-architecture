@@ -22,14 +22,12 @@ allprojects {
             force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.KOTLIN}")
             force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.KOTLIN}")
             force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.KOTLIN}")
+            force("androidx.recyclerview:recyclerview:${LibraryVersions.RECYCLER_VIEW}")
         }
     }
 }
 
 subprojects {
-    // detekt can auto-reference the required file while working on module-level gradle.build.kts
-    // Without it, any plugins that apply in module-level cannot be resolved when written.
-    // (i.e: android block)
     apply(plugin = GradlePluginId.DETEKT)
 
     detekt {

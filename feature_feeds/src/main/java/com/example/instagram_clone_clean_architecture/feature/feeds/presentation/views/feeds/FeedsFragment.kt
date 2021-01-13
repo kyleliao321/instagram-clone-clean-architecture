@@ -6,15 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsBinding
+import com.example.instagram_clone_clean_architecture.feature.feeds.presentation.adapters.FeedsAdapter
 import com.example.library_base.presentation.fragment.InjectionFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
-import timber.log.Timber
 
 class FeedsFragment : InjectionFragment() {
 
     private val viewModel: FeedsViewModel by instance()
+
+    private lateinit var feedsAdapter: FeedsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,6 +25,9 @@ class FeedsFragment : InjectionFragment() {
     ): View? {
         val binding = FragmentFeedsBinding.inflate(inflater, container, false)
 
+        feedsAdapter = FeedsAdapter()
+        binding.feedsContainer.adapter = feedsAdapter
+
         return binding.root
     }
 
@@ -30,8 +35,9 @@ class FeedsFragment : InjectionFragment() {
         super.onStart()
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getFeeds().collectLatest {
-                Timber.d(it.toString())
+                feedsAdapter.submitData(it)
             }
         }
     }
+
 }

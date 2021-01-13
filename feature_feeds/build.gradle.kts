@@ -80,6 +80,7 @@ dependencies {
     implementation(LibraryDependency.LIFECYCLE_RUNTIME)
     implementation(LibraryDependency.KOTLIN_CO_ANDROID)
     implementation(LibraryDependency.KOTLIN_CO_CORE)
+    implementation(LibraryDependency.RECYCLER_VIEW)
     testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
 
     testImplementation(TestLibraryDependency.JUNIT)

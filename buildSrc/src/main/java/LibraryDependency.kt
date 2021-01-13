@@ -3,7 +3,7 @@ object LibraryVersions {
     const val KOTLIN_REFLECTION = "1.4.10"
     const val CORE_KTX = "1.3.1"
     const val APP_COMPAT = "1.1.0"
-    const val CONSTRAINT_LAYOUT = "1.1.3"
+    const val CONSTRAINT_LAYOUT = "2.0.4"
     const val NAVIGATION = "2.3.0"
     const val LIFECYCLE = "2.2.0"
     const val KODEIN = "7.0.0"
@@ -20,11 +20,14 @@ object LibraryVersions {
     const val GSON = "2.8.0"
     const val OK_HTTP_LOG_INTERCEPTOR = "4.9.0"
     const val PAGING = "3.0.0-alpha11"
+    const val RECYCLER_VIEW = "1.2.0-alpha06"
 }
 
 object LibraryDependency {
-    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${LibraryVersions.KOTLIN_STDLIB}"
-    const val KOTLIN_REFLECTION = "org.jetbrains.kotlin:kotlin-reflect:${LibraryVersions.KOTLIN_REFLECTION}"
+    const val KOTLIN_STDLIB =
+        "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${LibraryVersions.KOTLIN_STDLIB}"
+    const val KOTLIN_REFLECTION =
+        "org.jetbrains.kotlin:kotlin-reflect:${LibraryVersions.KOTLIN_REFLECTION}"
     const val CORE_KTX = "androidx.core:core-ktx:${LibraryVersions.CORE_KTX}"
     const val APP_COMPAT = "androidx.appcompat:appcompat:${LibraryVersions.APP_COMPAT}"
     const val CONSTRAINT_LAYOUT =
@@ -59,7 +62,10 @@ object LibraryDependency {
     const val OK_HTTP_LOG_INTERCEPTOR =
         "com.squareup.okhttp3:logging-interceptor:${LibraryVersions.OK_HTTP_LOG_INTERCEPTOR}"
     const val PAGING = "androidx.paging:paging-runtime:${LibraryVersions.PAGING}"
-    const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersions.LIFECYCLE}"
-    const val KOTLIN_CO_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.KOTLIN}"
+    const val LIFECYCLE_RUNTIME =
+        "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersions.LIFECYCLE}"
+    const val KOTLIN_CO_ANDROID =
+        "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.KOTLIN}"
     const val KOTLIN_CO_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.KOTLIN}"
+    const val RECYCLER_VIEW = "androidx.recyclerview:recyclerview:${LibraryVersions.RECYCLER_VIEW}"
 }
