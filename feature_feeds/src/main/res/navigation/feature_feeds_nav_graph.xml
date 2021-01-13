@@ -8,6 +8,10 @@
         android:id="@+id/feedsFragment"
         android:label="FeedsFragment"
         android:name="com.example.instagram_clone_clean_architecture.feature.feeds.presentation.views.feeds.FeedsFragment"
-        app:moduleName="@string/module_name" />
+        app:moduleName="@string/module_name" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

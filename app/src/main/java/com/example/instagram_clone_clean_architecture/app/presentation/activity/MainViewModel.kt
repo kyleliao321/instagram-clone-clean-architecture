@@ -30,8 +30,12 @@ class MainViewModel(
     }
 
     fun onNavigateToFeeds() {
-        val navDir = AppNavGraphDirections.featureFeedsNavGraph()
-        navManager.onNavEvent(navDir)
+        if (state.localUserId == null) {
+            throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
+        } else {
+            val navDir = AppNavGraphDirections.featureFeedsNavGraph(state.localUserId!!)
+            navManager.onNavEvent(navDir)
+        }
     }
 
     fun onNavigateToProfile() {

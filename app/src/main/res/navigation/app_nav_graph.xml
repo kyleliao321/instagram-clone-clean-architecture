@@ -58,5 +58,9 @@
     <include-dynamic
         android:id="@+id/featureFeedsNavGraph"
         app:moduleName="feature_feeds"
-        app:graphResName="feature_feeds_nav_graph"></include-dynamic>
+        app:graphResName="feature_feeds_nav_graph">
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </include-dynamic>
 </navigation>
