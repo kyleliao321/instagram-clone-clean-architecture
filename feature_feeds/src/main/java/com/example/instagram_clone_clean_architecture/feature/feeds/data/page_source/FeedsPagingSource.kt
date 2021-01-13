@@ -2,23 +2,23 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.data.page_s
 
 import androidx.paging.PagingSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.library_base.domain.utility.Either
 import java.net.SocketTimeoutException
 
 class FeedsPagingSource(
     private val remoteDataSource: RemoteDataSource,
     private val query: Query
-) : PagingSource<FeedsPagingSource.Cursor, PostDomainModel>() {
+) : PagingSource<FeedsPagingSource.Cursor, FeedDomainModel>() {
 
-    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, PostDomainModel> =
+    override suspend fun load(params: LoadParams<Cursor>): LoadResult<Cursor, FeedDomainModel> =
         when (val key = params.key) {
             is Cursor.NextCursor -> getNextFeeds(key, query)
             is Cursor.PreviousCursor -> getPreviousFeeds(key, query)
             null -> getLatestFeeds(query)
         }
 
-    private suspend fun getLatestFeeds(query: Query): LoadResult<Cursor, PostDomainModel> {
+    private suspend fun getLatestFeeds(query: Query): LoadResult<Cursor, FeedDomainModel> {
         val getFeedsResult = remoteDataSource.getLatestFeeds(query.userId, query.pageSize)
 
         return when (getFeedsResult) {
@@ -28,7 +28,7 @@ class FeedsPagingSource(
                 LoadResult.Page(
                     data = feeds,
                     prevKey = null,
-                    nextKey = if (feeds.isEmpty()) null else Cursor.NextCursor(feeds.last().date)
+                    nextKey = if (feeds.isEmpty()) null else Cursor.NextCursor(feeds.last().timestamp)
                 )
             }
         }
@@ -37,7 +37,7 @@ class FeedsPagingSource(
     private suspend fun getNextFeeds(
         key: Cursor.NextCursor,
         query: Query
-    ): LoadResult<Cursor, PostDomainModel> {
+    ): LoadResult<Cursor, FeedDomainModel> {
         val getFeedsResult = remoteDataSource.getNextFeeds(query.userId, query.pageSize, key.after)
 
         return when (getFeedsResult) {
@@ -47,9 +47,9 @@ class FeedsPagingSource(
                 LoadResult.Page(
                     data = feeds,
                     prevKey = if (feeds.isEmpty()) Cursor.PreviousCursor(key.after) else Cursor.PreviousCursor(
-                        feeds.first().date
+                        feeds.first().timestamp
                     ),
-                    nextKey = if (feeds.isEmpty()) null else Cursor.NextCursor(feeds.last().date)
+                    nextKey = if (feeds.isEmpty()) null else Cursor.NextCursor(feeds.last().timestamp)
                 )
             }
         }
@@ -58,7 +58,7 @@ class FeedsPagingSource(
     private suspend fun getPreviousFeeds(
         key: Cursor.PreviousCursor,
         query: Query
-    ): LoadResult<Cursor, PostDomainModel> {
+    ): LoadResult<Cursor, FeedDomainModel> {
         val getFeedsResult =
             remoteDataSource.getPreviousFeeds(query.userId, query.pageSize, key.before)
 
@@ -68,9 +68,9 @@ class FeedsPagingSource(
                 val feeds = getFeedsResult.a
                 LoadResult.Page(
                     data = feeds,
-                    prevKey = if (feeds.isEmpty()) null else Cursor.PreviousCursor(feeds.first().date),
+                    prevKey = if (feeds.isEmpty()) null else Cursor.PreviousCursor(feeds.first().timestamp),
                     nextKey = if (feeds.isEmpty()) Cursor.NextCursor(key.before) else Cursor.NextCursor(
-                        feeds.last().date
+                        feeds.last().timestamp
                     )
                 )
             }

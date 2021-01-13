@@ -50,18 +50,18 @@ interface RemoteDataSource {
     suspend fun getLatestFeeds(
         userId: String,
         pageSize: Int
-    ): Either<List<PostDomainModel>, Failure>
+    ): Either<List<FeedDomainModel>, Failure>
 
     suspend fun getNextFeeds(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure>
+    ): Either<List<FeedDomainModel>, Failure>
 
     suspend fun getPreviousFeeds(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure>
+    ): Either<List<FeedDomainModel>, Failure>
 
 }

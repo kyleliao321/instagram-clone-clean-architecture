@@ -370,7 +370,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     override suspend fun getLatestFeeds(
         userId: String,
         pageSize: Int
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         val followingIds = userRelationList
             .filter { it.first == userId }
             .map { it.second }
@@ -379,14 +379,35 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             .filter { it.belongUserId in followingIds }
 
         val sortedPostsDesc = sortPostsByDateDesc(allPosts)
-        return Either.Success(sortedPostsDesc.slice(0 until pageSize))
+        val pagedPost = sortedPostsDesc.slice(0 until pageSize)
+
+        val pagedFeeds = pagedPost.map { post ->
+            var user: UserDomainModel? = null
+            for (userProfile in userProfileList) {
+                if (userProfile.id == userId) {
+                    user = userProfile
+                }
+            }
+            return@map FeedDomainModel(
+                userId = user!!.id,
+                userName = user!!.userName,
+                userImage = user!!.imageSrc,
+                postId = post.id,
+                location = post.location ?: "",
+                description = post.description ?: "",
+                timestamp = post.date,
+                postImage = post.imageSrc
+            )
+        }
+
+        return Either.Success(pagedFeeds)
     }
 
     override suspend fun getNextFeeds(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         val followingIds = userRelationList
             .filter { it.first == userId }
             .map { it.second }
@@ -397,14 +418,35 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         val candidatePosts = allPosts
             .filter { parseCST(it.date).before(parseCST(breakPoint)) }
         val sortedCandidates = sortPostsByDateDesc(candidatePosts)
-        return Either.Success(sortedCandidates.slice(0 until pageSize))
+        val pagedPosts = sortedCandidates.slice(0 until pageSize)
+
+        val pagedFeeds = pagedPosts.map { post ->
+            var user: UserDomainModel? = null
+            for (userProfile in userProfileList) {
+                if (userProfile.id == userId) {
+                    user = userProfile
+                }
+            }
+            return@map FeedDomainModel(
+                userId = user!!.id,
+                userName = user!!.userName,
+                userImage = user!!.imageSrc,
+                postId = post.id,
+                location = post.location ?: "",
+                description = post.description ?: "",
+                timestamp = post.date,
+                postImage = post.imageSrc
+            )
+        }
+
+        return Either.Success(pagedFeeds)
     }
 
     override suspend fun getPreviousFeeds(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         val followingIds = userRelationList
             .filter { it.first == userId }
             .map { it.second }
@@ -416,7 +458,28 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             .filter { parseCST(it.date).after(parseCST(breakPoint)) }
         val sortedCandidates = sortPostsByDateAse(candidatePosts)
         val result = sortedCandidates.slice(0 until pageSize)
-        return Either.Success(result.reversed())
+        val pagedPosts = result.reversed()
+
+        val pagedFeeds = pagedPosts.map { post ->
+            var user: UserDomainModel? = null
+            for (userProfile in userProfileList) {
+                if (userProfile.id == userId) {
+                    user = userProfile
+                }
+            }
+            return@map FeedDomainModel(
+                userId = user!!.id,
+                userName = user!!.userName,
+                userImage = user!!.imageSrc,
+                postId = post.id,
+                location = post.location ?: "",
+                description = post.description ?: "",
+                timestamp = post.date,
+                postImage = post.imageSrc
+            )
+        }
+
+        return Either.Success(pagedFeeds)
     }
 
     private fun isNetworkFail(): Boolean {

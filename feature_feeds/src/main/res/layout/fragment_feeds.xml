@@ -15,7 +15,6 @@
             android:id="@+id/feeds_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="parent"

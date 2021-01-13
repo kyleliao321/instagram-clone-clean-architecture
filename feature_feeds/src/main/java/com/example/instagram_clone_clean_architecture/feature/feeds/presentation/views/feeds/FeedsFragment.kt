@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsBinding
 import com.example.instagram_clone_clean_architecture.feature.feeds.presentation.adapters.FeedsAdapter
+import com.example.instagram_clone_clean_architecture.feature.feeds.presentation.decorators.FeedViewItemDecorator
 import com.example.library_base.presentation.fragment.InjectionFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,8 +26,8 @@ class FeedsFragment : InjectionFragment() {
     ): View? {
         val binding = FragmentFeedsBinding.inflate(inflater, container, false)
 
-        feedsAdapter = FeedsAdapter()
-        binding.feedsContainer.adapter = feedsAdapter
+        setupFeedsAdapter(binding)
+        setupFeedItemViewDecorator(binding)
 
         return binding.root
     }
@@ -38,6 +39,16 @@ class FeedsFragment : InjectionFragment() {
                 feedsAdapter.submitData(it)
             }
         }
+    }
+
+    private fun setupFeedsAdapter(binding: FragmentFeedsBinding) {
+        feedsAdapter = FeedsAdapter()
+        binding.feedsContainer.adapter = feedsAdapter
+    }
+
+    private fun setupFeedItemViewDecorator(binding: FragmentFeedsBinding) {
+        val decorator = FeedViewItemDecorator(10)
+        binding.feedsContainer.addItemDecoration(decorator)
     }
 
 }

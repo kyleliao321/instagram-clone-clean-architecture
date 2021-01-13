@@ -328,14 +328,14 @@ class RemoteDataSourceImpl(
     override suspend fun getLatestFeeds(
         userId: String,
         pageSize: Int
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         return try {
             val res = feedServices.getLatestFeeds(userId, pageSize.toString())
             val status = res.code()
             val data = res.body()?.feeds
 
             if (status == HttpURLConnection.HTTP_OK && data != null) {
-                Either.Success(data.map { PostDomainModel.from(it) })
+                Either.Success(data.map { FeedDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
             }
@@ -348,14 +348,14 @@ class RemoteDataSourceImpl(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         return try {
             val res = feedServices.getNextFeeds(userId, pageSize.toString(), breakPoint)
             val status = res.code()
             val data = res.body()?.feeds
 
             if (status == HttpURLConnection.HTTP_OK && data != null) {
-                Either.Success(data.map { PostDomainModel.from(it) })
+                Either.Success(data.map { FeedDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
             }
@@ -368,14 +368,14 @@ class RemoteDataSourceImpl(
         userId: String,
         pageSize: Int,
         breakPoint: String
-    ): Either<List<PostDomainModel>, Failure> {
+    ): Either<List<FeedDomainModel>, Failure> {
         return try {
             val res = feedServices.getPreviousFeeds(userId, pageSize.toString(), breakPoint)
             val status = res.code()
             val data = res.body()?.feeds
 
             if (status == HttpURLConnection.HTTP_OK && data != null) {
-                Either.Success(data.map { PostDomainModel.from(it) })
+                Either.Success(data.map { FeedDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
             }

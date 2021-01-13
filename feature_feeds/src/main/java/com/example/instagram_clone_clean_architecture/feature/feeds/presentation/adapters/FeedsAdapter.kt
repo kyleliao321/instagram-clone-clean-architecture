@@ -5,25 +5,27 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
+import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsItemViewBinding
+import timber.log.Timber
 
-class FeedsAdapter : PagingDataAdapter<PostDomainModel, FeedsAdapter.FeedViewHolder>(DiffCallback) {
+class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         return FeedViewHolder.from(parent)
     }
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
-        val post = getItem(position)
-        holder.bind(post)
+        val feed = getItem(position)
+        Timber.d(feed.toString())
+        holder.bind(feed)
     }
 
     class FeedViewHolder private constructor(
         private val binding: FragmentFeedsItemViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(post: PostDomainModel?) {
-            binding.post = post
+        fun bind(feed: FeedDomainModel?) {
+            binding.feed = feed
         }
 
         companion object {
@@ -35,16 +37,16 @@ class FeedsAdapter : PagingDataAdapter<PostDomainModel, FeedsAdapter.FeedViewHol
         }
     }
 
-    companion object DiffCallback : DiffUtil.ItemCallback<PostDomainModel>() {
+    companion object DiffCallback : DiffUtil.ItemCallback<FeedDomainModel>() {
         override fun areContentsTheSame(
-            oldItem: PostDomainModel,
-            newItem: PostDomainModel
+            oldItem: FeedDomainModel,
+            newItem: FeedDomainModel
         ): Boolean {
             return oldItem == newItem
         }
 
-        override fun areItemsTheSame(oldItem: PostDomainModel, newItem: PostDomainModel): Boolean {
-            return oldItem.id == newItem.id
+        override fun areItemsTheSame(oldItem: FeedDomainModel, newItem: FeedDomainModel): Boolean {
+            return oldItem.postId == newItem.postId
         }
     }
 }

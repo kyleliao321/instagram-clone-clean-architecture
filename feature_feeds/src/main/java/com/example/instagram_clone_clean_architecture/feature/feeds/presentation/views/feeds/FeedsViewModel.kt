@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.presentatio
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.feature.feeds.domain.repository.FeedRepository
 import com.example.library_base.presentation.viewmodel.BaseAction
@@ -20,7 +21,7 @@ class FeedsViewModel(
 
     private val PAGE_SIZE = 10
 
-    fun getFeeds(): Flow<PagingData<PostDomainModel>> {
+    fun getFeeds(): Flow<PagingData<FeedDomainModel>> {
         val feeds = feedRepository.getFeedsFlow(args.userId, PAGE_SIZE)
         feeds.cachedIn(viewModelScope)
         return feeds
