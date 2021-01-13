@@ -1,5 +1,5 @@
 object TestLibraryVersion {
-    const val KOTLIN_CO_TEST = "1.3.6"
+    const val KOTLIN_TEST = "1.4.1"
     const val JUNIT = "4.12"
     const val MOCKK = "1.10.0"
     const val KLUENT = "1.61"
@@ -12,11 +12,11 @@ object TestLibraryVersion {
 
 object TestLibraryDependency {
     const val KOTLIN_CO_TEST =
-        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestLibraryVersion.KOTLIN_CO_TEST}"
+        "org.jetbrains.kotlinx:kotlinx-coroutines-test:${TestLibraryVersion.KOTLIN_TEST}"
     const val JUNIT = "junit:junit:${TestLibraryVersion.JUNIT}"
     const val MOCKK = "io.mockk:mockk:${TestLibraryVersion.MOCKK}"
     const val KOTLIN_CO_CORE =
-        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${TestLibraryVersion.KOTLIN_CO_TEST}"
+        "org.jetbrains.kotlinx:kotlinx-coroutines-core:${TestLibraryVersion.KOTLIN_TEST}"
     const val KLUENT = "org.amshove.kluent:kluent:${TestLibraryVersion.KLUENT}"
     const val ANDROID_ARCH_CORE_TEST =
         "androidx.arch.core:core-testing:${TestLibraryVersion.ANDROIDX_ARCH_CORE_TEST}"

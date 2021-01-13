@@ -5,5 +5,5 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomai
 import kotlinx.coroutines.flow.Flow
 
 interface FeedRepository {
-    suspend fun getFeedsFlow(userId: String, pageSize: Int): Flow<PagingData<PostDomainModel>>
+    fun getFeedsFlow(userId: String, pageSize: Int): Flow<PagingData<PostDomainModel>>
 }

@@ -2,39 +2,31 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.presentatio
 
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
-import com.example.instagram_clone_clean_architecture.feature.feeds.domain.GetFeedsUserCase
+import com.example.instagram_clone_clean_architecture.feature.feeds.domain.repository.FeedRepository
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
 class FeedsViewModel(
     private val args: FeedsFragmentArgs,
-    private val getFeedsUserCase: GetFeedsUserCase,
+    private val feedRepository: FeedRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<FeedsViewModel.ViewState, FeedsViewModel.Action>(ViewState()) {
 
     private val PAGE_SIZE = 10
 
-    private fun loadFeeds() = viewModelScope.launch(defaultDispatcher) {
-        sendAction(Action.StartFeedsLoading)
-        val param = GetFeedsUserCase.Param(args.userId, PAGE_SIZE)
-        getFeedsUserCase(param) {
-            it.fold(
-                onSucceed = { feeds ->
-                    sendAction(Action.FeedsLoaded(feeds))
-                }
-            )
-        }
+    fun getFeeds(): Flow<PagingData<PostDomainModel>> {
+        val feeds = feedRepository.getFeedsFlow(args.userId, PAGE_SIZE)
+        feeds.cachedIn(viewModelScope)
+        return feeds
     }
 
-    override fun onLoadData() {
-        loadFeeds()
-    }
+    override fun onLoadData() {}
 
     override fun onReduceState(action: Action): ViewState = when (action) {
         is Action.StartFeedsLoading -> state.copy(

@@ -1,3 +1,3 @@
 object CoreVersion {
-    const val KOTLIN = "1.3.72"
+    const val KOTLIN = "1.4.1"
 }

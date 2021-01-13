@@ -77,6 +77,9 @@ android {
 dependencies {
     implementation(project(ModuleDependency.APP))
     implementation(LibraryDependency.PAGING)
+    implementation(LibraryDependency.LIFECYCLE_RUNTIME)
+    implementation(LibraryDependency.KOTLIN_CO_ANDROID)
+    implementation(LibraryDependency.KOTLIN_CO_CORE)
     testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
 
     testImplementation(TestLibraryDependency.JUNIT)

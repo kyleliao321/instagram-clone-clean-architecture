@@ -13,15 +13,14 @@ class FeedRepositoryImpl(
     private val remoteDataSource: RemoteDataSource
 ) : FeedRepository {
 
-    override suspend fun getFeedsFlow(
+    override fun getFeedsFlow(
         userId: String,
         pageSize: Int
     ): Flow<PagingData<PostDomainModel>> {
         val query = FeedsPagingSource.Query(userId, pageSize)
         return Pager(
             config = PagingConfig(
-                pageSize = query.pageSize,
-                enablePlaceholders = false
+                pageSize = query.pageSize
             ),
             pagingSourceFactory = { FeedsPagingSource(remoteDataSource, query) }
         ).flow

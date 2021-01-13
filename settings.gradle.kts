@@ -15,9 +15,9 @@ pluginManagement {
         id("com.android.application") version "4.0.0"
         id("com.android.dynamic-feature") version "4.0.0"
         id("com.android.library") version "4.0.0"
-        id("org.jetbrains.kotlin.jvm") version "1.3.72"
-        id("org.jetbrains.kotlin.android") version "1.3.72"
-        id("org.jetbrains.kotlin.android.extensions") version "1.3.72"
+        id("org.jetbrains.kotlin.jvm") version "1.4.21"
+        id("org.jetbrains.kotlin.android") version "1.4.21"
+        id("org.jetbrains.kotlin.android.extensions") version "1.4.21"
         id("androidx.navigation.safeargs.kotlin") version "2.3.0"
     }
 

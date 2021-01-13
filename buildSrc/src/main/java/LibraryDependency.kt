@@ -1,4 +1,6 @@
 object LibraryVersions {
+    const val KOTLIN_STDLIB = "1.4.10"
+    const val KOTLIN_REFLECTION = "1.4.10"
     const val CORE_KTX = "1.3.1"
     const val APP_COMPAT = "1.1.0"
     const val CONSTRAINT_LAYOUT = "1.1.3"
@@ -21,8 +23,8 @@ object LibraryVersions {
 }
 
 object LibraryDependency {
-    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib:${CoreVersion.KOTLIN}"
-    const val KOTLIN_REFLECTION = "org.jetbrains.kotlin:kotlin-reflect:${CoreVersion.KOTLIN}"
+    const val KOTLIN_STDLIB = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${LibraryVersions.KOTLIN_STDLIB}"
+    const val KOTLIN_REFLECTION = "org.jetbrains.kotlin:kotlin-reflect:${LibraryVersions.KOTLIN_REFLECTION}"
     const val CORE_KTX = "androidx.core:core-ktx:${LibraryVersions.CORE_KTX}"
     const val APP_COMPAT = "androidx.appcompat:appcompat:${LibraryVersions.APP_COMPAT}"
     const val CONSTRAINT_LAYOUT =
@@ -57,4 +59,7 @@ object LibraryDependency {
     const val OK_HTTP_LOG_INTERCEPTOR =
         "com.squareup.okhttp3:logging-interceptor:${LibraryVersions.OK_HTTP_LOG_INTERCEPTOR}"
     const val PAGING = "androidx.paging:paging-runtime:${LibraryVersions.PAGING}"
+    const val LIFECYCLE_RUNTIME = "androidx.lifecycle:lifecycle-runtime-ktx:${LibraryVersions.LIFECYCLE}"
+    const val KOTLIN_CO_ANDROID = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${CoreVersion.KOTLIN}"
+    const val KOTLIN_CO_CORE = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${CoreVersion.KOTLIN}"
 }
