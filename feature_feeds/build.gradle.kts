@@ -76,6 +76,7 @@ android {
 
 dependencies {
     implementation(project(ModuleDependency.APP))
+    implementation(LibraryDependency.PAGING)
     testImplementation(project(ModuleDependency.LIBRARY_TEST_UTILS))
 
     testImplementation(TestLibraryDependency.JUNIT)
