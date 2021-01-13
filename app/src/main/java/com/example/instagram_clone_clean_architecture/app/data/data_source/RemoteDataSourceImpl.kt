@@ -325,14 +325,52 @@ class RemoteDataSourceImpl(
         }
     }
 
-    override suspend fun getFeeds(cursor: GetFeedsCursorDomainModel): Either<List<PostDomainModel>, Failure> {
+    override suspend fun getLatestFeeds(
+        userId: String,
+        pageSize: Int
+    ): Either<List<PostDomainModel>, Failure> {
         return try {
-            val res = feedServices.getFeeds(
-                cursor.userId,
-                cursor.pageSize.toString(),
-                cursor.next,
-                cursor.previous
-            )
+            val res = feedServices.getLatestFeeds(userId, pageSize.toString())
+            val status = res.code()
+            val data = res.body()?.feeds
+
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
+                Either.Success(data.map { PostDomainModel.from(it) })
+            } else {
+                Either.Failure(Failure.ServerError)
+            }
+        } catch (e: SocketTimeoutException) {
+            Either.Failure(Failure.NetworkConnection)
+        }
+    }
+
+    override suspend fun getNextFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure> {
+        return try {
+            val res = feedServices.getNextFeeds(userId, pageSize.toString(), breakPoint)
+            val status = res.code()
+            val data = res.body()?.feeds
+
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
+                Either.Success(data.map { PostDomainModel.from(it) })
+            } else {
+                Either.Failure(Failure.ServerError)
+            }
+        } catch (e: SocketTimeoutException) {
+            Either.Failure(Failure.NetworkConnection)
+        }
+    }
+
+    override suspend fun getPreviousFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure> {
+        return try {
+            val res = feedServices.getPreviousFeeds(userId, pageSize.toString(), breakPoint)
             val status = res.code()
             val data = res.body()?.feeds
 

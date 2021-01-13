@@ -367,33 +367,56 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(newPost)
     }
 
-    override suspend fun getFeeds(cursor: GetFeedsCursorDomainModel): Either<List<PostDomainModel>, Failure> {
+    override suspend fun getLatestFeeds(
+        userId: String,
+        pageSize: Int
+    ): Either<List<PostDomainModel>, Failure> {
         val followingIds = userRelationList
-            .filter { it.first == cursor.userId }
+            .filter { it.first == userId }
             .map { it.second }
 
         val allPosts = userPostList
             .filter { it.belongUserId in followingIds }
 
+        val sortedPostsDesc = sortPostsByDateDesc(allPosts)
+        return Either.Success(sortedPostsDesc.subList(0, pageSize))
+    }
 
-        return if (cursor.next == null && cursor.previous == null) {
-            // return latest posts
-            val sortedPostsDesc = sortPostsByDateDesc(allPosts)
-            Either.Success(sortedPostsDesc.subList(0, cursor.pageSize))
-        } else if (cursor.next != null) {
-            // return older posts
-            val candidatePosts = allPosts
-                .filter { parseIsoDateToDateObj(it.date).before(parseIsoDateToDateObj(cursor.next)) }
-            val sortedCandidates = sortPostsByDateDesc(candidatePosts)
-            Either.Success(sortedCandidates.subList(0, cursor.pageSize))
-        } else {
-            // return newer posts
-            val candidatePosts = allPosts
-                .filter { parseIsoDateToDateObj(it.date).after(parseIsoDateToDateObj(cursor.previous!!)) }
-            val sortedCandidates = sortPostsByDateAse(candidatePosts)
-            val result = sortedCandidates.subList(0, cursor.pageSize)
-            Either.Success(result.reversed())
-        }
+    override suspend fun getNextFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure> {
+        val followingIds = userRelationList
+            .filter { it.first == userId }
+            .map { it.second }
+
+        val allPosts = userPostList
+            .filter { it.belongUserId in followingIds }
+
+        val candidatePosts = allPosts
+            .filter { parseIsoDateToDateObj(it.date).before(parseIsoDateToDateObj(breakPoint)) }
+        val sortedCandidates = sortPostsByDateDesc(candidatePosts)
+        return Either.Success(sortedCandidates.subList(0, pageSize))
+    }
+
+    override suspend fun getPreviousFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure> {
+        val followingIds = userRelationList
+            .filter { it.first == userId }
+            .map { it.second }
+
+        val allPosts = userPostList
+            .filter { it.belongUserId in followingIds }
+
+        val candidatePosts = allPosts
+            .filter { parseIsoDateToDateObj(it.date).after(parseIsoDateToDateObj(breakPoint)) }
+        val sortedCandidates = sortPostsByDateAse(candidatePosts)
+        val result = sortedCandidates.subList(0, pageSize)
+        return Either.Success(result.reversed())
     }
 
     private fun isNetworkFail(): Boolean {

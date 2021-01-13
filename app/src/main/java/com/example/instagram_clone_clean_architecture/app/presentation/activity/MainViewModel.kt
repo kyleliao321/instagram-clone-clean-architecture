@@ -5,8 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.example.instagram_clone_clean_architecture.AppNavGraphDirections
-import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
-import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.GetCachedLoginUserUseCase
 import com.example.library_base.domain.exception.Failure

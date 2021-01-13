@@ -47,6 +47,21 @@ interface RemoteDataSource {
 
     suspend fun uploadPost(post: PostUploadDomainModel): Either<PostDomainModel, Failure>
 
-    suspend fun getFeeds(cursor: GetFeedsCursorDomainModel): Either<List<PostDomainModel>, Failure>
+    suspend fun getLatestFeeds(
+        userId: String,
+        pageSize: Int
+    ): Either<List<PostDomainModel>, Failure>
+
+    suspend fun getNextFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure>
+
+    suspend fun getPreviousFeeds(
+        userId: String,
+        pageSize: Int,
+        breakPoint: String
+    ): Either<List<PostDomainModel>, Failure>
 
 }

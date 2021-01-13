@@ -35,8 +35,7 @@
     <include-dynamic
         android:id="@+id/featureSearchNavGraph"
         app:moduleName="feature_search"
-        app:graphResName="feature_search_nav_graph">
-    </include-dynamic>
+        app:graphResName="feature_search_nav_graph"></include-dynamic>
 
     <include-dynamic
         android:id="@+id/featureLoginNavGraph"
@@ -59,6 +58,5 @@
     <include-dynamic
         android:id="@+id/featureFeedsNavGraph"
         app:moduleName="feature_feeds"
-        app:graphResName="feature_feeds_nav_graph">
-    </include-dynamic>
+        app:graphResName="feature_feeds_nav_graph"></include-dynamic>
 </navigation>

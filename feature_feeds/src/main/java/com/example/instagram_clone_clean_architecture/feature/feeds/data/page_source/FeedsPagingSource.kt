@@ -2,7 +2,6 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.data.page_s
 
 import androidx.paging.PagingSource
 import com.example.instagram_clone_clean_architecture.app.domain.data_source.RemoteDataSource
-import com.example.instagram_clone_clean_architecture.app.domain.model.GetFeedsCursorDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.library_base.domain.utility.Either
 import java.net.SocketTimeoutException
@@ -20,8 +19,7 @@ class FeedsPagingSource(
         }
 
     private suspend fun getLatestFeeds(query: Query): LoadResult<Cursor, PostDomainModel> {
-        val cursor = GetFeedsCursorDomainModel(query.userId, query.pageSize)
-        val getFeedsResult = remoteDataSource.getFeeds(cursor)
+        val getFeedsResult = remoteDataSource.getLatestFeeds(query.userId, query.pageSize)
 
         return when (getFeedsResult) {
             is Either.Failure -> LoadResult.Error(SocketTimeoutException())
@@ -40,8 +38,7 @@ class FeedsPagingSource(
         key: Cursor.NextCursor,
         query: Query
     ): LoadResult<Cursor, PostDomainModel> {
-        val cursor = GetFeedsCursorDomainModel(query.userId, query.pageSize, next = key.after)
-        val getFeedsResult = remoteDataSource.getFeeds(cursor)
+        val getFeedsResult = remoteDataSource.getNextFeeds(query.userId, query.pageSize, key.after)
 
         return when (getFeedsResult) {
             is Either.Failure -> LoadResult.Error(SocketTimeoutException())
@@ -62,8 +59,8 @@ class FeedsPagingSource(
         key: Cursor.PreviousCursor,
         query: Query
     ): LoadResult<Cursor, PostDomainModel> {
-        val cursor = GetFeedsCursorDomainModel(query.userId, query.pageSize, previous = key.before)
-        val getFeedsResult = remoteDataSource.getFeeds(cursor)
+        val getFeedsResult =
+            remoteDataSource.getPreviousFeeds(query.userId, query.pageSize, key.before)
 
         return when (getFeedsResult) {
             is Either.Failure -> LoadResult.Error(SocketTimeoutException())

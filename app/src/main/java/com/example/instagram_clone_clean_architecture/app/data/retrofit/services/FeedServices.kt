@@ -7,10 +7,22 @@ import retrofit2.http.Query
 
 interface FeedServices {
     @GET("/api/v1/feeds/")
-    suspend fun getFeeds(
+    suspend fun getLatestFeeds(
+        @Query("userId") userId: String,
+        @Query("pageSize") pageSize: String
+    ): Response<GetFeedsResponse>
+
+    @GET("/api/v1/feeds/")
+    suspend fun getNextFeeds(
         @Query("userId") userId: String,
         @Query("pageSize") pageSize: String,
-        @Query("after") next: String?,
-        @Query("before") previous: String?
+        @Query("after") breakPoint: String
+    ): Response<GetFeedsResponse>
+
+    @GET("/api/v1/feeds/")
+    suspend fun getPreviousFeeds(
+        @Query("userId") userId: String,
+        @Query("pageSize") pageSize: String,
+        @Query("before") breakPoint: String
     ): Response<GetFeedsResponse>
 }

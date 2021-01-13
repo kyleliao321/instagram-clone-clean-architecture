@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsBinding
 import com.example.library_base.presentation.fragment.InjectionFragment
 
-class FeedsFragment: InjectionFragment() {
+class FeedsFragment : InjectionFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
