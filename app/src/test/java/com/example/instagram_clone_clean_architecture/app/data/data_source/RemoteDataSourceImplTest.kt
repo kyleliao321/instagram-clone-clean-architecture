@@ -50,6 +50,9 @@ class RemoteDataSourceImplTest {
     @MockK(relaxed = true)
     internal lateinit var likeServices: LikeServices
 
+    @MockK(relaxed = true)
+    internal lateinit var feedServices: FeedServices
+
     private lateinit var remoteDataSourceImpl: RemoteDataSource
 
     private val mockUserId = "mockUserId"
@@ -121,7 +124,8 @@ class RemoteDataSourceImplTest {
             userServices,
             postServices,
             relationServices,
-            likeServices
+            likeServices,
+            feedServices
         )
     }
 

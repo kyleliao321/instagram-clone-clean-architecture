@@ -30,6 +30,7 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
                 instance(),
                 instance(),
                 instance(),
+                instance(),
                 instance()
             )
         } else {
@@ -54,4 +55,6 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind() from singleton { instance<Retrofit>().create(RelationServices::class.java) }
 
     bind() from singleton { instance<Retrofit>().create(LikeServices::class.java) }
+
+    bind() from singleton { instance<Retrofit>().create(FeedServices::class.java) }
 }

@@ -6,7 +6,9 @@ import com.example.instagram_clone_clean_architecture.app.domain.model.*
 import com.example.library_base.domain.exception.Failure
 import com.example.library_base.domain.utility.Either
 import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.Comparator
 
 class MockRemoteDataSourceImpl : RemoteDataSource {
 
@@ -365,6 +367,35 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return Either.Success(newPost)
     }
 
+    override suspend fun getFeeds(cursor: GetFeedsCursorDomainModel): Either<List<PostDomainModel>, Failure> {
+        val followingIds = userRelationList
+            .filter { it.first == cursor.userId }
+            .map { it.second }
+
+        val allPosts = userPostList
+            .filter { it.belongUserId in followingIds }
+
+
+        return if (cursor.next == null && cursor.previous == null) {
+            // return latest posts
+            val sortedPostsDesc = sortPostsByDateDesc(allPosts)
+            Either.Success(sortedPostsDesc.subList(0, cursor.pageSize))
+        } else if (cursor.next != null) {
+            // return older posts
+            val candidatePosts = allPosts
+                .filter { parseIsoDateToDateObj(it.date).before(parseIsoDateToDateObj(cursor.next)) }
+            val sortedCandidates = sortPostsByDateDesc(candidatePosts)
+            Either.Success(sortedCandidates.subList(0, cursor.pageSize))
+        } else {
+            // return newer posts
+            val candidatePosts = allPosts
+                .filter { parseIsoDateToDateObj(it.date).after(parseIsoDateToDateObj(cursor.previous!!)) }
+            val sortedCandidates = sortPostsByDateAse(candidatePosts)
+            val result = sortedCandidates.subList(0, cursor.pageSize)
+            Either.Success(result.reversed())
+        }
+    }
+
     private fun isNetworkFail(): Boolean {
         val randomNumber = (0..100).random()
         return randomNumber < networkFailureRate
@@ -373,4 +404,38 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
     private fun generateId(): String =
         UUID.randomUUID().toString()
 
+    private fun sortPostsByDateDesc(posts: List<PostDomainModel>): List<PostDomainModel> {
+        val comparator = Comparator { p1: PostDomainModel, p2: PostDomainModel ->
+            val d1 = parseIsoDateToDateObj(p1.date)
+            val d2 = parseIsoDateToDateObj(p2.date)
+            return@Comparator if (d1.after(d2)) {
+                1
+            } else if (d1.before(d2)) {
+                -1
+            } else {
+                0
+            }
+        }
+        return posts.sortedWith(comparator)
+    }
+
+    private fun sortPostsByDateAse(posts: List<PostDomainModel>): List<PostDomainModel> {
+        val comparator = Comparator { p1: PostDomainModel, p2: PostDomainModel ->
+            val d1 = parseIsoDateToDateObj(p1.date)
+            val d2 = parseIsoDateToDateObj(p2.date)
+            return@Comparator if (d1.after(d2)) {
+                -1
+            } else if (d1.before(d2)) {
+                1
+            } else {
+                0
+            }
+        }
+        return posts.sortedWith(comparator)
+    }
+
+    private fun parseIsoDateToDateObj(timestamp: String): Date {
+        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z", Locale.getDefault())
+        return format.parse(timestamp)
+    }
 }

@@ -19,7 +19,8 @@ class RemoteDataSourceImpl(
     private val userServices: UserServices,
     private val postServices: PostServices,
     private val relationServices: RelationServices,
-    private val likeServices: LikeServices
+    private val likeServices: LikeServices,
+    private val feedServices: FeedServices
 ) : RemoteDataSource {
     override suspend fun userLogin(
         userName: String,
@@ -316,6 +317,27 @@ class RemoteDataSourceImpl(
 
             if (status == HttpURLConnection.HTTP_CREATED && data != null) {
                 Either.Success(PostDomainModel.from(data))
+            } else {
+                Either.Failure(Failure.ServerError)
+            }
+        } catch (e: SocketTimeoutException) {
+            Either.Failure(Failure.NetworkConnection)
+        }
+    }
+
+    override suspend fun getFeeds(cursor: GetFeedsCursorDomainModel): Either<List<PostDomainModel>, Failure> {
+        return try {
+            val res = feedServices.getFeeds(
+                cursor.userId,
+                cursor.pageSize.toString(),
+                cursor.next,
+                cursor.previous
+            )
+            val status = res.code()
+            val data = res.body()?.feeds
+
+            if (status == HttpURLConnection.HTTP_OK && data != null) {
+                Either.Success(data.map { PostDomainModel.from(it) })
             } else {
                 Either.Failure(Failure.ServerError)
             }
