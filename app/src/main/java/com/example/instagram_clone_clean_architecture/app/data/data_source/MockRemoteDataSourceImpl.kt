@@ -379,7 +379,7 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             .filter { it.belongUserId in followingIds }
 
         val sortedPostsDesc = sortPostsByDateDesc(allPosts)
-        return Either.Success(sortedPostsDesc.subList(0, pageSize))
+        return Either.Success(sortedPostsDesc.slice(0 until pageSize))
     }
 
     override suspend fun getNextFeeds(
@@ -395,9 +395,9 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             .filter { it.belongUserId in followingIds }
 
         val candidatePosts = allPosts
-            .filter { parseIsoDateToDateObj(it.date).before(parseIsoDateToDateObj(breakPoint)) }
+            .filter { parseCST(it.date).before(parseCST(breakPoint)) }
         val sortedCandidates = sortPostsByDateDesc(candidatePosts)
-        return Either.Success(sortedCandidates.subList(0, pageSize))
+        return Either.Success(sortedCandidates.slice(0 until pageSize))
     }
 
     override suspend fun getPreviousFeeds(
@@ -413,9 +413,9 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
             .filter { it.belongUserId in followingIds }
 
         val candidatePosts = allPosts
-            .filter { parseIsoDateToDateObj(it.date).after(parseIsoDateToDateObj(breakPoint)) }
+            .filter { parseCST(it.date).after(parseCST(breakPoint)) }
         val sortedCandidates = sortPostsByDateAse(candidatePosts)
-        val result = sortedCandidates.subList(0, pageSize)
+        val result = sortedCandidates.slice(0 until pageSize)
         return Either.Success(result.reversed())
     }
 
@@ -429,8 +429,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private fun sortPostsByDateDesc(posts: List<PostDomainModel>): List<PostDomainModel> {
         val comparator = Comparator { p1: PostDomainModel, p2: PostDomainModel ->
-            val d1 = parseIsoDateToDateObj(p1.date)
-            val d2 = parseIsoDateToDateObj(p2.date)
+            val d1 = parseCST(p1.date)
+            val d2 = parseCST(p2.date)
             return@Comparator if (d1.after(d2)) {
                 1
             } else if (d1.before(d2)) {
@@ -444,8 +444,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
     private fun sortPostsByDateAse(posts: List<PostDomainModel>): List<PostDomainModel> {
         val comparator = Comparator { p1: PostDomainModel, p2: PostDomainModel ->
-            val d1 = parseIsoDateToDateObj(p1.date)
-            val d2 = parseIsoDateToDateObj(p2.date)
+            val d1 = parseCST(p1.date)
+            val d2 = parseCST(p2.date)
             return@Comparator if (d1.after(d2)) {
                 -1
             } else if (d1.before(d2)) {
@@ -457,8 +457,8 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
         return posts.sortedWith(comparator)
     }
 
-    private fun parseIsoDateToDateObj(timestamp: String): Date {
-        val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z", Locale.getDefault())
-        return format.parse(timestamp)
+    private fun parseCST(timestamp: String): Date {
+        val format = SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.getDefault())
+        return format.parse(timestamp)!!
     }
 }
