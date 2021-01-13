@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:moduleName="@string/module_name"
+    app:startDestination="@id/feedsFragment">
+
+    <fragment
+        android:id="@+id/feedsFragment"
+        android:label="FeedsFragment"
+        android:name="com.example.instagram_clone_clean_architecture.feature.feeds.presentation.views.feeds.FeedsFragment"
+        app:moduleName="@string/module_name" />
+
+</navigation>

@@ -91,6 +91,10 @@ class MainActivity : InjectionActivity() {
 
         bottomNav.setupNavControllerWithNavCallback(navController) setupNavControllerWithCallback@{
             when (it.itemId) {
+                R.id.featureFeedsNavGraph -> {
+                    viewModel.onNavigateToFeeds()
+                    return@setupNavControllerWithCallback true
+                }
                 R.id.featureSearchNavGraph -> {
                     viewModel.onNavigateToSearch()
                     return@setupNavControllerWithCallback true

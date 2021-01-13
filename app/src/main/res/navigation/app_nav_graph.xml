@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/app_nav_graph"
     app:startDestination="@id/featureLoginNavGraph">
+
+    <action
+        android:id="@id/featureProfileNavGraph"
+        app:destination="@id/featureProfileNavGraph" />
+    <action
+        android:id="@id/featureSearchNavGraph"
+        app:destination="@id/featureSearchNavGraph" />
+    <action
+        android:id="@id/featureFeedsNavGraph"
+        app:destination="@id/featureFeedsNavGraph" />
 
     <include-dynamic
         android:id="@+id/featureProfileNavGraph"
@@ -25,9 +36,6 @@
         android:id="@+id/featureSearchNavGraph"
         app:moduleName="feature_search"
         app:graphResName="feature_search_nav_graph">
-        <action
-            android:id="@id/featureProfileNavGraph"
-            app:destination="@id/featureProfileNavGraph" />
     </include-dynamic>
 
     <include-dynamic
@@ -46,5 +54,11 @@
         <action
             android:id="@id/featureProfileNavGraph"
             app:destination="@id/featureProfileNavGraph" />
+    </include-dynamic>
+
+    <include-dynamic
+        android:id="@+id/featureFeedsNavGraph"
+        app:moduleName="feature_feeds"
+        app:graphResName="feature_feeds_nav_graph">
     </include-dynamic>
 </navigation>

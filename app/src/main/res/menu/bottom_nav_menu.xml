@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@id/featureFeedsNavGraph"
+        android:title="Feeds"
+        android:icon="@drawable/menu_feeds_item_icon" />
+    <item
         android:id="@+id/featureProfileNavGraph"
         android:title="Profile"
         android:icon="@drawable/menu_profile_item_icon" />

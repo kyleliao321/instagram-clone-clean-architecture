@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
+import com.example.instagram_clone_clean_architecture.AppNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureProfileNavGraphDirections
 import com.example.instagram_clone_clean_architecture.FeatureSearchNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.usecase.CacheUserSelectedImageUseCase
@@ -30,17 +31,22 @@ class MainViewModel(
         it.localUserId != null
     }
 
+    fun onNavigateToFeeds() {
+        val navDir = AppNavGraphDirections.featureFeedsNavGraph()
+        navManager.onNavEvent(navDir)
+    }
+
     fun onNavigateToProfile() {
         if (state.localUserId == null) {
             throw IllegalStateException("Local Login User id should not be null in ${this::class.java}")
         } else {
-            val navDir = FeatureSearchNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
+            val navDir = AppNavGraphDirections.featureProfileNavGraph(state.localUserId!!)
             navManager.onNavEvent(navDir)
         }
     }
 
     fun onNavigateToSearch() {
-        val navDir = FeatureProfileNavGraphDirections.featureSearchNavGraph()
+        val navDir = AppNavGraphDirections.featureSearchNavGraph()
         navManager.onNavEvent(navDir)
     }
 

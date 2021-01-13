@@ -1,4 +1,3 @@
-include(":library_test_utils")
 /**
  * Since version 6.0 of Gradle update, properties defined inside buildSrc cannot be
  * accessed from setting.gradle.kts. As a result, it is necessary to synchronize
@@ -38,6 +37,7 @@ include(":feature_profile")
 include(":feature_search")
 include("feature_login")
 include("feature_post")
+include("feature_feeds")
 include(":library_base")
 include(":library_test_utils")
 include(":app")
