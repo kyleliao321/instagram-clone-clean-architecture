@@ -50,7 +50,11 @@ class UserProfileListViewAdapter(
         companion object {
             fun from(parent: ViewGroup): UserProfileViewHolder {
                 val binding =
-                    FragmentProfileFollowUserViewItemBinding.inflate(LayoutInflater.from(parent.context))
+                    FragmentProfileFollowUserViewItemBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
                 return UserProfileViewHolder(binding)
             }
         }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsItemViewBinding
-import timber.log.Timber
 
 class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHolder>(DiffCallback) {
 
@@ -17,7 +16,6 @@ class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHol
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val feed = getItem(position)
-        Timber.d(feed.toString())
         holder.bind(feed)
     }
 
@@ -31,7 +29,11 @@ class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHol
         companion object {
             fun from(parent: ViewGroup): FeedViewHolder {
                 val binding =
-                    FragmentFeedsItemViewBinding.inflate(LayoutInflater.from(parent.context))
+                    FragmentFeedsItemViewBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
                 return FeedViewHolder(binding)
             }
         }

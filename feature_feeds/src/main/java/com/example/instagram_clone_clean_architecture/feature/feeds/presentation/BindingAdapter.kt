@@ -3,6 +3,7 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.presentatio
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import coil.api.load
+import coil.size.Scale
 import coil.transform.CircleCropTransformation
 import com.example.instagram_clone_clean_architecture.feature.feeds.R
 
