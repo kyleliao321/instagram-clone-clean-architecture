@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.lifecycleScope
+import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsBinding
 import com.example.instagram_clone_clean_architecture.feature.feeds.presentation.adapters.FeedsAdapter
 import com.example.instagram_clone_clean_architecture.feature.feeds.presentation.decorators.FeedViewItemDecorator
@@ -26,6 +28,8 @@ class FeedsFragment : InjectionFragment() {
     ): View? {
         val binding = FragmentFeedsBinding.inflate(inflater, container, false)
 
+        setupFeedsAppbar(binding.feedsAppBar)
+
         setupFeedsAdapter(binding)
         setupFeedItemViewDecorator(binding)
 
@@ -39,6 +43,10 @@ class FeedsFragment : InjectionFragment() {
                 feedsAdapter.submitData(it)
             }
         }
+    }
+
+    private fun setupFeedsAppbar(appBar: Toolbar?) {
+        (requireActivity() as MainActivity).setSupportActionBar(appBar)
     }
 
     private fun setupFeedsAdapter(binding: FragmentFeedsBinding) {
