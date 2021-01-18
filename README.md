@@ -98,6 +98,7 @@ ranging from 0 to 100, to mock how likely the service will lose network connecti
 - [Data-Binding](https://developer.android.com/topic/libraries/data-binding).
 - Using [LeakCanary](https://square.github.io/leakcanary/) for memory leak detection.
 - Using [EncryptedSharedPreferences](https://developer.android.com/topic/security/data) to store sensitive user data
+- Using [Paging 3](https://developer.android.com/topic/libraries/architecture/paging/v3-overview) to paginate large data sequence
 
 ### Kotlin
 - Inline function with [reified](https://kotlinlang.org/docs/reference/inline-functions.html) type parameter.
