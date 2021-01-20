@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.instagram_clone_clean_architecture.app.presentation.activity.MainActivity
 import com.example.instagram_clone_clean_architecture.feature.search.databinding.FragmentSearchBinding
 import com.example.instagram_clone_clean_architecture.feature.search.presentation.adapters.SearchUserProfileListAdapter
+import com.example.instagram_clone_clean_architecture.feature.search.presentation.decorators.SearchUserItemDecorator
 import com.example.library_base.presentation.fragment.InjectionFragment
 import org.kodein.di.instance
 
@@ -25,6 +26,7 @@ class SearchFragment : InjectionFragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
+        setupDecorator(binding)
         setupRecyclerViewAdapter(binding)
         setSupportAppBar(binding.searchFragmentAppBar)
         return binding.root
@@ -40,6 +42,10 @@ class SearchFragment : InjectionFragment() {
         parentActivity?.let {
             it.setSupportActionBar(appBar)
         }
+    }
+
+    private fun setupDecorator(binding: FragmentSearchBinding) {
+        binding.searchResultContainer.addItemDecoration(SearchUserItemDecorator(10))
     }
 
     private fun setupRecyclerViewAdapter(binding: FragmentSearchBinding) {
