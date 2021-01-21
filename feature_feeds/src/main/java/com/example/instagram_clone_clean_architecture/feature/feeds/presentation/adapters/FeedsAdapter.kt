@@ -8,7 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.instagram_clone_clean_architecture.feature.feeds.databinding.FragmentFeedsItemViewBinding
 
-class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHolder>(DiffCallback) {
+class FeedsAdapter(
+    private val userImageClickListener: UserImageClickListener
+) : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         return FeedViewHolder.from(parent)
@@ -16,14 +18,19 @@ class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHol
 
     override fun onBindViewHolder(holder: FeedViewHolder, position: Int) {
         val feed = getItem(position)
-        holder.bind(feed)
+        holder.bind(feed, userImageClickListener)
     }
 
     class FeedViewHolder private constructor(
         private val binding: FragmentFeedsItemViewBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(feed: FeedDomainModel?) {
+        fun bind(feed: FeedDomainModel?, imageClickListener: UserImageClickListener) {
             binding.feed = feed
+            binding.postUserImage.setOnClickListener {
+                feed?.let {
+                    imageClickListener.onClick(it.userId)
+                }
+            }
         }
 
         companion object {
@@ -50,5 +57,9 @@ class FeedsAdapter : PagingDataAdapter<FeedDomainModel, FeedsAdapter.FeedViewHol
         override fun areItemsTheSame(oldItem: FeedDomainModel, newItem: FeedDomainModel): Boolean {
             return oldItem.postId == newItem.postId
         }
+    }
+
+    class UserImageClickListener(val callback: (userId: String) -> Unit) {
+        fun onClick(userId: String) = callback(userId)
     }
 }

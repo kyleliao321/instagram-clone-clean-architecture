@@ -12,6 +12,7 @@ val presentationModule = DI.Module("${MODULE_NAME}PresentationModule") {
         KotlinViewModelProvider.of(context) {
             FeedsViewModel(
                 instance(),
+                instance(),
                 instance()
             )
         }

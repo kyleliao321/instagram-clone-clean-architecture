@@ -3,9 +3,11 @@ package com.example.instagram_clone_clean_architecture.feature.feeds.presentatio
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.instagram_clone_clean_architecture.FeatureFeedsNavGraphDirections
 import com.example.instagram_clone_clean_architecture.app.domain.model.FeedDomainModel
 import com.example.instagram_clone_clean_architecture.app.domain.model.PostDomainModel
 import com.example.instagram_clone_clean_architecture.feature.feeds.domain.repository.FeedRepository
+import com.example.library_base.presentation.navigation.NavigationManager
 import com.example.library_base.presentation.viewmodel.BaseAction
 import com.example.library_base.presentation.viewmodel.BaseViewModel
 import com.example.library_base.presentation.viewmodel.BaseViewState
@@ -16,10 +18,16 @@ import kotlinx.coroutines.flow.Flow
 class FeedsViewModel(
     private val args: FeedsFragmentArgs,
     private val feedRepository: FeedRepository,
+    private val navManager: NavigationManager,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Main
 ) : BaseViewModel<FeedsViewModel.ViewState, FeedsViewModel.Action>(ViewState()) {
 
     private val PAGE_SIZE = 10
+
+    fun navigateToProfile(userId: String) {
+        val navDir = FeatureFeedsNavGraphDirections.featureProfileNavGraph(userId)
+        navManager.onNavEvent(navDir)
+    }
 
     fun getFeeds(): Flow<PagingData<FeedDomainModel>> {
         val feeds = feedRepository.getFeedsFlow(args.userId, PAGE_SIZE)

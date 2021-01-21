@@ -14,12 +14,13 @@ import com.example.library_base.presentation.fragment.InjectionFragment
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
+import java.lang.ref.SoftReference
 
 class FeedsFragment : InjectionFragment() {
 
     private val viewModel: FeedsViewModel by instance()
 
-    private lateinit var feedsAdapter: FeedsAdapter
+    private lateinit var feedsAdapterRef: SoftReference<FeedsAdapter>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,6 +28,7 @@ class FeedsFragment : InjectionFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentFeedsBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
 
         setupFeedsAppbar(binding.feedsAppBar)
 
@@ -38,9 +40,11 @@ class FeedsFragment : InjectionFragment() {
 
     override fun onStart() {
         super.onStart()
+        val feedsAdapter = feedsAdapterRef.get()
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.getFeeds().collectLatest {
-                feedsAdapter.submitData(it)
+                feedsAdapter?.submitData(it)
             }
         }
     }
@@ -50,7 +54,10 @@ class FeedsFragment : InjectionFragment() {
     }
 
     private fun setupFeedsAdapter(binding: FragmentFeedsBinding) {
-        feedsAdapter = FeedsAdapter()
+        val feedsAdapter = FeedsAdapter(FeedsAdapter.UserImageClickListener {
+            viewModel.navigateToProfile(it)
+        })
+        feedsAdapterRef = SoftReference(feedsAdapter)
         binding.feedsContainer.adapter = feedsAdapter
     }
 
