@@ -32,7 +32,7 @@ class UploadPostUseCase(
 
         val bitmap = (getBitmapResult as Either.Success).a
         val resizedBitmap = bitmap.resizeAndCrop(400, 400)
-        val byteArray = resizedBitmap.getJpegByteArray()
+        val byteArray = resizedBitmap.getJpegByteArray(80)
         val randomFileName = UUID.randomUUID().toString()
         val cacheFileResult = postRepository.cacheCompressedImageFile(randomFileName, byteArray)
 

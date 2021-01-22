@@ -377,14 +377,14 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         val allPosts = userPostList
             .filter { it.belongUserId in followingIds }
-
+        val acceptPageSize = if (pageSize > allPosts.size) allPosts.size else pageSize
         val sortedPostsDesc = sortPostsByDateDesc(allPosts)
-        val pagedPost = sortedPostsDesc.slice(0 until pageSize)
+        val pagedPost = sortedPostsDesc.slice(0 until acceptPageSize)
 
         val pagedFeeds = pagedPost.map { post ->
             var user: UserDomainModel? = null
             for (userProfile in userProfileList) {
-                if (userProfile.id == userId) {
+                if (userProfile.id == post.belongUserId) {
                     user = userProfile
                 }
             }
@@ -417,13 +417,14 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         val candidatePosts = allPosts
             .filter { parseCST(it.date).before(parseCST(breakPoint)) }
+        val acceptPageSize = if (pageSize > candidatePosts.size) candidatePosts.size else pageSize
         val sortedCandidates = sortPostsByDateDesc(candidatePosts)
-        val pagedPosts = sortedCandidates.slice(0 until pageSize)
+        val pagedPosts = sortedCandidates.slice(0 until acceptPageSize)
 
         val pagedFeeds = pagedPosts.map { post ->
             var user: UserDomainModel? = null
             for (userProfile in userProfileList) {
-                if (userProfile.id == userId) {
+                if (userProfile.id == post.belongUserId) {
                     user = userProfile
                 }
             }
@@ -456,14 +457,15 @@ class MockRemoteDataSourceImpl : RemoteDataSource {
 
         val candidatePosts = allPosts
             .filter { parseCST(it.date).after(parseCST(breakPoint)) }
+        val acceptPageSize = if (pageSize > candidatePosts.size) candidatePosts.size else pageSize
         val sortedCandidates = sortPostsByDateAse(candidatePosts)
-        val result = sortedCandidates.slice(0 until pageSize)
+        val result = sortedCandidates.slice(0 until acceptPageSize)
         val pagedPosts = result.reversed()
 
         val pagedFeeds = pagedPosts.map { post ->
             var user: UserDomainModel? = null
             for (userProfile in userProfileList) {
-                if (userProfile.id == userId) {
+                if (userProfile.id == post.belongUserId) {
                     user = userProfile
                 }
             }
