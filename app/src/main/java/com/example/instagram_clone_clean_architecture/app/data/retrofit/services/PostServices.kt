@@ -9,18 +9,18 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface PostServices {
-    @GET("/api/v1/posts/{postId}")
+    @GET("/server/api/v1/posts/{postId}")
     suspend fun getPostAsync(
         @Path("postId") postId: String
     ): Response<GetPostResponse>
 
-    @GET("/api/v1/posts/")
+    @GET("/server/api/v1/posts/")
     suspend fun getPostsAsync(
         @Query("userId") userId: String
     ): Response<GetPostsResponse>
 
     @Multipart
-    @POST("/api/v1/posts/")
+    @POST("/server/api/v1/posts/")
     suspend fun addNewPostAsync(
         @Part("description") description: RequestBody? = null,
         @Part("location") location: RequestBody? = null,

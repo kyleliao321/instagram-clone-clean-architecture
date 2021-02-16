@@ -7,12 +7,12 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface AccountServices {
-    @POST("/api/v1/accounts/register")
+    @POST("/server/api/v1/accounts/register")
     suspend fun registerNewAccountAsync(
         @Body accountInfo: AccountRequest
     ): Response<Unit>
 
-    @POST("/api/v1/accounts/login")
+    @POST("/server/api/v1/accounts/login")
     suspend fun loginAsync(
         @Body accountInfo: AccountRequest
     ): Response<LoginResponse>

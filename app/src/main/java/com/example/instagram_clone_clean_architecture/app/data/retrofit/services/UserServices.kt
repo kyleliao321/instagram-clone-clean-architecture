@@ -9,18 +9,18 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface UserServices {
-    @GET("/api/v1/users/{userId}")
+    @GET("/server/api/v1/users/{userId}")
     suspend fun getUserProfileAsync(
         @Path("userId") userId: String
     ): Response<GetUserProfileResponse>
 
-    @GET("/api/v1/users/")
+    @GET("/server/api/v1/users/")
     suspend fun searchUserProfilesAsync(
         @Query("userName") keyword: String
     ): Response<SearchUserProfilesResponse>
 
     @Multipart
-    @PUT("/api/v1/users/{userId}")
+    @PUT("/server/api/v1/users/{userId}")
     suspend fun updateUserProfileAsync(
         @Path("userId") userId: String,
         @Part("id") id: RequestBody,

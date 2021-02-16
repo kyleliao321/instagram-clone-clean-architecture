@@ -6,20 +6,20 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface FeedServices {
-    @GET("/api/v1/feeds/")
+    @GET("/server/api/v1/feeds/")
     suspend fun getLatestFeeds(
         @Query("userId") userId: String,
         @Query("pageSize") pageSize: String
     ): Response<GetFeedsResponse>
 
-    @GET("/api/v1/feeds/")
+    @GET("/server/api/v1/feeds/")
     suspend fun getNextFeeds(
         @Query("userId") userId: String,
         @Query("pageSize") pageSize: String,
         @Query("after") breakPoint: String
     ): Response<GetFeedsResponse>
 
-    @GET("/api/v1/feeds/")
+    @GET("/server/api/v1/feeds/")
     suspend fun getPreviousFeeds(
         @Query("userId") userId: String,
         @Query("pageSize") pageSize: String,
