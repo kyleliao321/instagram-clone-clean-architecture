@@ -39,17 +39,6 @@ android {
         }
     }
 
-    flavorDimensions(ServerDimension.name)
-    productFlavors {
-        create(FlavorType.LOCAL) {
-            setDimension(LocalFlavor.dimension.name)
-        }
-
-        create(FlavorType.REMOTE) {
-            setDimension(RemoteFlavor.dimension.name)
-        }
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

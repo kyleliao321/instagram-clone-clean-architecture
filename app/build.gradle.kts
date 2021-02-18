@@ -47,19 +47,6 @@ android {
         }
     }
 
-    flavorDimensions(ServerDimension.name)
-    productFlavors {
-        create(FlavorType.LOCAL) {
-            setDimension(LocalFlavor.dimension.name)
-            flavorBuildConfigField("boolean", "remoteServer", "false")
-        }
-
-        create(FlavorType.REMOTE) {
-            setDimension(RemoteFlavor.dimension.name)
-            flavorBuildConfigField("boolean", "remoteServer", "true")
-        }
-    }
-
     // Each feature module that is included in settings.gradle.kts is added here as dynamic feature
     dynamicFeatures = ModuleDependency.getDynamicFeatureModules().toMutableSet()
 

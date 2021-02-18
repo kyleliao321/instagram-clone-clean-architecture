@@ -24,18 +24,14 @@ val dataModule = DI.Module("${MODULE_NAME}DataModule") {
     bind<AppRepository>() with singleton { AppRepositoryImpl(instance()) }
 
     bind<RemoteDataSource>() with singleton {
-        if (BuildConfig.FLAVOR_REMOTE_SERVER) {
-            RemoteDataSourceImpl(
-                instance(),
-                instance(),
-                instance(),
-                instance(),
-                instance(),
-                instance()
-            )
-        } else {
-            MockRemoteDataSourceImpl()
-        }
+        RemoteDataSourceImpl(
+            instance(),
+            instance(),
+            instance(),
+            instance(),
+            instance(),
+            instance()
+        )
     }
 
     bind<LocalDataSource>() with singleton { LocalDataSourceImpl() }

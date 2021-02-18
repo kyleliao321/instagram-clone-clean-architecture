@@ -19,29 +19,11 @@ While it takes longer to setup a project, after setting-up, the workflow is less
 ```bash
 git clone https://github.com/kyleliao321/instagram-clone-clean-architecture.git
 ```
+## Build
 
-## Development
-The application come with two flavors: **Local** or **Remote**. The difference is how the application will communicate with server. **Local** flavor mocks the
-behavior to store data in memory. On the other hand, **Remote** flavor will actually send request to remote server.
-
-### Setup Environment for Remote Flavor
-- Open Project in Android Studio
-- Build - Select Build Variant...
-- For app Module, choose **remoteDebug** or **remoteRelease** as its Active Build Variant.
-- Build - Rebuild Project
-
-Now, the application will communicate to the server address that is specified in project-level gradle.properties. By default, it assume that the server is
-running in local host. [(More on How to setup development server for application)](https://github.com/kyleliao321/instagram-clone-server)
-
-### Setup Environment for Local Flavor
-- Open Project in Android Studio
-- Build - Select Build Variant...
-- For app Module, choose **localDebug** or **localRelease** as its Active Build Variant.
-- Build - Rebuild Project
-
-Now, whenever the application has to make a network request, it will use internal mocks services and store data in memory. That is to say, all the data created 
-during this time on **Local** flavor will be gone after device shut down the application. Also, inside project-level gradle.properties, you can adjust `mockNetworkFailureRate`
-ranging from 0 to 100, to mock how likely the service will lose network connection on each request.
+### Android Studio
+- Build -> Make Project
+- Run - Run 'app'
 
 ## Demo
 
